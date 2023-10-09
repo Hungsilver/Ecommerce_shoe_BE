@@ -1,6 +1,5 @@
 package com.example.projectshop.controller.rest;
 
-import com.example.projectshop.domain.Nhanvien;
 import com.example.projectshop.service.impl.INhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
