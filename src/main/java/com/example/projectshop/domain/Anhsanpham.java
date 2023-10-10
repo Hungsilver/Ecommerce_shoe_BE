@@ -31,18 +31,22 @@ public class Anhsanpham {
     private String ten;
 
     public Integer getId() {
+
         return this.id;
     }
 
     public void setId(Integer id) {
+
         this.id = id;
     }
 
     public Integer getIdSanPham() {
+
         return this.idSanPham;
     }
 
     public void setIdSanPham(Integer idSanPham) {
+
         this.idSanPham = idSanPham;
     }
 

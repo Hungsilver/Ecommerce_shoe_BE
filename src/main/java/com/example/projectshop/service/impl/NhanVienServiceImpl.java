@@ -1,8 +1,8 @@
-package com.example.projectshop.service;
+package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.Nhanvien;
 import com.example.projectshop.repository.NhanVienRepository;
-import com.example.projectshop.service.impl.INhanVienService;
+import com.example.projectshop.service.INhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
