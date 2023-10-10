@@ -1,6 +1,6 @@
 package com.example.projectshop.controller.rest;
 
-import com.example.projectshop.service.impl.INhanVienService;
+import com.example.projectshop.service.INhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

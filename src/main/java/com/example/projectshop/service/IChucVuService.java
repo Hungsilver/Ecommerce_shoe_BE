@@ -1,4 +1,4 @@
-package com.example.projectshop.service.impl;
+package com.example.projectshop.service;
 
 import com.example.projectshop.domain.Chucvu;
 
