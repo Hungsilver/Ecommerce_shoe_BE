@@ -15,7 +15,7 @@ public class NhanVienRestController {
     private INhanVienService nhanVienService;
 
     @GetMapping("/nhanvien")
-    private ResponseEntity<?> getAll(Pageable pageable ){
+    private ResponseEntity<?> getAll(Pageable pageable) {
         return ResponseEntity.ok(nhanVienService.getAll(pageable));
     }
 }

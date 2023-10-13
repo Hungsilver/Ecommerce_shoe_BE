@@ -1,16 +1,11 @@
 package com.example.projectshop.domain;
 
-
-
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Getter
 @Setter
@@ -21,6 +16,7 @@ import jakarta.persistence.Table;
 @Table(name = "anhsanpham")
 public class Anhsanpham {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -30,31 +26,4 @@ public class Anhsanpham {
     @Column(name = "ten")
     private String ten;
 
-    public Integer getId() {
-
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-
-        this.id = id;
-    }
-
-    public Integer getIdSanPham() {
-
-        return this.idSanPham;
-    }
-
-    public void setIdSanPham(Integer idSanPham) {
-
-        this.idSanPham = idSanPham;
-    }
-
-    public String getTen() {
-        return this.ten;
-    }
-
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
 }
