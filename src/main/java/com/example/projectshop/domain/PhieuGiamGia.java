@@ -33,22 +33,22 @@ public class PhieuGiamGia {
     @Column(name = "ten")
     private String ten;
 
-    @Column(name = "chietKhau")
+    @Column(name = "chietkhau")
     private BigDecimal chietKhau;
 
-    @Column(name = "hinhThucGiamGia")
+    @Column(name = "hinhthucgiamgia")
     private Byte hinhThucGiamGia;
 
-    @Column(name = "thoiGianBatDau")
+    @Column(name = "thoigianbatdau")
     private java.sql.Date thoiGianBatDau;
 
-    @Column(name = "thoiGianKetThuc")
+    @Column(name = "thoigianketthuc")
     private java.sql.Date thoiGianKetThuc;
 
-    @Column(name = "moTa")
+    @Column(name = "mota")
     private String moTa;
 
-    @Column(name = "trangThai")
+    @Column(name = "trangthai")
     private Integer trangThai;
 
 //    @Column(name = "idKhachHang")
