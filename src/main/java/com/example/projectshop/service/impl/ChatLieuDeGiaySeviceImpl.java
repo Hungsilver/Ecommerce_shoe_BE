@@ -1,12 +1,15 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.Chatlieudegiay;
+import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayRequest;
 import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayResponse;
 import com.example.projectshop.repository.ChatLieuDeGiayRepository;
 import com.example.projectshop.service.IChatLieuDeGiayService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +20,16 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     private ChatLieuDeGiayRepository chatLieuDeGiayRepository;
 
     @Override
-    public List<ChatLieuDeGiayResponse> getAll() {
-        List<ChatLieuDeGiayResponse> list = ObjectMapperUtils.mapAll(chatLieuDeGiayRepository.findAll(), ChatLieuDeGiayResponse.class);
+    public List<ChatLieuDeGiayResponse> findAll() {
+        return ObjectMapperUtils.mapAll(chatLieuDeGiayRepository.findAll(), ChatLieuDeGiayResponse.class);
+    }
+
+    @Override
+    public Page<ChatLieuDeGiayResponse> getAll(String pageParam, String limitParam) {
+        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
+        Integer limit = limitParam == null ? 2 : Integer.valueOf(limitParam);
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<ChatLieuDeGiayResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(chatLieuDeGiayRepository.findAll(pageable), ChatLieuDeGiayResponse.class);
         return list;
     }
 
@@ -28,8 +39,17 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     }
 
     @Override
+    public Page<ChatLieuDeGiay> timKiem(String input, String pageParam, String limitParam) {
+        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
+        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
+        Pageable pageable = PageRequest.of(page, limit);
+        return chatLieuDeGiayRepository.timKiem(input, pageable);
+//        return ObjectMapperUtils.mapEntityPageIntoDtoPage(chatLieuDeGiayRepository.timKiem(input,pageable), ChatLieuDeGiayResponse.class);
+    }
+
+    @Override
     public ChatLieuDeGiayResponse create(ChatLieuDeGiayRequest chatLieuDeGiayRequest) {
-        Chatlieudegiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, Chatlieudegiay.class);
+        ChatLieuDeGiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, ChatLieuDeGiay.class);
         entity.setTen(chatLieuDeGiayRequest.getTen());
         entity = chatLieuDeGiayRepository.save(entity);
         ChatLieuDeGiayResponse response = ObjectMapperUtils.map(entity, ChatLieuDeGiayResponse.class);
@@ -38,8 +58,8 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
 
     @Override
     public ChatLieuDeGiayResponse update(ChatLieuDeGiayRequest chatLieuDeGiayRequest, Integer id) {
-        Chatlieudegiay eDb = chatLieuDeGiayRepository.findById(id).get();
-        Chatlieudegiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, Chatlieudegiay.class);
+        ChatLieuDeGiay eDb = chatLieuDeGiayRepository.findById(id).get();
+        ChatLieuDeGiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, ChatLieuDeGiay.class);
         entity.setId(eDb.getId());
         entity.setTen(chatLieuDeGiayRequest.getTen());
         entity = chatLieuDeGiayRepository.save(entity);

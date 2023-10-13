@@ -25,13 +25,14 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+
 @Entity
 @Table(name = "nhanvien")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Nhanvien implements Serializable {
     @Id
     @Column(name = "id")
@@ -53,10 +54,10 @@ public class Nhanvien implements Serializable {
     @Column(name = "sodienthoai")
     private String soDienThoai;
 
-    @Column(nullable = false,name = "gioitinh")
+    @Column(nullable = false, name = "gioitinh")
     private Boolean gioiTinh;
 
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(name = "ngaysinh")
     private LocalDate ngaySinh;
 
@@ -67,8 +68,8 @@ public class Nhanvien implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "nhanvien_chucvu",
-            joinColumns = @JoinColumn(name = "idNhanVien",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "idChucVu",referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "idNhanVien", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "idChucVu", referencedColumnName = "id")
     )
     private Set<Chucvu> chucVus = new HashSet<>();
 
