@@ -11,4 +11,6 @@ public interface IPhieuGiamGiaService {
     List<PhieuGiamGiaResponse> findAll();
 
     Page<PhieuGiamGiaResponse> getAll(String pageParam,String limitParam);
+
+    PhieuGiamGiaResponse getOne(Integer id);
 }
