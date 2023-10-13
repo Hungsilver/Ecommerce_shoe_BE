@@ -1,7 +1,9 @@
 package com.example.projectshop.repository;
 
-import com.example.projectshop.domain.Phieugiamgia;
+import com.example.projectshop.domain.PhieuGiamGia;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface PhieuGiamGiaRepository extends JpaRepository<Phieugiamgia, Integer> {
+@Repository
+public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Integer> {
 }

@@ -2,8 +2,8 @@ package com.example.projectshop.service;
 
 
 import com.example.projectshop.domain.ChatLieuDeGiay;
-import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayRequest;
-import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayResponse;
+import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
+import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
