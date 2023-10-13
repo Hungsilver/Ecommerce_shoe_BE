@@ -1,7 +1,7 @@
 package com.example.projectshop.service;
 
-import com.example.projectshop.dto.chatLieuGiay.ChatLieuGiayRequest;
-import com.example.projectshop.dto.chatLieuGiay.ChatLieuGiayResponse;
+import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
+import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

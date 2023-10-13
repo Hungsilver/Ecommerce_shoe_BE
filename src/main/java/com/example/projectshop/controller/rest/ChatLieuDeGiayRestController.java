@@ -1,6 +1,6 @@
 package com.example.projectshop.controller.rest;
 
-import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayRequest;
+import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
 import com.example.projectshop.service.IChatLieuDeGiayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

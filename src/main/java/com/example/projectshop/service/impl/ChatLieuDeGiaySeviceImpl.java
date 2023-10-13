@@ -1,8 +1,8 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChatLieuDeGiay;
-import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayRequest;
-import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayResponse;
+import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
+import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayResponse;
 import com.example.projectshop.repository.ChatLieuDeGiayRepository;
 import com.example.projectshop.service.IChatLieuDeGiayService;
 import com.example.projectshop.service.ObjectMapperUtils;
