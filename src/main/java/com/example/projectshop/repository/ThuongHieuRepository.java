@@ -1,4 +1,7 @@
 package com.example.projectshop.repository;
 
-public interface ThuongHieuRepository {
+import com.example.projectshop.domain.Thuonghieu;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ThuongHieuRepository extends JpaRepository<Thuonghieu,Integer> {
 }

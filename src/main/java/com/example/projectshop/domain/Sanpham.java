@@ -1,9 +1,6 @@
 package com.example.projectshop.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,73 +34,15 @@ public class Sanpham {
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    @Column(name = "idThuongHieu")
-    private Integer idThuongHieu;
+    //    @Column(name = "idThuongHieu")
+    @ManyToOne
+    @JoinColumn(name = "idThuongHieu")
+    private Thuonghieu idThuongHieu;
 
-    @Column(name = "idXuatXu")
-    private Integer idXuatXu;
+    @ManyToOne
+    @JoinColumn(name = "idAnhSanPham")
+    private Anhsanpham idAnhsanpham;
+//    @Column(name = "idXuatXu")
+//    private Integer idXuatXu;
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getMa() {
-        return this.ma;
-    }
-
-    public void setMa(String ma) {
-        this.ma = ma;
-    }
-
-    public String getTen() {
-        return this.ten;
-    }
-
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
-
-    public String getAnhChinh() {
-        return this.anhChinh;
-    }
-
-    public void setAnhChinh(String anhChinh) {
-        this.anhChinh = anhChinh;
-    }
-
-    public String getMoTa() {
-        return this.moTa;
-    }
-
-    public void setMoTa(String moTa) {
-        this.moTa = moTa;
-    }
-
-    public Integer getTrangThai() {
-        return this.trangThai;
-    }
-
-    public void setTrangThai(Integer trangThai) {
-        this.trangThai = trangThai;
-    }
-
-    public Integer getIdThuongHieu() {
-        return this.idThuongHieu;
-    }
-
-    public void setIdThuongHieu(Integer idThuongHieu) {
-        this.idThuongHieu = idThuongHieu;
-    }
-
-    public Integer getIdXuatXu() {
-        return this.idXuatXu;
-    }
-
-    public void setIdXuatXu(Integer idXuatXu) {
-        this.idXuatXu = idXuatXu;
-    }
 }
