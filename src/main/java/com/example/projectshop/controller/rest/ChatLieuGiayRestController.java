@@ -1,13 +1,14 @@
 package com.example.projectshop.controller.rest;
 
-import com.example.projectshop.dto.chatLieuDeGiay.ChatLieuDeGiayRequest;
-import com.example.projectshop.service.IChatLieuDeGiayService;
+import com.example.projectshop.dto.chatLieuGiay.ChatLieuGiayRequest;
+import com.example.projectshop.service.IChatLieuGiayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,27 +19,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin
 @RestController
-@RequestMapping("/api/chat-lieu-de-giay")
-public class ChatLieuDeGiayRestController {
+@RequestMapping("/api/chat-lieu-giay")
+public class ChatLieuGiayRestController {
 
     @Autowired
-    private IChatLieuDeGiayService service;
+    private IChatLieuGiayService service;
 
     @Autowired
     private HttpServletRequest request;
 
-    @GetMapping(value = "/get-all")
-    public ResponseEntity<?> getALl() {
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.getAll(page,limit));
-    }
-
     @GetMapping(value = "/find-all")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping(value = "/get-all")
+    public ResponseEntity<?> getALl() {
+        String page = request.getParameter("page");
+        String limt = request.getParameter("limit");
+        return ResponseEntity.ok(service.getAll(page,limt));
     }
 
     @GetMapping(value = "/get-one/{id}")
@@ -46,18 +50,10 @@ public class ChatLieuDeGiayRestController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping(value = "/tim-kiem")
-    public ResponseEntity<?> timKiem() {
-        String timKiem = request.getParameter("timKiem");
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.timKiem(timKiem,page,limit));
-    }
-
 
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> create(
-            @RequestBody @Valid ChatLieuDeGiayRequest request,
+            @RequestBody @Valid ChatLieuGiayRequest request,
             BindingResult result) {
 //        if (result.hasErrors()) {
 //            Map<String, String> mapError = new HashMap<>();
@@ -72,7 +68,7 @@ public class ChatLieuDeGiayRestController {
     @PutMapping(value = "/update/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,
-            @RequestBody @Valid ChatLieuDeGiayRequest request,
+            @RequestBody @Valid ChatLieuGiayRequest request,
             BindingResult result) {
 //        if (result.hasErrors()) {
 //            Map<String, String> mapError = new HashMap<>();

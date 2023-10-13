@@ -7,11 +7,13 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Component
 public class ObjectMapperUtils {
     private static final ModelMapper modelMapper;
     private static final ObjectMapper OBJECT_MAPPER;
@@ -48,7 +50,7 @@ public class ObjectMapperUtils {
         }
     }
 
-    public static byte[]  readValueToString(final Object entity) {
+    public static byte[] readValueToString(final Object entity) {
         try {
             return OBJECT_MAPPER.writeValueAsBytes(entity);
         } catch (JsonProcessingException e) {

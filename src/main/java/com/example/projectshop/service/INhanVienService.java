@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface INhanVienService {
     Page<Nhanvien> getAll(Pageable pageable);
+
     Nhanvien add(Nhanvien cv);
+
     Nhanvien update(Nhanvien cv);
+
     void delete(Integer id);
 }
