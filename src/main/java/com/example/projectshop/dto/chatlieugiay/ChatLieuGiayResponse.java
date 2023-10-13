@@ -1,4 +1,4 @@
-package com.example.projectshop.dto.chatLieuGiay;
+package com.example.projectshop.dto.chatlieugiay;
 
 import lombok.Getter;
 import lombok.Setter;

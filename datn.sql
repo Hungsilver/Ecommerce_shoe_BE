@@ -1,198 +1,237 @@
-CREATE DATABASE DuAnTotNghiep;
-USE DuAnTotNghiep;
+CREATE
+DATABASE DuAnTotNghiep;
+USE
+DuAnTotNghiep;
 
-CREATE TABLE `ChatLieuDeGiay` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ten` nvarchar(50)
+CREATE TABLE `ChatLieuDeGiay`
+(
+    `id`  Integer AUTO_INCREMENT PRIMARY KEY,
+    `ten` nvarchar(50)
 );
 
-CREATE TABLE `KichCo` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `size` int
+CREATE TABLE `KichCo`
+(
+    `id`   Integer AUTO_INCREMENT PRIMARY KEY,
+    `size` int
 );
 
-CREATE TABLE `MauSac` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ten` nvarchar(50)
+CREATE TABLE `MauSac`
+(
+    `id`  Integer AUTO_INCREMENT PRIMARY KEY,
+    `ten` nvarchar(50)
 );
 
-CREATE TABLE `XuatXu` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ten` nvarchar(50)
+CREATE TABLE `XuatXu`
+(
+    `id`  Integer AUTO_INCREMENT PRIMARY KEY,
+    `ten` nvarchar(50)
 );
 
-CREATE TABLE `ThuongHieu` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ten` nvarchar(50)
+CREATE TABLE `ThuongHieu`
+(
+    `id`  Integer AUTO_INCREMENT PRIMARY KEY,
+    `ten` nvarchar(50)
 );
 
-CREATE TABLE `ChatLieuGiay` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ten` nvarchar(50)
+CREATE TABLE `ChatLieuGiay`
+(
+    `id`  Integer AUTO_INCREMENT PRIMARY KEY,
+    `ten` nvarchar(50)
 );
 
-CREATE TABLE `AnhSanPham` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `idGiaySneaker` Integer,
-  `ten` varchar(100)
+CREATE TABLE `AnhSanPham`
+(
+    `id`            Integer AUTO_INCREMENT PRIMARY KEY,
+    `idGiaySneaker` Integer,
+    `ten`           varchar(100)
 );
 
-CREATE TABLE `GiaySneaker` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ma` varchar(25),
-  `ten` nvarchar(100),
-  `anhChinh` varchar(250),
-  `moTa` nvarchar(500),
-  `trangThai` int,
-  `idThuongHieu` Integer,
-  `idXuatXu` Integer
+CREATE TABLE `GiaySneaker`
+(
+    `id`           Integer AUTO_INCREMENT PRIMARY KEY,
+    `ma`           varchar(25),
+    `ten`          nvarchar(100),
+    `anhChinh`     varchar(250),
+    `moTa`         nvarchar(500),
+    `trangThai`    int,
+    `idThuongHieu` Integer,
+    `idXuatXu`     Integer
 );
 
-CREATE TABLE `ChiTietSanPham` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `soLuong` int,
-  `giaBan` decimal(18,2),
-  `ngayTao` date,
-  `trangThai` int,
-  `idMauSac` Integer,
-  `idKichCo` Integer,
-  `idChatLieuGiay` Integer,
-  `idChatLieuDeGiay` Integer,
-  `idGiaySneaker` Integer
+CREATE TABLE `ChiTietSanPham`
+(
+    `id`               Integer AUTO_INCREMENT PRIMARY KEY,
+    `soLuong`          int,
+    `giaBan`           decimal(18, 2),
+    `ngayTao`          date,
+    `trangThai`        int,
+    `idMauSac`         Integer,
+    `idKichCo`         Integer,
+    `idChatLieuGiay`   Integer,
+    `idChatLieuDeGiay` Integer,
+    `idGiaySneaker`    Integer
 );
 
-CREATE TABLE `HoaDon` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `maHoaDon` varchar(36),
-  `tenKhachHang` nvarchar(40),
-  `soDienThoai` varchar(10),
-  `diaChi` nvarchar(250),
-  `phuongXa` nvarchar(100),
-  `quanHuyen` nvarchar(100),
-  `tinhThanh` nvarchar(100),
-  `ngayTao` date,
-  `tongTien` Decimal(18,2),
-  `phiVanChuyen` Decimal(18,2),
-  `phuongThucThanhToan` nvarchar(50),
-  `trangThai` int,
-  `idPhieuGiamGia` Integer,
-  `idKhachHang` Integer,
-  `idNhanVien` Integer
+CREATE TABLE `HoaDon`
+(
+    `id`                  Integer AUTO_INCREMENT PRIMARY KEY,
+    `maHoaDon`            varchar(36),
+    `tenKhachHang`        nvarchar(40),
+    `soDienThoai`         varchar(10),
+    `diaChi`              nvarchar(250),
+    `phuongXa`            nvarchar(100),
+    `quanHuyen`           nvarchar(100),
+    `tinhThanh`           nvarchar(100),
+    `ngayTao`             date,
+    `tongTien`            Decimal(18, 2),
+    `phiVanChuyen`        Decimal(18, 2),
+    `phuongThucThanhToan` nvarchar(50),
+    `trangThai`           int,
+    `idPhieuGiamGia`      Integer,
+    `idKhachHang`         Integer,
+    `idNhanVien`          Integer
 );
 
-CREATE TABLE `HoaDonChiTiet` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `idHoaDon` Integer,
-  `idChiTietGiay` Integer,
-  `donGia` Decimal(18,2),
-  `soLuong` int
+CREATE TABLE `HoaDonChiTiet`
+(
+    `id`            Integer AUTO_INCREMENT PRIMARY KEY,
+    `idHoaDon`      Integer,
+    `idChiTietGiay` Integer,
+    `donGia`        Decimal(18, 2),
+    `soLuong`       int
 );
 
-CREATE TABLE `GioHang` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `idKhachHang` Integer
+CREATE TABLE `GioHang`
+(
+    `id`          Integer AUTO_INCREMENT PRIMARY KEY,
+    `idKhachHang` Integer
 );
 
-CREATE TABLE `GioHangChiTiet` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `idGioHang` Integer,
-  `idChiTietSanPham` Integer,
-  `soLuong` Integer,
-  `giaBan` Decimal(18,2)
+CREATE TABLE `GioHangChiTiet`
+(
+    `id`               Integer AUTO_INCREMENT PRIMARY KEY,
+    `idGioHang`        Integer,
+    `idChiTietSanPham` Integer,
+    `soLuong`          Integer,
+    `giaBan`           Decimal(18, 2)
 );
 
-CREATE TABLE `KhachHang` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `tenKhachHang` nvarchar(40),
-  `email` varchar(50),
-  `soDienThoai` varchar(15),
-  `password` varchar(25),
-  `ngaySinh` varchar(8),
-  `diaChi` nvarchar(250),
-  `trangThai` int
+CREATE TABLE `KhachHang`
+(
+    `id`           Integer AUTO_INCREMENT PRIMARY KEY,
+    `tenKhachHang` nvarchar(40),
+    `email`        varchar(50),
+    `soDienThoai`  varchar(15),
+    `password`     varchar(25),
+    `ngaySinh`     varchar(8),
+    `diaChi`       nvarchar(250),
+    `trangThai`    int
 );
 
-CREATE TABLE `ChucVu` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `tenChucVu` nvarchar(50),
-  `trangThai` boolean
+CREATE TABLE `ChucVu`
+(
+    `id`        Integer AUTO_INCREMENT PRIMARY KEY,
+    `tenChucVu` nvarchar(50),
+    `trangThai` boolean
 );
 
-CREATE TABLE `NhanVien` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `hoTen` nvarchar(50),
-  `anh` varchar(100),
-  `email` varchar(50),
-  `matKhau` varchar(25),
-  `soDienThoai` varchar(10),
-  `gioiTinh` boolean,
-  `ngaySinh` varchar(8),
-  `trangThai` int,
-  `idChucVu` Integer
+CREATE TABLE `NhanVien`
+(
+    `id`          Integer AUTO_INCREMENT PRIMARY KEY,
+    `hoTen`       nvarchar(50),
+    `anh`         varchar(100),
+    `email`       varchar(50),
+    `matKhau`     varchar(25),
+    `soDienThoai` varchar(10),
+    `gioiTinh`    boolean,
+    `ngaySinh`    varchar(8),
+    `trangThai`   int,
+    `idChucVu`    Integer
 );
 
-CREATE TABLE `PhieuGiamGia` (
-  `id` Integer AUTO_INCREMENT PRIMARY KEY,
-  `ma` varchar(10),
-  `ten` nvarchar(300),
-  `chietKhau` Decimal(18,2),
-  `hinhThucGiamGia` boolean,
-  `thoiGianBatDau` Date,
-  `thoiGianKetThuc` Date,
-  `moTa` nvarchar(100),
-  `trangThai` int,
-  `idKhachHang` Integer
+CREATE TABLE `PhieuGiamGia`
+(
+    `id`              Integer AUTO_INCREMENT PRIMARY KEY,
+    `ma`              varchar(10),
+    `ten`             nvarchar(300),
+    `chietKhau`       Decimal(18, 2),
+    `hinhThucGiamGia` boolean,
+    `thoiGianBatDau`  Date,
+    `thoiGianKetThuc` Date,
+    `moTa`            nvarchar(100),
+    `trangThai`       int,
+    `idKhachHang`     Integer
 );
 
-CREATE TABLE `NhanVienChucVu` (
-  `idNhanVien` Integer,
-  `idChucVu` Integer
+CREATE TABLE `NhanVienChucVu`
+(
+    `idNhanVien` Integer,
+    `idChucVu`   Integer
 );
 
-ALTER TABLE `AnhSanPham` ADD FOREIGN KEY (`idGiaySneaker`) REFERENCES `GiaySneaker` (`id`);
+ALTER TABLE `AnhSanPham`
+    ADD FOREIGN KEY (`idGiaySneaker`) REFERENCES `GiaySneaker` (`id`);
 
-ALTER TABLE `GiaySneaker` ADD FOREIGN KEY (`idThuongHieu`) REFERENCES `ThuongHieu` (`id`);
+ALTER TABLE `GiaySneaker`
+    ADD FOREIGN KEY (`idThuongHieu`) REFERENCES `ThuongHieu` (`id`);
 
-ALTER TABLE `GiaySneaker` ADD FOREIGN KEY (`idXuatXu`) REFERENCES `XuatXu` (`id`);
+ALTER TABLE `GiaySneaker`
+    ADD FOREIGN KEY (`idXuatXu`) REFERENCES `XuatXu` (`id`);
 
-ALTER TABLE `ChiTietSanPham` ADD FOREIGN KEY (`idMauSac`) REFERENCES `MauSac` (`id`);
+ALTER TABLE `ChiTietSanPham`
+    ADD FOREIGN KEY (`idMauSac`) REFERENCES `MauSac` (`id`);
 
-ALTER TABLE `ChiTietSanPham` ADD FOREIGN KEY (`idKichCo`) REFERENCES `KichCo` (`id`);
+ALTER TABLE `ChiTietSanPham`
+    ADD FOREIGN KEY (`idKichCo`) REFERENCES `KichCo` (`id`);
 
-ALTER TABLE `ChiTietSanPham` ADD FOREIGN KEY (`idChatLieuGiay`) REFERENCES `ChatLieuGiay` (`id`);
+ALTER TABLE `ChiTietSanPham`
+    ADD FOREIGN KEY (`idChatLieuGiay`) REFERENCES `ChatLieuGiay` (`id`);
 
-ALTER TABLE `ChiTietSanPham` ADD FOREIGN KEY (`idChatLieuDeGiay`) REFERENCES `ChatLieuDeGiay` (`id`);
+ALTER TABLE `ChiTietSanPham`
+    ADD FOREIGN KEY (`idChatLieuDeGiay`) REFERENCES `ChatLieuDeGiay` (`id`);
 
-ALTER TABLE `ChiTietSanPham` ADD FOREIGN KEY (`idGiaySneaker`) REFERENCES `GiaySneaker` (`id`);
+ALTER TABLE `ChiTietSanPham`
+    ADD FOREIGN KEY (`idGiaySneaker`) REFERENCES `GiaySneaker` (`id`);
 
-ALTER TABLE `HoaDon` ADD FOREIGN KEY (`idPhieuGiamGia`) REFERENCES `PhieuGiamGia` (`id`);
+ALTER TABLE `HoaDon`
+    ADD FOREIGN KEY (`idPhieuGiamGia`) REFERENCES `PhieuGiamGia` (`id`);
 
-ALTER TABLE `HoaDon` ADD FOREIGN KEY (`idKhachHang`) REFERENCES `KhachHang` (`id`);
+ALTER TABLE `HoaDon`
+    ADD FOREIGN KEY (`idKhachHang`) REFERENCES `KhachHang` (`id`);
 
-ALTER TABLE `HoaDon` ADD FOREIGN KEY (`idNhanVien`) REFERENCES `NhanVien` (`id`);
+ALTER TABLE `HoaDon`
+    ADD FOREIGN KEY (`idNhanVien`) REFERENCES `NhanVien` (`id`);
 
-ALTER TABLE `HoaDonChiTiet` ADD FOREIGN KEY (`idHoaDon`) REFERENCES `HoaDon` (`id`);
+ALTER TABLE `HoaDonChiTiet`
+    ADD FOREIGN KEY (`idHoaDon`) REFERENCES `HoaDon` (`id`);
 
-ALTER TABLE `HoaDonChiTiet` ADD FOREIGN KEY (`idChiTietGiay`) REFERENCES `ChiTietSanPham` (`id`);
+ALTER TABLE `HoaDonChiTiet`
+    ADD FOREIGN KEY (`idChiTietGiay`) REFERENCES `ChiTietSanPham` (`id`);
 
-ALTER TABLE `GioHang` ADD FOREIGN KEY (`idKhachHang`) REFERENCES `KhachHang` (`id`);
+ALTER TABLE `GioHang`
+    ADD FOREIGN KEY (`idKhachHang`) REFERENCES `KhachHang` (`id`);
 
-ALTER TABLE `GioHangChiTiet` ADD FOREIGN KEY (`idGioHang`) REFERENCES `GioHang` (`id`);
+ALTER TABLE `GioHangChiTiet`
+    ADD FOREIGN KEY (`idGioHang`) REFERENCES `GioHang` (`id`);
 
-ALTER TABLE `GioHangChiTiet` ADD FOREIGN KEY (`idChiTietSanPham`) REFERENCES `ChiTietSanPham` (`id`);
+ALTER TABLE `GioHangChiTiet`
+    ADD FOREIGN KEY (`idChiTietSanPham`) REFERENCES `ChiTietSanPham` (`id`);
 
-ALTER TABLE `NhanVien` ADD FOREIGN KEY (`idChucVu`) REFERENCES `ChucVu` (`id`);
+ALTER TABLE `NhanVien`
+    ADD FOREIGN KEY (`idChucVu`) REFERENCES `ChucVu` (`id`);
 
-ALTER TABLE `PhieuGiamGia` ADD FOREIGN KEY (`idKhachHang`) REFERENCES `KhachHang` (`id`);
+ALTER TABLE `PhieuGiamGia`
+    ADD FOREIGN KEY (`idKhachHang`) REFERENCES `KhachHang` (`id`);
 
-ALTER TABLE `NhanVienChucVu` ADD FOREIGN KEY (`idNhanVien`) REFERENCES `NhanVien` (`id`);
+ALTER TABLE `NhanVienChucVu`
+    ADD FOREIGN KEY (`idNhanVien`) REFERENCES `NhanVien` (`id`);
 
-ALTER TABLE `NhanVienChucVu` ADD FOREIGN KEY (`idChucVu`) REFERENCES `ChucVu` (`id`);
+ALTER TABLE `NhanVienChucVu`
+    ADD FOREIGN KEY (`idChucVu`) REFERENCES `ChucVu` (`id`);
 
 -- Insert values
 -- Insert KichCo
-Insert into KichCo value
-	(null, "37"),
+Insert into KichCo value (null, "37"),
 	(null, "38"),
     (null, "39"),
     (null, "40"),
@@ -200,8 +239,7 @@ Insert into KichCo value
     (null, "42");
 
 -- Insert ThuongHieu
-Insert into ThuongHieu value
-	(null, "Adidas"),
+Insert into ThuongHieu value (null, "Adidas"),
     (null, "Nike"),
     (null, "Converse"),
     (null, "Puma"),
@@ -213,8 +251,7 @@ Insert into ThuongHieu value
     (null, "Gucci");
 
 -- Insert XuatXu
-Insert into XuatXu value
-	(null, "Đức"),
+Insert into XuatXu value (null, "Đức"),
     (null, "Mỹ"),
     (null, "Anh"),
     (null, "Pháp"),
@@ -224,34 +261,30 @@ Insert into XuatXu value
     (null, "Nhật Bản"),
     (null, "Hàn Quốc"),
     (null, "Hà Lan");
-    
+
 -- Insert MauSac
-Insert into MauSac value
-	(null, "Blue"),
+Insert into MauSac value (null, "Blue"),
 	(null, "Black"),
 	(null, "Pink"),
 	(null, "Yellow"),
 	(null, "purple");
-        
+
 -- Insert ChatLieuDeGiay
-Insert into ChatLieuDeGiay value
-    (null, "EVA"),
+Insert into ChatLieuDeGiay value (null, "EVA"),
     (null, "PVC"),
     (null, "PU");
-    
+
 -- Insert ChatLieuGiay
-Insert into ChatLieuGiay value
-	(null, "Da Lộn"),
+Insert into ChatLieuGiay value (null, "Da Lộn"),
     (null, "Da Nubuck"),
     (null, "Da tổng hợp"),
     (null, "Da Shellac"),
     (null, "Vải canvas"),
     (null, "Vải Jeans"),
     (null, "Vải lưới");
-    
+
 -- Insert GiaySneaker
-Insert into GiaySneaker value
-	(null,"G1","Air Jordan 1 Zoom CMFT 2",null,"Da lộn cao cấp và bọt Công thức 23 đặc trưng của Jordan Brand kết hợp với nhau để mang đến cho bạn chiếc AJ1 sang trọng hơn (và cực kỳ ấm cúng). Bạn không cần phải chơi trò hoặc khi chọn phong cách hoặc sự thoải mái với kiểu này—điều này thật tuyệt, vì bạn xứng đáng có được cả hai.",0,2,8),
+Insert into GiaySneaker value (null,"G1","Air Jordan 1 Zoom CMFT 2",null,"Da lộn cao cấp và bọt Công thức 23 đặc trưng của Jordan Brand kết hợp với nhau để mang đến cho bạn chiếc AJ1 sang trọng hơn (và cực kỳ ấm cúng). Bạn không cần phải chơi trò hoặc khi chọn phong cách hoặc sự thoải mái với kiểu này—điều này thật tuyệt, vì bạn xứng đáng có được cả hai.",0,2,8),
     (null,"G2","GIÀY LG2 SPZL",null,"LG2 lần đầu ra mắt với dòng sản phẩm SS22 SPZL và là phiên bản tiếp nối của Spezial LG nguyên bản từ mùa FW19. Đây là kiểu dáng kết hợp giữa giày bóng quần cổ điển và giày trong nhà.Mẫu Giày LG2 SPZL này có thân giày bằng vải nylon, 3 Sọc in nhung, các chi tiết phủ ngoài bằng da lộn cùng phần lỗ xỏ dây giày và viền gót giày bằng da. Mặt đến bao gồm đế giữa cắt theo khuôn bằng chất liệu EVA, phần bọc mũi giày bất đối xứng và đế ngoài bằng cao su. ",0,1,7),
     (null,"G3","Chuck 70s Low Cream White",null,"Converse 1970s là 1 trong những dòng sản phẩm bán chạy nhất của Converse.Sunflower là một trong những phối màu hot nhất của dòng Converse 1970s, rất đẹp và dễ phối đồ, đồng thời có 2 bản là cao cổ và thấp cổ",0,3,2),
     (null,"G4","Giày Puma Cell Speed Reflective In 371868-01",null,"Giày Puma Cell Speed Reflective In 371868-01 có thiết kế hiện đại và trẻ trung, phù hợp với nhiều đối tượng khác nhau, từ các vận động viên chuyên nghiệp đến những người đam mê thể thao và phong cách đường phố.",0,4,1),
@@ -263,8 +296,8 @@ Insert into GiaySneaker value
     (null,"G10","Giày Sneaker Nam Gucci Screener GG Leather Canvas 546551-9Y920-9666",null,"Đôi giày Sneaker Gucci Screener GG Leather Canvas 546551-9Y920-9666 là sự kết hợp của những ảnh hưởng khác nhau trải qua nhiều thập kỷ. Chất liệu được sử dụng là da, 2 bên sườn giày nổi bật với sọc web và logo cổ điển của Gucci tạo nên phong cách thể thao khỏe khoắn, năng động nhưng không kém phân sành điệu",0,1,5);
 
 -- Insert ChiTietSanPham
-Insert into ChiTietSanPham(id,soLuong,giaBan,ngayTao,trangThai,idMauSac,idKichCo,idChatLieuGiay,idChatLieuDeGiay,idGiaySneaker) value
-	(null,15,4259000,null,0,1,1,1,1,1),--
+Insert into ChiTietSanPham(id, soLuong, giaBan, ngayTao, trangThai, idMauSac, idKichCo, idChatLieuGiay,
+                           idChatLieuDeGiay, idGiaySneaker) value (null,15,4259000,null,0,1,1,1,1,1),--
     (null,15,4259000,null,0,2,2,2,2,1),
     (null,15,4259000,null,0,3,3,3,3,1),
     (null,15,4259000,null,0,4,4,4,1,1),
@@ -322,11 +355,11 @@ Insert into ChiTietSanPham(id,soLuong,giaBan,ngayTao,trangThai,idMauSac,idKichCo
     (null,15,8800000,null,0,2,2,2,2,10),
     (null,15,8800000,null,0,3,3,3,3,10),
     (null,15,8800000,null,0,4,4,4,1,10),
-    (null,15,8800000,null,0,5,5,5,2,10);--
-    
+    (null,15,8800000,null,0,5,5,5,2,10);
+--
+
 -- Insert ChucVu
-Insert into ChucVu value
-	(null,"Quản Lý",0),
+Insert into ChucVu value (null,"Quản Lý",0),
     (null,"Nhân Viên",0)
     
 
