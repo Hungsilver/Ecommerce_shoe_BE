@@ -1,9 +1,8 @@
 package com.example.projectshop.domain;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -13,20 +12,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "chatlieudegiay")
+@Table(name = "nguoidungchucvu")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class ChatLieuDeGiay {
+public class Nguoidungchucvu {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "id_NguoiDung")
+    private Integer idNguoiDung;
 
-    @Column(name = "ten")
-    private String ten;
+    @Column(name = "id_ChucVu")
+    private Integer idChucVu;
 
 
 }

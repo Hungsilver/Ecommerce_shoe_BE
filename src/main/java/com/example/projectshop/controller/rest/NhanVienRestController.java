@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 public class NhanVienRestController {
-    @Autowired
-    private INhanVienService nhanVienService;
-
-    @GetMapping("/nhanvien")
-    private ResponseEntity<?> getAll(Pageable pageable) {
-        return ResponseEntity.ok(nhanVienService.getAll(pageable));
-    }
+//    @Autowired
+//    private INhanVienService nhanVienService;
+//
+//    @GetMapping("/nhanvien")
+//    private ResponseEntity<?> getAll(Pageable pageable) {
+//        return ResponseEntity.ok(nhanVienService.getAll(pageable));
+//    }
 }
 

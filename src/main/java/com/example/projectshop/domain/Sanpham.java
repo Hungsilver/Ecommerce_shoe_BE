@@ -1,21 +1,28 @@
 package com.example.projectshop.domain;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "sanpham")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Sanpham {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -25,24 +32,20 @@ public class Sanpham {
     @Column(name = "ten")
     private String ten;
 
-    @Column(name = "anhChinh")
+    @Column(name = "anhchinh")
     private String anhChinh;
 
-    @Column(name = "moTa")
+    @Column(name = "mota")
     private String moTa;
 
-    @Column(name = "trangThai")
+    @Column(name = "trangthai")
     private Integer trangThai;
 
-    //    @Column(name = "idThuongHieu")
-    @ManyToOne
-    @JoinColumn(name = "idThuongHieu")
-    private Thuonghieu idThuongHieu;
-
-    @ManyToOne
-    @JoinColumn(name = "idAnhSanPham")
-    private Anhsanpham idAnhsanpham;
-//    @Column(name = "idXuatXu")
+//    @Column(name = "id_thuonghieu")
+//    private Integer idThuongHieu;
+//
+//    @Column(name = "id_xuatxu")
 //    private Integer idXuatXu;
+
 
 }

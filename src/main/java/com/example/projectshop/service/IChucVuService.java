@@ -1,7 +1,5 @@
 package com.example.projectshop.service;
 
-import com.example.projectshop.domain.Chucvu;
-
 import java.util.List;
 
 public interface IChucVuService {

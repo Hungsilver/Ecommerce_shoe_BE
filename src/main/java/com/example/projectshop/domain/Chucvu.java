@@ -1,11 +1,11 @@
 package com.example.projectshop.domain;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,30 +13,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
-
 @Entity
 @Table(name = "chucvu")
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
+@Setter
 @Builder
-public class Chucvu implements Serializable {
+public class Chucvu {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "tenchucvu")
     private String tenChucVu;
 
     @Column(name = "trangthai")
-    private Boolean trangThai;
+    private Byte trangThai;
 
-    @ManyToMany(mappedBy = "chucVus")
-    private Set<Nhanvien> nhanViens = new HashSet<>();
+
 }

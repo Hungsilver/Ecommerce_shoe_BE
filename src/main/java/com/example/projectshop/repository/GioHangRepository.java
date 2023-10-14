@@ -1,9 +1,9 @@
 package com.example.projectshop.repository;
 
-import com.example.projectshop.domain.Hoadon;
+import com.example.projectshop.domain.Giohang;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HoaDonRepository extends JpaRepository<Hoadon, Integer> {
+public interface GioHangRepository extends JpaRepository<Giohang,Integer> {
 }
