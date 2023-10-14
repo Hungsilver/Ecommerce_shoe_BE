@@ -1,4 +1,6 @@
 package com.example.projectshop.service.impl;
 
-public class SanPhamServiceImpl implements  {
+import com.example.projectshop.service.SanPhamService;
+
+public class SanPhamServiceImpl implements SanPhamService {
 }
