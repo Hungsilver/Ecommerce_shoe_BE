@@ -41,8 +41,8 @@ public class Sanpham {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "id_thuonghieu")
-//    private Integer idThuongHieu;
+    @Column(name = "id_thuonghieu")
+    private Integer idThuongHieu;
 //
 //    @Column(name = "id_xuatxu")
 //    private Integer idXuatXu;
