@@ -1,11 +1,15 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +27,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @Builder
-public class Chitietsanpham {
+public class ChiTietSanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -41,20 +45,30 @@ public class Chitietsanpham {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "id_mausac")
-//    private Integer idMauSac;
-//
-//    @Column(name = "id_kichco")
-//    private Integer idKichCo;
-//
-//    @Column(name = "id_chatlieugiay")
-//    private Integer idChatLieuGiay;
-//
-//    @Column(name = "id_chatlieudegiay")
-//    private Integer idChatLieuDeGiay;
-//
-//    @Column(name = "id_sanpham")
-//    private Integer idSanPham;
+    @ManyToOne
+    @JoinColumn(name = "id_mausac")
+    private Mausac mauSac;
+
+    @ManyToOne
+    @JoinColumn(name = "id_kichco")
+    private Kichco kichCo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_chatlieugiay")
+    private ChatLieuGiay chatLieuGiay;
+
+    @ManyToOne
+    @JoinColumn(name = "id_chatlieudegiay")
+    private ChatLieuDeGiay chatLieuDeGiay;
+
+//    @JsonIgnore
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_sanpham")
+    private SanPham sanPham;
+
+//    @OneToMany(mappedBy = "chiTietSanPham")
+//    private List<AnhSanPham> list;
 
 
 }
