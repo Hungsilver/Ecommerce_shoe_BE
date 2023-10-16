@@ -31,6 +31,7 @@ public class ChatLieuGiayRestController {
 
     @GetMapping(value = "/find-all")
     public ResponseEntity<?> findAll() {
+
         return ResponseEntity.ok(service.findAll());
     }
 
