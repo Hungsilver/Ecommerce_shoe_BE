@@ -15,5 +15,7 @@ public interface ChatLieuDeGiayRepository extends JpaRepository<ChatLieuDeGiay, 
     @Query("select c from ChatLieuDeGiay c where c.ten like %:input%")
     Page<ChatLieuDeGiay> timKiem(@Param("input") String input, Pageable pageable);
 
-    Page<ChatLieuDeGiay>  findChatLieuDeGiaysByTen(@Param("name") String name,Pageable pageable);
+    @Query(value = "select * from chatlieudegiay  limit 1",nativeQuery = true)
+    ChatLieuDeGiay getTop1();
+
 }

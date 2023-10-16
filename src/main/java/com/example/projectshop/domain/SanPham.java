@@ -1,17 +1,24 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "sanpham")
@@ -20,7 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Sanpham {
+public class SanPham {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -41,11 +48,18 @@ public class Sanpham {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "id_thuonghieu")
-//    private Integer idThuongHieu;
-//
-//    @Column(name = "id_xuatxu")
-//    private Integer idXuatXu;
+    @ManyToOne
+    @JoinColumn(name = "id_thuonghieu")
+    private Thuonghieu thuongHieu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_xuatxu")
+    private Xuatxu xuatXu;
+
+//    @JsonIgnore
+    @JsonManagedReference
+    @OneToMany(mappedBy = "sanPham")
+    private List<ChiTietSanPham> listChiTietSanPham = new ArrayList<>();
 
 
 }

@@ -28,6 +28,6 @@ public class Thuonghieu {
     private String ten;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "idThuongHieu")
-    private List<Sanpham> list=new ArrayList<>();
+    @OneToMany(mappedBy = "thuongHieu")
+    private List<SanPham> list=new ArrayList<>();
 }
