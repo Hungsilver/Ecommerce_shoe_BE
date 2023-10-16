@@ -1,11 +1,14 @@
 package com.example.projectshop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,5 +25,9 @@ public class Kichco {
 
     @Column(name = "size")
     private Integer size;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "kichCo")
+    private List<ChiTietSanPham> list;
 
 }
