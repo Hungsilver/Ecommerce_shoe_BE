@@ -1,6 +1,6 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.Mausac;
+import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.dto.mausac.MauSacRequest;
 import com.example.projectshop.dto.mausac.MauSacResponse;
 import com.example.projectshop.repository.MauSacRepository;
@@ -33,7 +33,7 @@ public class MauSacSeviceImpl implements IMauSacService {
 
     @Override
     public MauSacResponse create(MauSacRequest mauSacRequest) {
-        Mausac entity = ObjectMapperUtils.map(mauSacRequest, Mausac.class);
+        MauSac entity = ObjectMapperUtils.map(mauSacRequest, MauSac.class);
         entity.setTen(mauSacRequest.getTen());
         entity = mauSacRepository.save(entity);
         MauSacResponse response = ObjectMapperUtils.map(entity, MauSacResponse.class);
@@ -41,8 +41,8 @@ public class MauSacSeviceImpl implements IMauSacService {
 
     @Override
     public MauSacResponse update(MauSacRequest mauSacRequest, Integer id) {
-        Mausac eDb = mauSacRepository.findById(id).get();
-        Mausac entity = ObjectMapperUtils.map(mauSacRequest, Mausac.class);
+        MauSac eDb = mauSacRepository.findById(id).get();
+        MauSac entity = ObjectMapperUtils.map(mauSacRequest, MauSac.class);
         entity.setId(eDb.getId());
         entity.setTen(mauSacRequest.getTen());
         entity = mauSacRepository.save(entity);

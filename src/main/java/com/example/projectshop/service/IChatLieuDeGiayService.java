@@ -11,6 +11,7 @@ import java.util.List;
 public interface IChatLieuDeGiayService {
 
     List<ChatLieuDeGiayResponse> findAll();
+
     Page<ChatLieuDeGiayResponse> getAll(String pageParam,String limitParam);
 
     ChatLieuDeGiayResponse findById(Integer id);

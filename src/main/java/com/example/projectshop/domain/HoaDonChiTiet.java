@@ -13,21 +13,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "giohang")
+@Table(name = "hoadonchitiet")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Giohang {
+public class HoaDonChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_nguoidung")
-    private Integer idNguoiDung;
+    @Column(name = "id_hoadon")
+    private Integer idHoaDon;
+
+    @Column(name = "id_chitietsanpham")
+    private Integer idChiTietSanPham;
+
+    @Column(name = "dongia")
+    private BigDecimal donGia;
+
+    @Column(name = "soluong")
+    private Integer soLuong;
 
 
 }

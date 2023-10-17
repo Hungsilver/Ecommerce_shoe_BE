@@ -14,23 +14,44 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "chucvu")
+@Table(name = "nhanvien")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Chucvu {
+public class NhanVien {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "tenchucvu")
-    private String tenChucVu;
+    @Column(name = "hoten")
+    private String hoTen;
+
+    @Column(name = "anhdaidien")
+    private String anhDaiDien;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "matkhau")
+    private String matKhau;
+
+    @Column(name = "sodienthoai")
+    private String soDienThoai;
+
+    @Column(name = "gioitinh")
+    private Byte gioiTinh;
+
+    @Column(name = "ngaysinh")
+    private String ngaySinh;
+
+    @Column(name = "diachi")
+    private String diaChi;
 
     @Column(name = "trangthai")
-    private Byte trangThai;
+    private Integer trangThai;
 
 
 }

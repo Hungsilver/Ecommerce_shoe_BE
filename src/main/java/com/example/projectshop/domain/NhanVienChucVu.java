@@ -12,19 +12,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "nguoidungchucvu")
+@Table(name = "nhanvienchucvu")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Nguoidungchucvu {
+public class NhanVienChucVu {
     @Id
-    @Column(name = "id_NguoiDung")
-    private Integer idNguoiDung;
+    @Column(name = "id_nhanVien")
+    private Integer idNhanVien;
 
     @Column(name = "id_ChucVu")
     private Integer idChucVu;
-
 
 }

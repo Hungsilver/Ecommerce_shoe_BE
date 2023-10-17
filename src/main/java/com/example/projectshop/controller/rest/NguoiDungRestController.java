@@ -16,10 +16,10 @@ public class NguoiDungRestController {
     @Autowired
     private INguoiDungService service;
 
-    @GetMapping("/hien-thi")
-    public ResponseEntity<?> load() {
-        return ResponseEntity.ok(service.getall());
-    }
+//    @GetMapping("/hien-thi")
+//    public ResponseEntity<?> load() {
+//        return ResponseEntity.ok(service.getall());
+//    }
 
 
 }

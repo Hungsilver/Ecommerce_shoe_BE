@@ -1,6 +1,6 @@
 package com.example.projectshop.repository;
 
-import com.example.projectshop.domain.ChatLieuDeGiay;
+import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Repository
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
@@ -53,6 +52,16 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
     @Query(value = "select * from sanpham  limit 1", nativeQuery = true)
     SanPham getTop1();
+
+    @Query(value = "select c.id,c.soluong,c.giaban,c.ngaytao,c.trangthai,c.id_mausac,c.id_kichco,c.id_chatlieugiay,c.id_chatlieudegiay,c.id_sanpham from sanpham c \n" +
+            "inner join thuonghieu t on t.id = c.id_thuonghieu\n" +
+            "inner join xuatxu x on x.id = c.id_xuatxu\n" +
+            "where c.ma like %:timKiem% \n" +
+            "or c.ten like %:timKiem% \n" +
+            "or t.ten like %:timKiem% \n" +
+            "or x.ten like %:timKiem% \n",
+            nativeQuery = true)
+    Page<SanPham> timKiem(@Param("timKiem")String timKiem, Pageable pageable);
 
 
 }

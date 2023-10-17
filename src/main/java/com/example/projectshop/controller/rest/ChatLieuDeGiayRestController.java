@@ -46,7 +46,7 @@ public class ChatLieuDeGiayRestController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @GetMapping(value = "/tim-kiem")
+    @GetMapping(value = "/search")
     public ResponseEntity<?> timKiem() {
         String timKiem = request.getParameter("timKiem");
         String page = request.getParameter("page");

@@ -3,8 +3,8 @@ package com.example.projectshop.dto.chitietsanpham;
 import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.domain.ChatLieuGiay;
-import com.example.projectshop.domain.Kichco;
-import com.example.projectshop.domain.Mausac;
+import com.example.projectshop.domain.KichCo;
+import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.SanPham;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,9 +26,9 @@ public class ChiTietSanPhamRequest {
 
     private Integer trangThai;
 
-    private Mausac mausac;
+    private MauSac mausac;
 
-    private Kichco kichco;
+    private KichCo kichco;
 
     private ChatLieuGiay chatLieuGiay;
 
