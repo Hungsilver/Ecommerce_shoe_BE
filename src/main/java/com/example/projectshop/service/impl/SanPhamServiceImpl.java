@@ -1,7 +1,10 @@
 package com.example.projectshop.service.impl;
 
 
+import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
+import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
+import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.SanPhamRepository;
 import com.example.projectshop.service.ISanPhamService;
@@ -82,5 +85,48 @@ public class SanPhamServiceImpl implements ISanPhamService {
     @Override
     public SanPham getOne(Integer id) {
         return sanPhamrepo.findById(id).get();
+    }
+
+    @Override
+    public SanPham create(SanPhamRequest sanPhamRequest) {
+        SanPham entity = new SanPham();
+        entity.setId(null);
+        entity.setMa(sanPhamRequest.getMa());
+        entity.setTen(sanPhamRequest.getTen());
+        entity.setAnhChinh(sanPhamRequest.getAnhChinh());
+        entity.setMoTa(sanPhamRequest.getMoTa());
+        entity.setTrangThai(sanPhamRequest.getTrangThai());
+        entity.setThuongHieu(sanPhamRequest.getThuonghieu());
+        entity.setXuatXu(sanPhamRequest.getXuatxu());
+        SanPham entityRs = sanPhamrepo.save(entity);
+        return entityRs;
+    }
+
+    @Override
+    public SanPham update(Integer id, SanPhamRequest sanPhamRequest) {
+        SanPham entity = new SanPham();
+        entity.setId(id);
+        entity.setMa(sanPhamRequest.getMa());
+        entity.setTen(sanPhamRequest.getTen());
+        entity.setAnhChinh(sanPhamRequest.getAnhChinh());
+        entity.setMoTa(sanPhamRequest.getMoTa());
+        entity.setTrangThai(sanPhamRequest.getTrangThai());
+        entity.setThuongHieu(sanPhamRequest.getThuonghieu());
+        entity.setXuatXu(sanPhamRequest.getXuatxu());
+        SanPham entityRs = sanPhamrepo.save(entity);
+        return entityRs;
+    }
+
+    @Override
+    public void delete(Integer id) {
+sanPhamrepo.deleteById(id);
+    }
+
+    @Override
+    public Page<SanPham> timKiem(String timKiem, String pageParam, String limitParam) {
+        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
+        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
+        Pageable pageable = PageRequest.of(page, limit);
+        return sanPhamrepo.timKiem(timKiem,pageable);
     }
 }

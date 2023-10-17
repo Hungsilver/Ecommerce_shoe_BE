@@ -12,17 +12,17 @@ public class NhanVienServiceImpl implements INhanVienService {
 //    private NhanVienRepository nvRepository;
 //
 //    @Override
-//    public Page<Nhanvien> getAll(Pageable pageable) {
+//    public Page<NhanVien> getAll(Pageable pageable) {
 //        return nvRepository.findAll(pageable);
 //    }
 //
 //    @Override
-//    public Nhanvien add(Nhanvien cv) {
+//    public NhanVien add(NhanVien cv) {
 //        return null;
 //    }
 //
 //    @Override
-//    public Nhanvien update(Nhanvien cv) {
+//    public NhanVien update(NhanVien cv) {
 //        return null;
 //    }
 //

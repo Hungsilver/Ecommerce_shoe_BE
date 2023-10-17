@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "mausac")
-public class Mausac {
+public class MauSac {
     @Id
     @Column(name = "id")
     private Integer id;

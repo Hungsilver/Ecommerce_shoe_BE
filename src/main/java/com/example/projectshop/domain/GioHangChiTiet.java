@@ -16,29 +16,29 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "hoadonchitiet")
+@Table(name = "giohangchitiet")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Hoadonchitiet {
+public class GioHangChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_hoadon")
-    private Integer idHoaDon;
+    @Column(name = "id_giohang")
+    private Integer idGioHang;
 
     @Column(name = "id_chitietsanpham")
     private Integer idChiTietSanPham;
 
-    @Column(name = "dongia")
-    private BigDecimal donGia;
-
     @Column(name = "soluong")
     private Integer soLuong;
+
+    @Column(name = "giaban")
+    private BigDecimal giaBan;
 
 
 }

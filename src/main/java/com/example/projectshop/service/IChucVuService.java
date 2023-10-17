@@ -3,11 +3,11 @@ package com.example.projectshop.service;
 import java.util.List;
 
 public interface IChucVuService {
-//    List<Chucvu> getAll();
+//    List<ChucVu> getAll();
 //
-//    Chucvu add(Chucvu cv);
+//    ChucVu add(ChucVu cv);
 //
-//    Chucvu update(Chucvu cv);
+//    ChucVu update(ChucVu cv);
 //
 //    void delete(Integer id);
 }

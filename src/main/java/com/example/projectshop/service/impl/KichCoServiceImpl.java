@@ -1,9 +1,8 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.Kichco;
+import com.example.projectshop.domain.KichCo;
 import com.example.projectshop.dto.kichco.KichCoRequest;
 import com.example.projectshop.dto.kichco.KichCoResponse;
-import com.example.projectshop.dto.mausac.MauSacResponse;
 import com.example.projectshop.repository.KichCoRepository;
 import com.example.projectshop.service.IKichCoService;
 import com.example.projectshop.service.ObjectMapperUtils;
@@ -33,7 +32,7 @@ public class KichCoServiceImpl implements IKichCoService {
 
     @Override
     public KichCoResponse create(KichCoRequest kichCoRequest) {
-        Kichco entity = ObjectMapperUtils.map(kichCoRequest, Kichco.class);
+        KichCo entity = ObjectMapperUtils.map(kichCoRequest, KichCo.class);
         entity.setSize(kichCoRequest.getSize());
         entity = kichCoRepository.save(entity);
         KichCoResponse response = ObjectMapperUtils.map(entity, KichCoResponse.class);
@@ -42,8 +41,8 @@ public class KichCoServiceImpl implements IKichCoService {
 
     @Override
     public KichCoResponse update(KichCoRequest kichCoRequest, Integer id) {
-        Kichco eDb = kichCoRepository.findById(id).get();
-        Kichco entity = ObjectMapperUtils.map(kichCoRequest, Kichco.class);
+        KichCo eDb = kichCoRepository.findById(id).get();
+        KichCo entity = ObjectMapperUtils.map(kichCoRequest, KichCo.class);
         entity.setId(eDb.getId());
         entity.setSize(kichCoRequest.getSize());
         entity = kichCoRepository.save(entity);

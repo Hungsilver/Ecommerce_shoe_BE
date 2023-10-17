@@ -2,7 +2,6 @@ package com.example.projectshop.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,11 +46,11 @@ public class ChiTietSanPham {
 
     @ManyToOne
     @JoinColumn(name = "id_mausac")
-    private Mausac mauSac;
+    private MauSac mauSac;
 
     @ManyToOne
     @JoinColumn(name = "id_kichco")
-    private Kichco kichCo;
+    private KichCo kichCo;
 
     @ManyToOne
     @JoinColumn(name = "id_chatlieugiay")
