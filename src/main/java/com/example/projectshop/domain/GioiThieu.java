@@ -12,39 +12,49 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import java.sql.Date;
 
 @Entity
-@Table(name = "diachi")
+@Table(name = "gioithieu")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class DiaChi {
-
+public class GioiThieu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "diachi")
-    private String diaChi;
+    @Column(name = "tengioithieu")
+    private String tenGioiThieu;
 
-    @Column(name = "phuongxa")
-    private String phuongXa;
+    @Column(name = "noidung")
+    private String noiDung;
 
-    @Column(name = "quanhuyen")
-    private String quanHuyen;
+    @Column(name = "logo")
+    private String logo;
 
-    @Column(name = "tinhthanh")
-    private String tinhThanh;
+    @Column(name = "banner")
+    private String banner;
+
+    @Column(name = "mata")
+    private String moTa;
+
+    @Column(name = "ngaytao")
+    private Date ngayTao;
+
+    @Column(name = "ngayxoa")
+    private Date ngayXoa;
 
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "id_khachHang")
-//    private Integer idKhachHang;
+    @Column(name = "id_nhanVien")
+    private Integer idNhanVien;
 
 
 }
