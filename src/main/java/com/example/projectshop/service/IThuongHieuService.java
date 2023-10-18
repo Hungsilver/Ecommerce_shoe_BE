@@ -14,7 +14,8 @@ public interface IThuongHieuService {
 
     ThuongHieuResponse create(ThuongHieuRequest thuongHieuRequest);
 
-    ThuongHieuResponse update(ThuongHieuRequest thuongHieuRequest, Integer id);
+    //    ThuongHieuResponse update(ThuongHieuRequest thuongHieuRequest, Integer id);
+    ThuongHieuResponse update(ThuongHieuRequest thuongHieuRequest);
 
     void delete(Integer id);
 

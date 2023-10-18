@@ -1,5 +1,6 @@
 package com.example.projectshop.service.impl;
 
+import com.example.projectshop.domain.Thuonghieu;
 import com.example.projectshop.dto.mausac.MauSacResponse;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuResponse;
@@ -22,27 +23,42 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
 
     @Override
     public List<ThuongHieuResponse> getAll() {
-        return null;
+        List<Thuonghieu> thu = thuongHieuRepository.findAll();
+        // ánh xạ từ thuonghieu sang thuonghieuReponse bằng mapAll
+        List<ThuongHieuResponse> reponse = ObjectMapperUtils.mapAll(thu, ThuongHieuResponse.class);
+        return reponse;
     }
 
     @Override
     public ThuongHieuResponse findById(Integer id) {
-        return null;
+        Thuonghieu thchitiet = thuongHieuRepository.findById(id).orElse(null);
+        ThuongHieuResponse response = ObjectMapperUtils.map(thchitiet, ThuongHieuResponse.class);
+
+        return response;
     }
 
     @Override
     public ThuongHieuResponse create(ThuongHieuRequest thuongHieuRequest) {
-        return null;
+        Thuonghieu th = ObjectMapperUtils.map(thuongHieuRequest, Thuonghieu.class);
+        th.setTen(thuongHieuRequest.getTen());
+        thuongHieuRepository.save(th);
+        ThuongHieuResponse response = ObjectMapperUtils.map(th, ThuongHieuResponse.class);
+        return response;
     }
 
     @Override
-    public ThuongHieuResponse update(ThuongHieuRequest thuongHieuRequest, Integer id) {
-        return null;
+    public ThuongHieuResponse update(ThuongHieuRequest thuongHieuRequest) {
+        Thuonghieu th = ObjectMapperUtils.map(thuongHieuRequest, Thuonghieu.class);
+        th.setTen(thuongHieuRequest.getTen());
+        th.setId(thuongHieuRequest.getId());
+        thuongHieuRepository.save(th);
+        ThuongHieuResponse response = ObjectMapperUtils.map(th, ThuongHieuResponse.class);
+        return response;
     }
 
     @Override
     public void delete(Integer id) {
-
+        thuongHieuRepository.deleteById(id);
     }
 
     @Override
