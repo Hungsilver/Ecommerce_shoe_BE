@@ -54,7 +54,7 @@ public class GioiThieu {
     private Integer trangThai;
 
     @Column(name = "id_nhanVien")
-    private Integer idNhanVien;
+    private NhanVien idNhanVien;
 
 
 }

@@ -27,18 +27,18 @@ public class ThuongHieuRestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ThuongHieuResponse> create(ThuongHieuRequest thuongHieuRequest) {
+    public ResponseEntity<ThuongHieuResponse> create(@RequestBody ThuongHieuRequest thuongHieuRequest) {
         ThuongHieuResponse response = service.create(thuongHieuRequest);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/delete/{id}")
+    @DeleteMapping ("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ThuongHieuResponse> update(ThuongHieuRequest thuongHieuRequest){
+    public ResponseEntity<ThuongHieuResponse> update(@RequestBody ThuongHieuRequest thuongHieuRequest){
         ThuongHieuResponse response = service.update(thuongHieuRequest);
         return ResponseEntity.ok(response);
     }

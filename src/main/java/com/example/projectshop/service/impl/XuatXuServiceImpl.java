@@ -1,6 +1,7 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.dto.mausac.MauSacResponse;
+
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.dto.xuatxu.XuatXuResponse;
 import com.example.projectshop.repository.XuatXuRepository;
@@ -13,8 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
 
+@Service
 public class XuatXuServiceImpl implements IXuatXuService {
 
     @Autowired
@@ -22,28 +23,41 @@ public class XuatXuServiceImpl implements IXuatXuService {
 
     @Override
     public List<XuatXuResponse> getAll() {
-        return null;
+        List<Xuatxu> listxuatxu = xuatXuRepository.findAll();
+        List<XuatXuResponse> listresponse = ObjectMapperUtils.mapAll(listxuatxu, XuatXuResponse.class);
+
+        return listresponse;
     }
 
     @Override
     public XuatXuResponse findById(Integer id) {
-
-        return null;
+        XuatXuResponse response = ObjectMapperUtils.map(xuatXuRepository.findById(id), XuatXuResponse.class);
+        return response;
     }
 
     @Override
     public XuatXuResponse create(XuatXuRequest xuatXuRequest) {
-        return null;
+        Xuatxu vb = ObjectMapperUtils.map(xuatXuRequest, Xuatxu.class);
+        vb.setTen(xuatXuRequest.getTen());
+        xuatXuRepository.save(vb);
+        XuatXuResponse response = ObjectMapperUtils.map(vb, XuatXuResponse.class);
+        return response;
     }
 
     @Override
     public XuatXuResponse update(XuatXuRequest xuatXuRequest, Integer id) {
-        return null;
+        Xuatxu vb = ObjectMapperUtils.map(xuatXuRequest, Xuatxu.class);
+        vb.setTen(xuatXuRequest.getTen());
+        vb.setId(id);
+        xuatXuRepository.save(vb);
+        XuatXuResponse response = ObjectMapperUtils.map(vb, XuatXuResponse.class);
+        return response;
+
     }
 
     @Override
     public void delete(Integer id) {
-
+        xuatXuRepository.deleteById(id);
     }
 
     @Override
@@ -52,5 +66,6 @@ public class XuatXuServiceImpl implements IXuatXuService {
         Integer limit = limitParam == null ? 3 : Integer.valueOf(limitParam);
         Pageable pageable = PageRequest.of(page, limit);
         Page<XuatXuResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(xuatXuRepository.findAll(pageable), XuatXuResponse.class);
-        return list;    }
+        return list;
+    }
 }
