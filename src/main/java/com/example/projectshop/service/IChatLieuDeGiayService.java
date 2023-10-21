@@ -14,7 +14,7 @@ public interface IChatLieuDeGiayService {
 
     Page<ChatLieuDeGiayResponse> getAll(String pageParam,String limitParam);
 
-    ChatLieuDeGiayResponse findById(Integer id);
+    ChatLieuDeGiay findById(Integer id);
 
     Page<ChatLieuDeGiay> timKiem(String input, String page, String limit);
 

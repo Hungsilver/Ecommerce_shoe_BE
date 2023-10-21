@@ -3,9 +3,11 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChatLieuDeGiayRepository;
+import com.example.projectshop.repository.SanPhamRepository;
 import com.example.projectshop.service.ISanPhamService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
@@ -27,8 +30,6 @@ public class SanPhamRestController {
     @Autowired
     private ISanPhamService service;
 
-    @Autowired
-    private ChatLieuDeGiayRepository chatLieuDeGiayRepository;
 
     @GetMapping("/find-all")
     public ResponseEntity<?> findAll() {
@@ -36,18 +37,19 @@ public class SanPhamRestController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getAll() {
-        System.out.println(chatLieuDeGiayRepository.getTop1().getId());
-        String priceMin = request.getParameter("pricemin");
-        String priceMax = request.getParameter("pricemax");
-        String thuongHieu = request.getParameter("thuonghieu");
-        String xuatXu = request.getParameter("xuatxu");
-        String mauSac = request.getParameter("mausac");
-        String chatLieuGiay = request.getParameter("chatlieugiay");
-        String chatLieuDeGiay = request.getParameter("chatlieudegiay");
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.getAllByParam(priceMin, priceMax, thuongHieu, xuatXu, mauSac, chatLieuGiay, chatLieuDeGiay, page, limit));
+    public ResponseEntity<?> getAll(
+            @RequestParam(value = "pricemin",required = false) String pricemin,
+            @RequestParam(value = "pricemax",required = false) String pricemax,
+            @RequestParam(value = "thuonghieu",required = false) String thuonghieu,
+            @RequestParam(value = "xuatxu",required = false) String xuatxu,
+            @RequestParam(value = "mausac",required = false) String mausac,
+            @RequestParam(value = "chatlieugiay",required = false) String chatlieugiay,
+            @RequestParam(value = "chatlieudegiay",required = false) String chatlieudegiay,
+            @RequestParam(value = "page",required = false) Integer page,
+            @RequestParam(value = "pageSize",required = false) Integer pageSize
+    ){
+        System.out.println(thuonghieu);
+        return ResponseEntity.ok(service.getAllByParam(pricemin,pricemax,thuonghieu,xuatxu,mausac,chatlieugiay,chatlieudegiay, page,pageSize));
     }
 
     @GetMapping("/get-one/{id}")

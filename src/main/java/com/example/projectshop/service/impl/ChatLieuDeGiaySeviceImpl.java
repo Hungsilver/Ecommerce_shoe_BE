@@ -3,7 +3,9 @@ package com.example.projectshop.service.impl;
 import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
 import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayResponse;
+import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
 import com.example.projectshop.repository.ChatLieuDeGiayRepository;
+import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.service.IChatLieuDeGiayService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import java.util.List;
 public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     @Autowired
     private ChatLieuDeGiayRepository chatLieuDeGiayRepository;
+
+    @Autowired
+    private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
     @Override
     public List<ChatLieuDeGiayResponse> findAll() {
@@ -34,8 +39,8 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     }
 
     @Override
-    public ChatLieuDeGiayResponse findById(Integer id) {
-        return ObjectMapperUtils.map(chatLieuDeGiayRepository.findById(id).get(), ChatLieuDeGiayResponse.class);
+    public ChatLieuDeGiay findById(Integer id) {
+        return ObjectMapperUtils.map(chatLieuDeGiayRepository.findById(id).get(), ChatLieuDeGiay.class);
     }
 
     @Override
@@ -68,6 +73,10 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
 
     @Override
     public void delete(Integer id) {
-        chatLieuDeGiayRepository.deleteById(id);
+        ChatLieuDeGiayRequest chatLieuDeGiay = new ChatLieuDeGiayRequest();
+        chatLieuDeGiay.setId(id);
+        chatLieuDeGiay.setTen(this.findById(id).getTen());
+        chatLieuDeGiay.setTrangThai(2);
+        this.update(chatLieuDeGiay,id);
     }
 }

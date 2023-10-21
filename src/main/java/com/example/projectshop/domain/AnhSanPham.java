@@ -1,5 +1,6 @@
 package com.example.projectshop.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,10 +21,12 @@ public class AnhSanPham {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_sanpham")
-    private Integer idSanPham;
-
     @Column(name = "ten")
     private String ten;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "id_chitietsanpham")
+    private ChiTietSanPham chiTietSanPham;
 
 }

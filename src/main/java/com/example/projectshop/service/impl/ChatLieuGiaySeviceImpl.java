@@ -1,9 +1,12 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChatLieuGiay;
+import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayResponse;
 import com.example.projectshop.repository.ChatLieuGiayRepository;
+import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.repository.HoaDonChiTietRepository;
 import com.example.projectshop.service.IChatLieuGiayService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,11 @@ import java.util.List;
 public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
     @Autowired
     private ChatLieuGiayRepository chatLieuGiayRepository;
+
+    @Autowired
+    private ChiTietSanPhamRepository chiTietSanPhamRepo;
+
+
 
 
     @Override
@@ -62,6 +70,10 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
 
     @Override
     public void delete(Integer id) {
-        chatLieuGiayRepository.deleteById(id);
+        ChatLieuGiayRequest chatLieuGiayRequest = new ChatLieuGiayRequest();
+        chatLieuGiayRequest.setId(id);
+        chatLieuGiayRequest.setTen(this.findById(id).getTen());
+        chatLieuGiayRequest.setTrangThai(2);
+        this.update(chatLieuGiayRequest,id);
     }
 }

@@ -36,6 +36,11 @@ public class DiaChiServiceImpl implements IDiaChiService {
     }
 
     @Override
+    public DiaChiResponse getOne(Integer id) {
+        return ObjectMapperUtils.map(diaChiRepo.findById(id).get(),DiaChiResponse.class);
+    }
+
+    @Override
     public DiaChiResponse create(DiaChiRequest diaChiRequest) {
         DiaChi entity = new DiaChi();
         entity.setId(null);
@@ -62,8 +67,7 @@ public class DiaChiServiceImpl implements IDiaChiService {
     }
 
     @Override
-    public void delete(Integer id) {
-        diaChiRepo.deleteById(id);
+    public void delete(Integer id) {diaChiRepo.deleteById(id);
     }
 
 }

@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,17 +30,19 @@ public class HoaDonChiTiet {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_hoadon")
-    private Integer idHoaDon;
-
-    @Column(name = "id_chitietsanpham")
-    private Integer idChiTietSanPham;
-
     @Column(name = "dongia")
     private BigDecimal donGia;
 
     @Column(name = "soluong")
     private Integer soLuong;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_hoadon")
+    private HoaDon hoaDon;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_chitietsanpham")
+    private ChiTietSanPham chiTietSanPham;
 
 
 }

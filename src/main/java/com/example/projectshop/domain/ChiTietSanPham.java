@@ -2,6 +2,8 @@ package com.example.projectshop.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +21,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "chitietsanpham")
@@ -66,8 +70,17 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
 
-//    @OneToMany(mappedBy = "chiTietSanPham")
-//    private List<AnhSanPham> list;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "chiTietSanPham")
+    private List<AnhSanPham> listAnhSanPham;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chiTietSanPham")
+    private List<GioHangChiTiet> listGioHangChiTiet;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chiTietSanPham")
+    private List<HoaDonChiTiet> listHoaDonChiTiet;
 
 
 }
