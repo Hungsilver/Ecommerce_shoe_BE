@@ -1,6 +1,7 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
+import com.example.projectshop.repository.ChatLieuGiayRepository;
 import com.example.projectshop.service.IChatLieuGiayService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -16,7 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -29,17 +36,29 @@ public class ChatLieuGiayRestController {
     @Autowired
     private HttpServletRequest request;
 
-    @GetMapping(value = "/find-all")
-    public ResponseEntity<?> findAll() {
+    @Autowired
+    ChatLieuGiayRepository chatLieuGiayRepo;
 
-        return ResponseEntity.ok(service.findAll());
+    @GetMapping(value = "/find-all")
+    public ResponseEntity<?> findAll(@RequestParam(value = "id",required = false)String id) {
+        String[] idArray = id.split("-");
+        for (String ids: idArray){
+            System.out.println(ids);
+        }
+//        List<String > list = new ArrayList<>();
+//        list.add("abc");
+//        list.add("adf");
+//        System.out.println(list);
+
+        return ResponseEntity.ok(chatLieuGiayRepo.test(1, idArray));
+
     }
 
     @GetMapping(value = "/get-all")
     public ResponseEntity<?> getALl() {
         String page = request.getParameter("page");
         String limt = request.getParameter("limit");
-        return ResponseEntity.ok(service.getAll(page,limt));
+        return ResponseEntity.ok(service.getAll(page, limt));
     }
 
     @GetMapping(value = "/get-one/{id}")

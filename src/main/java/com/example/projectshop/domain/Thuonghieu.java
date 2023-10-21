@@ -27,6 +27,9 @@ public class Thuonghieu {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "trangthai")
+    private Integer trangThai;
+
     @JsonIgnore
     @OneToMany(mappedBy = "thuongHieu")
     private List<SanPham> list=new ArrayList<>();

@@ -1,17 +1,22 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "khachhang")
@@ -43,6 +48,22 @@ public class KhachHang {
 
     @Column(name = "trangthai")
     private Integer trangThai;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "khachHang")
+    private List<DiaChi> listDiaChi = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "khachHang")
+    private List<PhieuGiamGia> listPhieuGiamGia = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "khachHang")
+    private List<GioHang> listGioHang = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "khachHang")
+    private List<HoaDon> listHoaDon = new ArrayList<>();
 
 
 }

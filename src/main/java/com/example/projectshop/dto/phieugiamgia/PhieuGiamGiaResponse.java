@@ -1,9 +1,12 @@
 package com.example.projectshop.dto.phieugiamgia;
 
+import com.example.projectshop.domain.HoaDon;
+import com.example.projectshop.domain.KhachHang;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,5 +29,7 @@ public class PhieuGiamGiaResponse {
 
     private Integer trangThai;
 
-//    private Integer idKhachHang;
+    private KhachHang khachHang;
+
+    private List<HoaDon> listHoaDon;
 }

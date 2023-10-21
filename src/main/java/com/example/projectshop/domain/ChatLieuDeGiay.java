@@ -32,7 +32,10 @@ public class ChatLieuDeGiay {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "trangthai")
+    private Integer trangThai;
+
     @JsonIgnore
     @OneToMany(mappedBy = "chatLieuDeGiay")
-    private List<ChiTietSanPham> list;
+    private List<ChiTietSanPham> listChiTietSanPham;
 }

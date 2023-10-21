@@ -1,15 +1,21 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "hoadon")
@@ -55,11 +61,22 @@ public class HoaDon {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "id_phieugiamgia")
-//    private Integer idPhieuGiamGia;
-//
-//    @Column(name = "id_nguoidung")
-//    private Integer idNguoiDung;
+    @ManyToOne
+    @JoinColumn(name = "id_phieugiamgia")
+    private PhieuGiamGia phieuGiamGia;
+
+    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "id_khachhang", referencedColumnName = "id")
+    private KhachHang khachHang;
+
+    @ManyToOne()
+    @JoinColumn(name = "id_nhanvien", referencedColumnName = "id")
+    private NhanVien nhanVien;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "hoaDon")
+    private List<HoaDonChiTiet> listHoaDonChiTiet;
 
 
 }

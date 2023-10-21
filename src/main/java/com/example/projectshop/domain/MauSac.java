@@ -29,6 +29,9 @@ public class MauSac {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "trangthai")
+    private Integer trangThai;
+
     @JsonIgnore
     @OneToMany(mappedBy = "mauSac")
     private List<ChiTietSanPham> list;

@@ -6,12 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "chucvu")
@@ -30,7 +33,10 @@ public class ChucVu {
     private String tenChucVu;
 
     @Column(name = "trangthai")
-    private Byte trangThai;
+    private Integer trangThai;
+
+    @OneToMany(mappedBy = "chucVu")
+    private List<NhanVienChucVu> listNhanVienChucVu;
 
 
 }
