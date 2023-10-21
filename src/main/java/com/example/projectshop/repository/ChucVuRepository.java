@@ -1,8 +1,9 @@
 package com.example.projectshop.repository;
 
-import com.example.projectshop.domain.Chucvu;
-import com.example.projectshop.domain.Nhanvien;
+import com.example.projectshop.domain.ChucVu;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ChucVuRepository extends JpaRepository<Chucvu,Integer> {
+@Repository
+public interface ChucVuRepository extends JpaRepository<ChucVu, Integer> {
 }
