@@ -20,8 +20,9 @@ public class AnhSanPham {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_sanpham")
-    private Integer idSanPham;
+    @ManyToOne
+    @JoinColumn(name = "id_chitietsanpham")
+    private ChiTietSanPham idSanPham;
 
     @Column(name = "ten")
     private String ten;
