@@ -1,7 +1,6 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.KhachHang;
-import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayResponse;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.khachhang.KhachHangRespone;
 import com.example.projectshop.repository.KhachHangRepository;
@@ -19,6 +18,7 @@ import java.util.List;
 public class KhachHangServiceImpl implements IKhachHangService {
     @Autowired
     private KhachHangRepository khachHangRepo;
+
     @Override
     public List<KhachHang> findAll() {
         return khachHangRepo.findAll();
@@ -33,6 +33,11 @@ public class KhachHangServiceImpl implements IKhachHangService {
     }
 
     @Override
+    public KhachHangRespone getOne(Integer id) {
+        return ObjectMapperUtils.map(khachHangRepo.findById(id).get(),KhachHangRespone.class);
+    }
+
+    @Override
     public KhachHangRespone create(KhachHangRequest khachHangRequest) {
         KhachHang entity = new KhachHang();
         entity.setId(null);
@@ -42,12 +47,12 @@ public class KhachHangServiceImpl implements IKhachHangService {
         entity.setNgaySinh(khachHangRequest.getNgaySinh());
         entity.setSoDienThoai(khachHangRequest.getSoDienThoai());
         entity.setTrangThai(khachHangRequest.getTrangThai());
-        KhachHangRespone entityRs = ObjectMapperUtils.map(khachHangRepo.save(entity),KhachHangRespone.class);
+        KhachHangRespone entityRs = ObjectMapperUtils.map(khachHangRepo.save(entity), KhachHangRespone.class);
         return entityRs;
     }
 
     @Override
-    public KhachHangRespone update(Integer id,KhachHangRequest khachHangRequest) {
+    public KhachHangRespone update(Integer id, KhachHangRequest khachHangRequest) {
         KhachHang entity = new KhachHang();
         entity.setId(id);
         entity.setEmail(khachHangRequest.getEmail());
@@ -56,13 +61,13 @@ public class KhachHangServiceImpl implements IKhachHangService {
         entity.setNgaySinh(khachHangRequest.getNgaySinh());
         entity.setSoDienThoai(khachHangRequest.getSoDienThoai());
         entity.setTrangThai(khachHangRequest.getTrangThai());
-        KhachHangRespone entityRs = ObjectMapperUtils.map(khachHangRepo.save(entity),KhachHangRespone.class);
+        KhachHangRespone entityRs = ObjectMapperUtils.map(khachHangRepo.save(entity), KhachHangRespone.class);
         return entityRs;
     }
 
     @Override
     public void delete(Integer id) {
-khachHangRepo.deleteById(id);
+        khachHangRepo.deleteById(id);
     }
 
     @Override
@@ -70,6 +75,6 @@ khachHangRepo.deleteById(id);
         Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
         Integer limit = limitParam == null ? 6 : Integer.valueOf(limitParam);
         Pageable pageable = PageRequest.of(page, limit);
-return khachHangRepo.timKiem(timKiem,pageable);
+        return khachHangRepo.timKiem(timKiem, pageable);
     }
 }

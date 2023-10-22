@@ -9,4 +9,6 @@ public class MauSacRequest {
     private Integer id;
 
     private String ten;
+
+    private Integer trangThai;
 }

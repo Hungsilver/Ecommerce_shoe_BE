@@ -1,14 +1,14 @@
 package com.example.projectshop.service.impl;
 
 
-import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
+import com.example.projectshop.dto.sanpham.SanPhamResponse;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.SanPhamRepository;
 import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.URLDecode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SanPhamServiceImpl implements ISanPhamService {
@@ -29,10 +32,10 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
 
     @Override
-    public List<SanPham> findAll() {
-//        List<SanPhamResponse> list = ObjectMapperUtils.mapAll(repo.findAll(),SanPhamResponse.class);
-//        return list;
-        return sanPhamrepo.findAll();
+    public List<SanPhamResponse> findAll() {
+        List<SanPhamResponse> list = ObjectMapperUtils.mapAll(sanPhamrepo.findAll(), SanPhamResponse.class);
+        return list;
+//        return sanPhamrepo.findAll();
     }
 
     @Override
@@ -43,52 +46,52 @@ public class SanPhamServiceImpl implements ISanPhamService {
                                        String mauSac,
                                        String chatLieuGiay,
                                        String chatLieuDeGiay,
-                                       String pageParam,
-                                       String limitParam) {
+                                       Integer pageParam,
+                                       Integer pageSizeParam) {
 
         Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
+        Integer pageSize = pageSizeParam == null ? Integer.MAX_VALUE : Integer.valueOf(pageSizeParam);
+//
+        Pageable pageable = PageRequest.of(page, pageSize);
 
-        Pageable pageable = PageRequest.of(page, limit);
-        if (priceMin == null && priceMax == null && thuongHieu == null && xuatXu == null && mauSac == null && chatLieuGiay == null && chatLieuDeGiay == null) {
-            return sanPhamrepo.getAll(pageable);
-        }
 
-        if (priceMin != null && priceMax != null && thuongHieu == null && xuatXu == null && mauSac == null && chatLieuGiay == null && chatLieuDeGiay == null) {
-            return sanPhamrepo.getAllByBetweenPrice(BigDecimal.valueOf(Double.valueOf(priceMin)), BigDecimal.valueOf(Double.valueOf(priceMin)), pageable);
-        }
+        BigDecimal priceMinOutput = priceMin == null ? chiTietSanPhamRepo.getTop1ByPriceMin().getGiaBan() : BigDecimal.valueOf(Long.valueOf(priceMin));
+        BigDecimal priceMaxOutput = priceMax == null ? chiTietSanPhamRepo.getTop1ByPriceMax().getGiaBan() : BigDecimal.valueOf(Long.valueOf(priceMax));
+        List<Integer> listThuongHieu = thuongHieu == null ? null : Arrays.stream(URLDecode.getDecode(thuongHieu).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        List<Integer> listXuatXu = thuongHieu == null ? null : Arrays.stream(URLDecode.getDecode(xuatXu).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        List<Integer> listMauSac = thuongHieu == null ? null : Arrays.stream(URLDecode.getDecode(mauSac).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        List<Integer> listChatLieuGiay = thuongHieu == null ? null : Arrays.stream(URLDecode.getDecode(chatLieuGiay).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        List<Integer> listChatLieuDeGiay = thuongHieu == null ? null : Arrays.stream(URLDecode.getDecode(chatLieuDeGiay).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
 
-        BigDecimal priceMaxx = priceMax == null ? chiTietSanPhamRepo.getTop1ByPriceMax().getGiaBan() : BigDecimal.valueOf(Double.valueOf(priceMax));
-        BigDecimal priceMinn = priceMin == null ? chiTietSanPhamRepo.getTop1ByPriceMin().getGiaBan() : BigDecimal.valueOf(Double.valueOf(priceMin));
-        Integer id_thuongHieu = thuongHieu == null ? sanPhamrepo.getTop1().getThuongHieu().getId() : Integer.valueOf(thuongHieu);
-        Integer id_xuatXu = xuatXu == null ? sanPhamrepo.getTop1().getXuatXu().getId() : Integer.valueOf(xuatXu);
-        Integer id_mauSac = mauSac == null ? sanPhamrepo.getTop1().getListChiTietSanPham().get(0).getMauSac().getId() : Integer.valueOf(mauSac);
-        Integer id_chatLieuGiay = chatLieuGiay == null ? sanPhamrepo.getTop1().getListChiTietSanPham().get(0).getChatLieuGiay().getId() : Integer.valueOf(chatLieuGiay);
-        Integer id_chatLieuDeGiay = chatLieuDeGiay == null ? sanPhamrepo.getTop1().getListChiTietSanPham().get(0).getChatLieuDeGiay().getId() : Integer.valueOf(chatLieuDeGiay);
-
-        Page<SanPham> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(sanPhamrepo.getAllByParam(
-                priceMinn,
-                priceMaxx,
-                id_thuongHieu,
-                id_xuatXu,
-                id_mauSac,
-                id_chatLieuGiay,
-                id_chatLieuDeGiay,
-                pageable), SanPham.class);
-
-        System.out.println("abc" + priceMinn + priceMaxx + id_thuongHieu + id_xuatXu + id_mauSac + id_chatLieuGiay + id_chatLieuDeGiay);
-        System.out.println(list.getContent());
-        return list;
+        return sanPhamrepo.getAllByParam(
+                priceMinOutput,
+                priceMaxOutput,
+                listThuongHieu,
+                listXuatXu,
+                listMauSac,
+                listChatLieuGiay,
+                listChatLieuDeGiay,
+                pageable);
     }
 
 
     @Override
-    public SanPham getOne(Integer id) {
-        return sanPhamrepo.findById(id).get();
+    public SanPhamResponse getOne(Integer id) {
+        return ObjectMapperUtils.map(sanPhamrepo.findById(id).get(), SanPhamResponse.class);
     }
 
     @Override
-    public SanPham create(SanPhamRequest sanPhamRequest) {
+    public SanPhamResponse create(SanPhamRequest sanPhamRequest) {
         SanPham entity = new SanPham();
         entity.setId(null);
         entity.setMa(sanPhamRequest.getMa());
@@ -98,12 +101,12 @@ public class SanPhamServiceImpl implements ISanPhamService {
         entity.setTrangThai(sanPhamRequest.getTrangThai());
         entity.setThuongHieu(sanPhamRequest.getThuonghieu());
         entity.setXuatXu(sanPhamRequest.getXuatxu());
-        SanPham entityRs = sanPhamrepo.save(entity);
+        SanPhamResponse entityRs = ObjectMapperUtils.map(sanPhamrepo.save(entity), SanPhamResponse.class);
         return entityRs;
     }
 
     @Override
-    public SanPham update(Integer id, SanPhamRequest sanPhamRequest) {
+    public SanPhamResponse update(Integer id, SanPhamRequest sanPhamRequest) {
         SanPham entity = new SanPham();
         entity.setId(id);
         entity.setMa(sanPhamRequest.getMa());
@@ -113,20 +116,20 @@ public class SanPhamServiceImpl implements ISanPhamService {
         entity.setTrangThai(sanPhamRequest.getTrangThai());
         entity.setThuongHieu(sanPhamRequest.getThuonghieu());
         entity.setXuatXu(sanPhamRequest.getXuatxu());
-        SanPham entityRs = sanPhamrepo.save(entity);
+        SanPhamResponse entityRs = ObjectMapperUtils.map(sanPhamrepo.save(entity), SanPhamResponse.class);
         return entityRs;
     }
 
     @Override
     public void delete(Integer id) {
-sanPhamrepo.deleteById(id);
+        sanPhamrepo.deleteById(id);
     }
 
     @Override
-    public Page<SanPham> timKiem(String timKiem, String pageParam, String limitParam) {
+    public Page<SanPhamResponse> timKiem(String timKiem, String pageParam, String limitParam) {
         Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
         Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
         Pageable pageable = PageRequest.of(page, limit);
-        return sanPhamrepo.timKiem(timKiem,pageable);
+        return ObjectMapperUtils.mapEntityPageIntoDtoPage(sanPhamrepo.timKiem(timKiem, pageable), SanPhamResponse.class);
     }
 }

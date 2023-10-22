@@ -1,10 +1,14 @@
 package com.example.projectshop.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,10 +46,10 @@ public class PhieuGiamGia {
     private Byte hinhThucGiamGia;
 
     @Column(name = "thoigianbatdau")
-    private java.sql.Date thoiGianBatDau;
+    private Date thoiGianBatDau;
 
     @Column(name = "thoigianketthuc")
-    private java.sql.Date thoiGianKetThuc;
+    private Date thoiGianKetThuc;
 
     @Column(name = "mota")
     private String moTa;
@@ -51,8 +57,13 @@ public class PhieuGiamGia {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "idKhachHang")
-//    private Integer idKhachHang;
+    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "id_khachhang", referencedColumnName = "id")
+    private KhachHang khachHang;
+
+    @OneToMany(mappedBy = "phieuGiamGia")
+    private List<HoaDon> listHoaDon;
 
 
 }

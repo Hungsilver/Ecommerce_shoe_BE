@@ -8,4 +8,5 @@ import lombok.Setter;
 public class AnhSanPhamResponse {
     private Integer id;
     private String ten;
+
 }

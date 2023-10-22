@@ -1,11 +1,10 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.ChatLieuGiay;
 import com.example.projectshop.domain.ChiTietSanPham;
-import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayResponse;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.repository.HoaDonChiTietRepository;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,9 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Autowired
     private ChiTietSanPhamRepository repo;
+
+    @Autowired
+    private HoaDonChiTietRepository hoaDonChiTietRepo;
 
     @Override
     public List<ChiTietSanPhamResponse> findAll() {
@@ -39,7 +41,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Override
     public ChiTietSanPhamResponse getOne(Integer id) {
-        return ObjectMapperUtils.map(repo.findById(id).get(),ChiTietSanPhamResponse.class);
+        return ObjectMapperUtils.map(repo.findById(id).get(), ChiTietSanPhamResponse.class);
     }
 
     @Override
@@ -61,7 +63,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     }
 
     @Override
-    public ChiTietSanPhamResponse update(Integer id,ChiTietSanPhamRequest chiTietSanPhamRequest) {
+    public ChiTietSanPhamResponse update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
         ChiTietSanPham entity = new ChiTietSanPham();
         entity.setId(id);
         entity.setSoLuong(chiTietSanPhamRequest.getSoLuong());
@@ -80,7 +82,13 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Override
     public void delete(Integer id) {
-        repo.deleteById(id);
+
+//        if (hoaDonChiTietRepo.findByChiTietSanPham(id) == null) {
+//            repo.deleteById(id);
+//        }
+//        ChiTietSanPhamRequest chiTietSanPhamRequest = ObjectMapperUtils.map(this.getOne(id), ChiTietSanPhamRequest.class);
+//        chiTietSanPhamRequest.setTrangThai(2);
+//        this.update(id, chiTietSanPhamRequest);
     }
 
     @Override
@@ -88,7 +96,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
         Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
         Pageable pageable = PageRequest.of(page, limit);
-        Page<ChiTietSanPhamResponse> listPage = ObjectMapperUtils.mapEntityPageIntoDtoPage(repo.timKiem(timKiem,pageable), ChiTietSanPhamResponse.class);
+        Page<ChiTietSanPhamResponse> listPage = ObjectMapperUtils.mapEntityPageIntoDtoPage(repo.timKiem(timKiem, pageable), ChiTietSanPhamResponse.class);
         return listPage;
     }
 }

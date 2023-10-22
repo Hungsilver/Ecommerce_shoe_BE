@@ -1,6 +1,7 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.PhieuGiamGia;
+import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaRequest;
 import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaResponse;
 import org.springframework.data.domain.Page;
 
@@ -13,4 +14,10 @@ public interface IPhieuGiamGiaService {
     Page<PhieuGiamGiaResponse> getAll(String pageParam,String limitParam);
 
     PhieuGiamGiaResponse getOne(Integer id);
+
+    PhieuGiamGiaResponse create(PhieuGiamGiaRequest phieuGiamGiaRequest);
+
+    PhieuGiamGiaResponse update(Integer id,PhieuGiamGiaRequest phieuGiamGiaRequest);
+
+    void delete(Integer id);
 }

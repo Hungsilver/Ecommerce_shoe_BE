@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface ISanPhamService {
 
-    List<SanPham> findAll();
+    List<SanPhamResponse> findAll();
 
     Page<SanPham> getAllByParam(String priceMin,
                                 String priceMax,
@@ -20,17 +20,17 @@ public interface ISanPhamService {
                                 String mauSac,
                                 String chatLieuGiay,
                                 String chatLieuDeGiay,
-                                String pageParam,
-                                String limitParam
+                                Integer pageParam,
+                                Integer pageSizeParam
     );
 
-    SanPham getOne(Integer id);
+    SanPhamResponse getOne(Integer id);
 
-    SanPham create(SanPhamRequest sanPhamRequest);
+    SanPhamResponse create(SanPhamRequest sanPhamRequest);
 
-    SanPham update(Integer id,SanPhamRequest sanPhamRequest);
+    SanPhamResponse update(Integer id,SanPhamRequest sanPhamRequest);
 
     void delete(Integer id);
 
-    Page<SanPham> timKiem (String timKiem,String pageParam,String limitParam);
+    Page<SanPhamResponse> timKiem (String timKiem,String pageParam,String limitParam);
 }

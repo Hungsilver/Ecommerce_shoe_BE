@@ -13,6 +13,8 @@ public interface IKhachHangService {
 
     Page<KhachHang> getAll(String pageParam,String limitParam);
 
+    KhachHangRespone getOne(Integer id);
+
     KhachHangRespone create(KhachHangRequest khachHangRequest);
 
     KhachHangRespone update(Integer id,KhachHangRequest khachHangRequest);

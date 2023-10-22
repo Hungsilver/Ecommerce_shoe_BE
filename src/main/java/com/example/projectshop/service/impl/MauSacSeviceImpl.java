@@ -3,6 +3,8 @@ package com.example.projectshop.service.impl;
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.dto.mausac.MauSacRequest;
 import com.example.projectshop.dto.mausac.MauSacResponse;
+import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.repository.HoaDonChiTietRepository;
 import com.example.projectshop.repository.MauSacRepository;
 import com.example.projectshop.service.IMauSacService;
 import com.example.projectshop.service.ObjectMapperUtils;
@@ -19,6 +21,9 @@ public class MauSacSeviceImpl implements IMauSacService {
 
     @Autowired
     private MauSacRepository mauSacRepository;
+
+    @Autowired
+    private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
     @Override
     public List<MauSacResponse> getAll() {
@@ -49,9 +54,13 @@ public class MauSacSeviceImpl implements IMauSacService {
         return ObjectMapperUtils.map(mauSacRepository.save(entity), MauSacResponse.class);
     }
 
-    @Override
+  @Override
     public void delete(Integer id) {
-        mauSacRepository.deleteById(id);
+        MauSacRequest mauSacRequest = new MauSacRequest();
+      mauSacRequest.setId(id);
+      mauSacRequest.setTen(this.findById(id).getTen());
+      mauSacRequest.setTrangThai(2);
+        this.update(mauSacRequest,id);
     }
 
     @Override

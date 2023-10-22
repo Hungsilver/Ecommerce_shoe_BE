@@ -1,7 +1,14 @@
 package com.example.projectshop.domain;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,13 +30,13 @@ public class GioHangChiTiet {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "id_giohang")
-    private GioHang idGioHang;
+    private GioHang gioHang;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "id_chitietsanpham")
-    private ChiTietSanPham idChiTietSanPham;
+    private ChiTietSanPham chiTietSanPham;
 
     @Column(name = "soluong")
     private Integer soLuong;

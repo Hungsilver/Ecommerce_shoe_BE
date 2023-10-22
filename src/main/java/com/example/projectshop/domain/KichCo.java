@@ -26,8 +26,11 @@ public class KichCo {
     @Column(name = "size")
     private Integer size;
 
+    @Column(name = "trangthai")
+    private Integer trangThai;
+
     @JsonIgnore
     @OneToMany(mappedBy = "kichCo")
-    private List<ChiTietSanPham> list;
+    private List<ChiTietSanPham> listChiTietSanPham;
 
 }

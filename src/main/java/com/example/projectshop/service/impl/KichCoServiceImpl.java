@@ -3,6 +3,7 @@ package com.example.projectshop.service.impl;
 import com.example.projectshop.domain.KichCo;
 import com.example.projectshop.dto.kichco.KichCoRequest;
 import com.example.projectshop.dto.kichco.KichCoResponse;
+import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.KichCoRepository;
 import com.example.projectshop.service.IKichCoService;
 import com.example.projectshop.service.ObjectMapperUtils;
@@ -18,6 +19,9 @@ import java.util.List;
 public class KichCoServiceImpl implements IKichCoService {
     @Autowired
     private KichCoRepository kichCoRepository;
+
+    @Autowired
+    private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
     @Override
     public List<KichCoResponse> getAll() {
@@ -51,7 +55,11 @@ public class KichCoServiceImpl implements IKichCoService {
 
     @Override
     public void delete(Integer id) {
-        kichCoRepository.deleteById(id);
+        KichCoRequest kichCoRequest = new KichCoRequest();
+        kichCoRequest.setId(id);
+        kichCoRequest.setSize(this.findById(id).getSize());
+        kichCoRequest.setTrangThai(2);
+        this.update(kichCoRequest,id);
     }
 
     @Override

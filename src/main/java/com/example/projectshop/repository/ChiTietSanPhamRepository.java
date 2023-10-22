@@ -29,5 +29,16 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "or s.ten like%:timKiem% \n" +
             "or c.soluong like %:timKiem%",
             nativeQuery = true)
-    Page<ChiTietSanPham> timKiem(@Param("timKiem")String timKiem, Pageable pageable);
+    Page<ChiTietSanPham> timKiem(@Param("timKiem") String timKiem, Pageable pageable);
+
+//    ChiTietSanPham findByChatLieuDeGiay(Integer id);
+//
+//    ChiTietSanPham findByChatLieuGiay(Integer id);
+//
+//    ChiTietSanPham findByMauSac(Integer id);
+//
+//    ChiTietSanPham findByKichCo(Integer id);
+//
+//    ChiTietSanPham findBySanPham(Integer id);
+
 }

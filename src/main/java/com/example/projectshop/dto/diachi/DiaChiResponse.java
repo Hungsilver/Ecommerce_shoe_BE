@@ -19,5 +19,5 @@ public class DiaChiResponse {
 
     private Integer trangThai;
 
-//    private KhachHang khachHang;
+    private KhachHang khachHang;
 }
