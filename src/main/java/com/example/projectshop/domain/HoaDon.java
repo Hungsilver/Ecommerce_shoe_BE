@@ -68,8 +68,6 @@ public class HoaDon {
     private KhachHang khachHang;
 
 
-
-
     @ManyToOne()
     @JoinColumn(name = "id_nhanvien", referencedColumnName = "id")
     private NhanVien nhanVien;
