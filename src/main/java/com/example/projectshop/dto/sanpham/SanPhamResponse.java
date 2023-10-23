@@ -1,6 +1,7 @@
 package com.example.projectshop.dto.sanpham;
 
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.Thuonghieu;
 import com.example.projectshop.domain.Xuatxu;
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class SanPhamResponse {
 
     private Integer trangThai;
 
-    private Thuonghieu thuonghieu;
+    private Thuonghieu thuongHieu;
 
-    private Xuatxu xuatxu;
+    private Xuatxu xuatXu;
+
+    private DanhMuc danhMuc;
 
     private List<ChiTietSanPham> listChiTietSanPham;
 }
