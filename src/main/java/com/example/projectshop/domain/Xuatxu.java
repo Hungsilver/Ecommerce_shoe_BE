@@ -32,6 +32,6 @@ public class Xuatxu {
 
     @JsonIgnore
     @OneToMany(mappedBy = "xuatXu")
-    private List<SanPham> list = new ArrayList<>();
+    private List<SanPham> listSanPham = new ArrayList<>();
 
 }
