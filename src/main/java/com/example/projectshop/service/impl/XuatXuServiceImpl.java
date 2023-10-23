@@ -13,8 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
 
+@Service
 public class XuatXuServiceImpl implements IXuatXuService {
 
     @Autowired
@@ -52,5 +52,6 @@ public class XuatXuServiceImpl implements IXuatXuService {
         Integer limit = limitParam == null ? 3 : Integer.valueOf(limitParam);
         Pageable pageable = PageRequest.of(page, limit);
         Page<XuatXuResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(xuatXuRepository.findAll(pageable), XuatXuResponse.class);
-        return list;    }
+        return list;
+    }
 }
