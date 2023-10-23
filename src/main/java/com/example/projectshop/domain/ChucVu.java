@@ -1,11 +1,15 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,8 +39,16 @@ public class ChucVu {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-    @OneToMany(mappedBy = "chucVu")
-    private List<NhanVienChucVu> listNhanVienChucVu;
+    @ManyToMany(mappedBy = "chucVus",fetch = FetchType.LAZY)
+    private List<NhanVien> nhanViens;
 
-
+    @Override
+    public String toString() {
+        return "ChucVu{" +
+                "id=" + id +
+                ", tenChucVu='" + tenChucVu + '\'' +
+                ", trangThai=" + trangThai +
+//                ", nhanViens=" + nhanViens +
+                '}';
+    }
 }
