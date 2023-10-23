@@ -14,31 +14,6 @@ import java.util.List;
 
 @Repository
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
-//    @Query(value = "select  s.id,s.ma,s.ten,s.anhChinh,s.moTa,s.trangThai,s.id_thuongHieu,s.id_xuatXu from sanpham s\n" +
-//            "inner join chitietsanpham  on chitietsanpham.id_sanpham = s.id\n" +
-//            "inner join thuonghieu  on thuonghieu.id = s.id_thuonghieu\n" +
-//            "inner join xuatxu xuatxu on xuatxu.id = s.id_xuatxu\n" +
-//            "inner join mausac mausac on mausac.id = chitietsanpham.id_mausac\n" +
-//            "inner join kichco  on kichco.id = chitietsanpham.id_kichco\n" +
-//            "inner join chatlieugiay  on chatlieugiay.id = chitietsanpham.id_chatlieugiay\n" +
-//            "inner join chatlieudegiay  on chatlieudegiay.id = chitietsanpham.id_chatlieudegiay\n" +
-//            "where chitietsanpham.giaban between :priceMin and :priceMax\n" +
-//            "and coalesce(thuonghieu.id) = :thuongHieu\n" +
-//            "and coalesce(xuatxu.id) = :xuatXu\n" +
-//            "and coalesce(mausac.id) = :mauSac\n" +
-//            "and coalesce(chatlieugiay.id) = :chatLieuGiay\n" +
-//            "and coalesce(chatlieudegiay.id) = :chatLieuDeGiay", nativeQuery = true)
-//    List<SanPham> getAllByParam(
-//            @Param("priceMin") BigDecimal priceMin,
-//            @Param("priceMax") BigDecimal priceMax,
-//            @Param("thuongHieu") Integer thuongHieu,
-//            @Param("xuatXu") Integer xuatXu,
-//            @Param("mauSac") Integer mauSac,
-//            @Param("chatLieuGiay") Integer chatLieuGiay,
-//            @Param("chatLieuDeGiay") Integer chatLieuDeGiay
-////            Pageable pageable
-//    );
-
     @Query(value = "select s from SanPham s " +
             "inner join ChiTietSanPham c on c.sanPham.id = s.id\n" +
             "inner join Thuonghieu t on t.id = s.thuongHieu.id\n" +

@@ -34,9 +34,6 @@ public class SanPham {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "ma")
-    private String ma;
-
     @Column(name = "ten")
     private String ten;
 
@@ -56,6 +53,10 @@ public class SanPham {
     @ManyToOne
     @JoinColumn(name = "id_xuatxu")
     private Xuatxu xuatXu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_danhmuc")
+    private Xuatxu danhMuc;
 
     @JsonIgnore
     @JsonManagedReference
