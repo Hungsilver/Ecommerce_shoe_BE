@@ -1,7 +1,6 @@
 package com.example.projectshop.domain;
 
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -25,8 +24,8 @@ public class NhanVienChucVu {
     @ManyToOne()
     @JoinColumn(name = "id_nhanvien")
     private NhanVien nhanVien;
-
     @ManyToOne()
+
     @JoinColumn(name = "id_chucvu")
     private ChucVu chucVu;
 
