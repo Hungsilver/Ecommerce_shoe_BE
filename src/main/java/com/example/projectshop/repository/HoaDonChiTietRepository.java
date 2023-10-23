@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet,Integer> {
+//    HoaDonChiTiet findByChiTietSanPham(Integer id);
 }

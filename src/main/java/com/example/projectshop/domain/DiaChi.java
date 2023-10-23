@@ -1,11 +1,14 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,8 +46,10 @@ public class DiaChi {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-//    @Column(name = "id_khachHang")
-//    private Integer idKhachHang;
+    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "id_khachhang",referencedColumnName = "id")
+    private KhachHang khachHang;
 
 
 }

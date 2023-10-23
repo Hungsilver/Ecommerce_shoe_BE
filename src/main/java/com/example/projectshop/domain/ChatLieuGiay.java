@@ -34,6 +34,9 @@ public class ChatLieuGiay {
     @Column(name = "ten")
     private String ten;
 
+    @Column(name = "trangthai")
+    private Integer trangThai;
+
     @JsonIgnore
     @OneToMany(mappedBy = "chatLieuGiay")
     private List<ChiTietSanPham> list;

@@ -28,5 +28,4 @@ public class SanPhamRequest {
 
     private Xuatxu xuatxu;
 
-    private List<ChiTietSanPham> listChiTietSanPham;
 }

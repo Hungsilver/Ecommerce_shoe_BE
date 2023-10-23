@@ -8,4 +8,6 @@ import lombok.Setter;
 public class ThuongHieuRequest {
     private Integer id;
     private String ten;
+    private Integer trangThai;
+
 }

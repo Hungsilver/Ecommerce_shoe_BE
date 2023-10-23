@@ -12,6 +12,8 @@ public interface IDiaChiService {
 
     Page<DiaChiResponse> getAll(String pageParam, String limitParam);
 
+    DiaChiResponse getOne(Integer id);
+
     DiaChiResponse create(DiaChiRequest diaChiRequest);
 
     DiaChiResponse update(Integer id, DiaChiRequest diaChiRequest);

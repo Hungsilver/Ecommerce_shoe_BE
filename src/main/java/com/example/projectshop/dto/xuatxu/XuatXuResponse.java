@@ -8,4 +8,5 @@ import lombok.Setter;
 public class XuatXuResponse {
     private Integer id;
     private String ten;
+    private Integer trangThai;
 }
