@@ -9,38 +9,48 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/api/thuong-hieu")
+@CrossOrigin(origins = "*")
+@RequestMapping("/api/trademark")
 public class ThuongHieuRestController {
 
     @Autowired
     private IThuongHieuService service;
 
-    @Autowired
-    private HttpServletRequest request;
-
-    @GetMapping("/get-all")
-    public ResponseEntity<?> findAll() {
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.findAllThuongHieu(page, limit));
+    @GetMapping()
+    public ResponseEntity<?> findAll(
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
+            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "keyword", required = false) String keyword
+    ) {
+        return ResponseEntity.ok(service.findAll(page,pageSize,sortField,isSortDesc,keyword));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ThuongHieuResponse> create(ThuongHieuRequest thuongHieuRequest) {
-        ThuongHieuResponse response = service.create(thuongHieuRequest);
-        return ResponseEntity.ok(response);
+    @PostMapping()
+    public ResponseEntity<?> create(
+            @RequestBody ThuongHieuRequest thuongHieuRequest
+    ) {
+        return ResponseEntity.ok(service.create(thuongHieuRequest));
     }
-    @GetMapping("/delete/{id}")
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+
+    @PutMapping("{id}")
+    public ResponseEntity<?> update(
+            @PathVariable("id") Integer id,
+            @RequestBody ThuongHieuRequest thuongHieuRequest
+
+    ){
+        return ResponseEntity.ok(service.update(id,thuongHieuRequest));
+    }
+
+    @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        service.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(service.delete(id));
     }
-
-    @PutMapping("/update")
-    public ResponseEntity<ThuongHieuResponse> update(ThuongHieuRequest thuongHieuRequest){
-        ThuongHieuResponse response = service.update(thuongHieuRequest);
-        return ResponseEntity.ok(response);
-    }
-
 }

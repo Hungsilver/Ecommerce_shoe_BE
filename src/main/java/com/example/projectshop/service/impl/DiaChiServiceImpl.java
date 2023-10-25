@@ -2,7 +2,6 @@ package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.DiaChi;
 import com.example.projectshop.dto.diachi.DiaChiRequest;
-import com.example.projectshop.dto.diachi.DiaChiResponse;
 import com.example.projectshop.repository.DiaChiRepository;
 import com.example.projectshop.service.IDiaChiService;
 import com.example.projectshop.service.ObjectMapperUtils;
@@ -10,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiaChiServiceImpl implements IDiaChiService {
@@ -21,53 +21,47 @@ public class DiaChiServiceImpl implements IDiaChiService {
     private DiaChiRepository diaChiRepo;
 
     @Override
-    public List<DiaChiResponse> findAll() {
-        List<DiaChiResponse> list = ObjectMapperUtils.mapAll(diaChiRepo.findAll(), DiaChiResponse.class);
-        return list;
+    public Page<DiaChi> findAll(Integer page,
+                                Integer pageSize,
+                                String sortField,
+                                Boolean isSortDesc,
+                                String keyword) {
+        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        if (keyword != null && !keyword.isEmpty()) {
+            return diaChiRepo.findAllByDiaChi(keyword, pageable);
+        } else {
+            return diaChiRepo.findAll(pageable);
+        }
     }
 
     @Override
-    public Page<DiaChiResponse> getAll(String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 2 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<DiaChiResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(diaChiRepo.findAll(pageable), DiaChiResponse.class);
-        return list;
+    public Optional<DiaChi> findById(Integer id) {
+        return diaChiRepo.findById(id);
     }
 
     @Override
-    public DiaChiResponse getOne(Integer id) {
-        return ObjectMapperUtils.map(diaChiRepo.findById(id).get(),DiaChiResponse.class);
+    public DiaChi create(DiaChiRequest diaChiRequest) {
+        DiaChi diaChi = ObjectMapperUtils.map(diaChiRequest, DiaChi.class);
+        diaChi.setId(null);
+        return diaChiRepo.save(diaChi);
     }
 
     @Override
-    public DiaChiResponse create(DiaChiRequest diaChiRequest) {
-        DiaChi entity = new DiaChi();
-        entity.setId(null);
-        entity.setDiaChi(diaChiRequest.getDiaChi());
-        entity.setPhuongXa(diaChiRequest.getPhuongXa());
-        entity.setQuanHuyen(diaChiRequest.getQuanHuyen());
-        entity.setTinhThanh(diaChiRequest.getTinhThanh());
-        entity.setTrangThai(diaChiRequest.getTrangThai());
-        DiaChiResponse entityRs = ObjectMapperUtils.map(diaChiRepo.save(entity), DiaChiResponse.class);
-        return entityRs;
+    public DiaChi update(Integer id, DiaChiRequest DiaChiRequest) {
+        DiaChi diaChi = ObjectMapperUtils.map(DiaChiRequest, DiaChi.class);
+        diaChi.setId(id);
+        return diaChiRepo.save(diaChi);
     }
 
     @Override
-    public DiaChiResponse update(Integer id, DiaChiRequest diaChiRequest) {
-        DiaChi entity = new DiaChi();
-        entity.setId(id);
-        entity.setDiaChi(diaChiRequest.getDiaChi());
-        entity.setPhuongXa(diaChiRequest.getPhuongXa());
-        entity.setQuanHuyen(diaChiRequest.getQuanHuyen());
-        entity.setTinhThanh(diaChiRequest.getTinhThanh());
-        entity.setTrangThai(diaChiRequest.getTrangThai());
-        DiaChiResponse entityRs = ObjectMapperUtils.map(diaChiRepo.save(entity), DiaChiResponse.class);
-        return entityRs;
-    }
-
-    @Override
-    public void delete(Integer id) {diaChiRepo.deleteById(id);
+    public DiaChi delete(Integer id) {
+        Optional<DiaChi> diaChi = this.findById(id);
+        if (diaChi.isPresent()) {
+            diaChi.get().setTrangThai(0);
+            return diaChiRepo.save(diaChi.get());
+        }
+        return null;
     }
 
 }

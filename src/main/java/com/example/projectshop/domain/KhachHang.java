@@ -1,6 +1,7 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,19 +50,23 @@ public class KhachHang {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-    @JsonManagedReference
+    @JsonIgnore
+//    @JsonManagedReference
     @OneToMany(mappedBy = "khachHang")
     private List<DiaChi> listDiaChi = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonIgnore
+//    @JsonManagedReference
     @OneToMany(mappedBy = "khachHang")
     private List<PhieuGiamGia> listPhieuGiamGia = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonIgnore
+//    @JsonManagedReference
     @OneToMany(mappedBy = "khachHang")
     private List<GioHang> listGioHang = new ArrayList<>();
 
-    @JsonManagedReference
+    @JsonIgnore
+//    @JsonManagedReference
     @OneToMany(mappedBy = "khachHang")
     private List<HoaDon> listHoaDon = new ArrayList<>();
 

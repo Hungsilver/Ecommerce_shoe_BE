@@ -16,7 +16,7 @@ import java.util.List;
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
     @Query(value = "select s from SanPham s " +
             "inner join ChiTietSanPham c on c.sanPham.id = s.id\n" +
-            "inner join Thuonghieu t on t.id = s.thuongHieu.id\n" +
+            "inner join ThuongHieu t on t.id = s.thuongHieu.id\n" +
             "inner join Xuatxu x on x.id = s.xuatXu.id\n " +
             "inner join MauSac m on m.id = c.mauSac.id\n" +
             "inner join ChatLieuGiay clg on clg.id = c.chatLieuGiay.id\n" +
@@ -40,33 +40,15 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
     );
 
 
-    @Query(value = "select distinct s.id,s.ma,s.ten,s.anhChinh,s.moTa,s.trangThai,s.id_thuongHieu,s.id_xuatXu from sanpham s\n" +
-            "inner join chitietsanpham c on c.id_sanpham = s.id\n" +
-            "where c.giaban between :priceMin and :priceMax\n", nativeQuery = true)
-    Page<SanPham> getAllByBetweenPrice(
-            @Param("priceMin") BigDecimal priceMin,
-            @Param("priceMax") BigDecimal priceMax,
-            Pageable pageable
-    );
+    @Query(value = "select s from SanPham s \n" +
+            "inner join ThuongHieu t on t.id = s.thuongHieu.id\n" +
+            "inner join Xuatxu x on x.id = s.xuatXu.id\n" +
+            "inner join DanhMuc d on d.id = s.danhMuc.id\n" +
+            "where s.ten like %:timKiem% \n" +
+            "or t.ten like %:keyword% \n" +
+            "or x.ten like %:keyword% \n" +
+            "or d.ten like %:keyword% ")
+    Page<SanPham> search(@Param("keyword")String keyword, Pageable pageable);
 
-    @Query(value = "select distinct * from sanpham", nativeQuery = true)
-    Page<SanPham> getAll(Pageable pageable);
-
-    @Query(value = "select * from sanpham  limit 1", nativeQuery = true)
-    SanPham getTop1();
-
-    @Query(value = "select s.id,s.soluong,s.giaban,s.ngaytao,s.trangthai,s.id_mausas,s.id_kichco,s.id_chatlieugiay,s.id_chatlieudegiay,s.id_sanpham from sanpham s \n" +
-            "inner join thuonghieu t on t.id = s.id_thuonghieu\n" +
-            "inner join xuatxu x on x.id = s.id_xuatxu\n" +
-            "where s.ma like %:timKiem% \n" +
-            "or s.ten like %:timKiem% \n" +
-            "or t.ten like %:timKiem% \n" +
-            "or x.ten like %:timKiem% \n",
-            nativeQuery = true)
-    Page<SanPham> timKiem(@Param("timKiem")String timKiem, Pageable pageable);
-
-//    SanPham findByThuongHieu(Integer id);
-//
-//    SanPham findByXuatXu(Integer id);
 
 }

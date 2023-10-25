@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
-    @Query(value = "select * from khachhang k where k.email like %:input% " +
-            "or k.sodienthoai like %:input%"
-            ,nativeQuery = true)
-    Page<KhachHang> timKiem(@Param("input") String input, Pageable pageable);
+    @Query(value = "select k from KhachHang k where k.email like %:input% " +
+            "or k.soDienThoai like %:input%")
+    Page<KhachHang> findAllByEmailOrSoDienThoai(@Param("input") String input, Pageable pageable);
 }
