@@ -1,22 +1,22 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.ChatLieuDeGiay;
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
+import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.service.IChatLieuDeGiayService;
+import com.example.projectshop.service.ObjectMapperUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
@@ -24,69 +24,50 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatLieuDeGiayRestController {
 
     @Autowired
-    private IChatLieuDeGiayService service;
+    private IChatLieuDeGiayService chatLieuDeGiayService;
 
     @Autowired
     private HttpServletRequest request;
 
-    @GetMapping(value = "/get-all")
-    public ResponseEntity<?> getALl() {
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.getAll(page,limit));
+    @GetMapping
+    public ResponseEntity<?> findAll(
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
+            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "keyword", required = false) String keyword
+    ) {
+        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        Page<ChatLieuDeGiay> chatLieuDeGiays;
+        if (keyword != null && !keyword.isEmpty()) {
+            chatLieuDeGiays = chatLieuDeGiayService.findAllByName(keyword, pageable);
+        } else {
+            chatLieuDeGiays = chatLieuDeGiayService.getAll(pageable);
+        }
+        return ResponseEntity.ok(chatLieuDeGiays);
     }
 
-    @GetMapping(value = "/find-all")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(service.findAll());
+    @GetMapping("{id}")
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(chatLieuDeGiayService.findById(id));
     }
 
-    @GetMapping(value = "/get-one/{id}")
-    public ResponseEntity<?> getALl(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody ChatLieuDeGiayRequest request) {
+        ChatLieuDeGiay xx = ObjectMapperUtils.map(request, ChatLieuDeGiay.class);
+        return ResponseEntity.ok(chatLieuDeGiayService.create(xx));
     }
 
-    @GetMapping(value = "/search")
-    public ResponseEntity<?> timKiem() {
-        String timKiem = request.getParameter("timKiem");
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.timKiem(timKiem,page,limit));
+    @PutMapping("{id}")
+    public ResponseEntity<?> update(@RequestBody ChatLieuDeGiayRequest request, @PathVariable("id") Integer id) {
+        ChatLieuDeGiay xx = ObjectMapperUtils.map(request, ChatLieuDeGiay.class);
+        return ResponseEntity.ok(chatLieuDeGiayService.update(xx, id));
     }
 
-
-    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> create(
-            @RequestBody @Valid ChatLieuDeGiayRequest request,
-            BindingResult result) {
-//        if (result.hasErrors()) {
-//            Map<String, String> mapError = new HashMap<>();
-//            result.getAllErrors().stream().forEach(
-//                    x -> mapError.put(((FieldError) x).getField(), x.getDefaultMessage())
-//            );
-//            return ResponseEntity.ok(mapError);
-//        }
-        return ResponseEntity.ok(service.create(request));
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(chatLieuDeGiayService.delete(id));
     }
 
-    @PutMapping(value = "/update/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
-            @RequestBody @Valid ChatLieuDeGiayRequest request,
-            BindingResult result) {
-//        if (result.hasErrors()) {
-//            Map<String, String> mapError = new HashMap<>();
-//            result.getAllErrors().stream().forEach(
-//                    x -> mapError.put(((FieldError) x).getField(), x.getDefaultMessage())
-//            );
-//            return ResponseEntity.ok(mapError);
-//        }
-        return ResponseEntity.ok(service.update(request, id));
-    }
-
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.ok().build();
-    }
 }

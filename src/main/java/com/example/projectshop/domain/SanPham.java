@@ -56,7 +56,7 @@ public class SanPham {
 
     @ManyToOne
     @JoinColumn(name = "id_danhmuc")
-    private Xuatxu danhMuc;
+    private DanhMuc danhMuc;
 
     @JsonIgnore
     @JsonManagedReference
