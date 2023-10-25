@@ -1,23 +1,28 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.KichCo;
+import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.dto.kichco.KichCoRequest;
 import com.example.projectshop.dto.kichco.KichCoResponse;
 import com.example.projectshop.dto.mausac.MauSacResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IKichCoService {
-    List<KichCoResponse> getAll();
+    Page<KichCo> getAll(Pageable pageable);
 
-    KichCoResponse findById(Integer id);
 
-    KichCoResponse create(KichCoRequest kichCoRequest);
+    Optional<KichCo> findById(Integer id);
 
-    KichCoResponse update(KichCoRequest kichCoRequest, Integer id);
+    Page<KichCo> findAllByName(String size,Pageable pageable);
 
-    void delete(Integer id);
+    KichCo create(KichCo kc);
 
-    Page<KichCoResponse> findAllKichCo(String pageParam, String limitParam);
+    KichCo update(KichCo  kc , Integer id);
+
+    KichCo delete(Integer id);
 
 }

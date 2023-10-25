@@ -1,22 +1,27 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.ChatLieuGiay;
+import com.example.projectshop.domain.KichCo;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface IChatLieuGiayService {
-    List<ChatLieuGiayResponse> findAll();
+    Page<ChatLieuGiay> getAll(Pageable pageable);
 
-    Page<ChatLieuGiayResponse> getAll(String pageParam, String limitParam);
 
-    ChatLieuGiayResponse findById(Integer id);
+    Optional<ChatLieuGiay> findById(Integer id);
 
-    ChatLieuGiayResponse create(ChatLieuGiayRequest chatLieuGiayRequest);
+    Page<ChatLieuGiay> findAllByName(String ten,Pageable pageable);
 
-    ChatLieuGiayResponse update(ChatLieuGiayRequest chatLieuGiayRequest, Integer id);
+    ChatLieuGiay create(ChatLieuGiay chatLieuGiay);
 
-    void delete(Integer id);
+    ChatLieuGiay update(ChatLieuGiay  chatLieuGiay , Integer id);
+
+    ChatLieuGiay delete(Integer id);
 }
