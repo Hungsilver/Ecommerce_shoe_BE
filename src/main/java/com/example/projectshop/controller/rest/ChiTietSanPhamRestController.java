@@ -2,7 +2,6 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,59 +12,58 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin
+@CrossOrigin(value = "*")
 @RestController
-@RequestMapping("/api/chi-tiet-san-pham")
+@RequestMapping("/api/product-details")
 public class ChiTietSanPhamRestController {
     @Autowired
-    private IChiTietSanPhamService service;
+    private IChiTietSanPhamService chiTietSanPhamService;
 
-    @Autowired
-    private HttpServletRequest request;
-
-    @GetMapping("/find-all")
-    public ResponseEntity<?> findAll(){
-        return ResponseEntity.ok(service.findAll());
+    @GetMapping()
+    public ResponseEntity<?> findAll(
+            @RequestParam(value = "pricemin", required = false) String pricemin,
+            @RequestParam(value = "pricemax", required = false) String pricemax,
+            @RequestParam(value = "color", required = false) String color,
+            @RequestParam(value = "shoe_material", required = false) String shoe_material,
+            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
+    ) {
+        return ResponseEntity.ok(chiTietSanPhamService.findAll(pricemin, pricemax, color, shoe_material, shoe_sole_material, page, pageSize));
     }
 
-    @GetMapping("/get-all")
-    public ResponseEntity<?> getAll(){
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.getAll(page,limit));
+    @GetMapping("{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(chiTietSanPhamService.findById(id));
     }
 
-    @GetMapping("/get-one/{id}")
-    public ResponseEntity<?> getOne(@PathVariable("id")Integer id){
-        return ResponseEntity.ok(service.getOne(id));
+    @PostMapping("")
+    public ResponseEntity<?> create(@RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest) {
+        return ResponseEntity.ok(chiTietSanPhamService.create(chiTietSanPhamRequest));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest){
-        return ResponseEntity.ok(service.create(chiTietSanPhamRequest));
-    }
-
-    @PutMapping("/update/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @PathVariable("id")Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
-    ){
-        return ResponseEntity.ok(service.update(id,chiTietSanPhamRequest));
+    ) {
+        return ResponseEntity.ok(chiTietSanPhamService.update(id, chiTietSanPhamRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id")Integer id){
-        service.delete(id);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(chiTietSanPhamService.delete(id));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> timKiem(){
-        String timKiem = request.getParameter("timKiem");
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.timKiem(timKiem,page,limit));
+    public ResponseEntity<?> timKiem(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
+    ) {
+        return ResponseEntity.ok(chiTietSanPhamService.search(keyword, page, pageSize));
     }
 }

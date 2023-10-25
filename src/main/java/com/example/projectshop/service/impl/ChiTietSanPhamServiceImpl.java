@@ -1,102 +1,101 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.HoaDonChiTietRepository;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.URLDecode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Autowired
-    private ChiTietSanPhamRepository repo;
+    private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
-    @Autowired
-    private HoaDonChiTietRepository hoaDonChiTietRepo;
 
     @Override
-    public List<ChiTietSanPhamResponse> findAll() {
-        List<ChiTietSanPhamResponse> list = ObjectMapperUtils.mapAll(repo.findAll(), ChiTietSanPhamResponse.class);
-        return list;
+    public Page<ChiTietSanPham> findAll(String priceMin,
+                                        String priceMax,
+                                        String color,
+                                        String shoe_material,
+                                        String shoe_sole_material,
+                                        Integer page,
+                                        Integer pageSize) {
+
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
+
+        BigDecimal priceMinOutput = priceMin == null ? BigDecimal.valueOf(0) : BigDecimal.valueOf(Long.valueOf(priceMin));
+        BigDecimal priceMaxOutput = priceMax == null ? chiTietSanPhamRepo.getTop1ByPriceMax().getGiaBan() : BigDecimal.valueOf(Long.valueOf(priceMax));
+
+        List<Integer> listMauSac = color == null ? null : Arrays.stream(URLDecode.getDecode(color).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> listChatLieuGiay = shoe_material == null ? null : Arrays.stream(URLDecode.getDecode(shoe_material).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> listChatLieuDeGiay = shoe_sole_material == null ? null : Arrays.stream(URLDecode.getDecode(shoe_sole_material).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        return chiTietSanPhamRepo.getAllByParam(
+                priceMinOutput,
+                priceMaxOutput,
+                listMauSac,
+                listChatLieuGiay,
+                listChatLieuDeGiay,
+                pageable);
+    }
+
+
+    @Override
+    public Optional<ChiTietSanPham> findById(Integer id) {
+        return chiTietSanPhamRepo.findById(id);
     }
 
     @Override
-    public Page<ChiTietSanPhamResponse> getAll(String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<ChiTietSanPhamResponse> listPage = ObjectMapperUtils.mapEntityPageIntoDtoPage(repo.findAll(pageable), ChiTietSanPhamResponse.class);
-        return listPage;
+    public ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) {
+        ChiTietSanPham chiTietSanPham = ObjectMapperUtils.map(chiTietSanPhamRequest,ChiTietSanPham.class);
+        chiTietSanPham.setId(null);
+        return chiTietSanPhamRepo.save(chiTietSanPham);
     }
 
     @Override
-    public ChiTietSanPhamResponse getOne(Integer id) {
-        return ObjectMapperUtils.map(repo.findById(id).get(), ChiTietSanPhamResponse.class);
+    public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
+        ChiTietSanPham chiTietSanPham = ObjectMapperUtils.map(chiTietSanPhamRequest, ChiTietSanPham.class);
+        chiTietSanPham.setId(id);
+        return chiTietSanPhamRepo.save(chiTietSanPham);
     }
 
     @Override
-    public ChiTietSanPhamResponse create(ChiTietSanPhamRequest chiTietSanPhamRequest) {
-        ChiTietSanPham entity = new ChiTietSanPham();
-        entity.setId(null);
-        entity.setSoLuong(chiTietSanPhamRequest.getSoLuong());
-        entity.setGiaBan(chiTietSanPhamRequest.getGiaBan());
-        entity.setNgayTao(chiTietSanPhamRequest.getNgayTao());
-        entity.setTrangThai(chiTietSanPhamRequest.getTrangThai());
-        entity.setMauSac(chiTietSanPhamRequest.getMausac());
-        entity.setKichCo(chiTietSanPhamRequest.getKichco());
-        entity.setChatLieuGiay(chiTietSanPhamRequest.getChatLieuGiay());
-        entity.setChatLieuDeGiay(chiTietSanPhamRequest.getChatLieuDeGiay());
-        entity.setSanPham(chiTietSanPhamRequest.getSanpham());
-        ChiTietSanPham entityRs = repo.save(entity);
-        ChiTietSanPhamResponse response = ObjectMapperUtils.map(entityRs, ChiTietSanPhamResponse.class);
-        return response;
+    public ChiTietSanPham delete(Integer id) {
+        Optional<ChiTietSanPham> chiTietSanPham = this.findById(id);
+        if (chiTietSanPham.isPresent()){
+            chiTietSanPham.get().setTrangThai(0);
+            return chiTietSanPhamRepo.save(chiTietSanPham.get());
+        }
+        return null;
     }
 
     @Override
-    public ChiTietSanPhamResponse update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
-        ChiTietSanPham entity = new ChiTietSanPham();
-        entity.setId(id);
-        entity.setSoLuong(chiTietSanPhamRequest.getSoLuong());
-        entity.setGiaBan(chiTietSanPhamRequest.getGiaBan());
-        entity.setNgayTao(chiTietSanPhamRequest.getNgayTao());
-        entity.setTrangThai(chiTietSanPhamRequest.getTrangThai());
-        entity.setMauSac(chiTietSanPhamRequest.getMausac());
-        entity.setKichCo(chiTietSanPhamRequest.getKichco());
-        entity.setChatLieuGiay(chiTietSanPhamRequest.getChatLieuGiay());
-        entity.setChatLieuDeGiay(chiTietSanPhamRequest.getChatLieuDeGiay());
-        entity.setSanPham(chiTietSanPhamRequest.getSanpham());
-        ChiTietSanPham entityRs = repo.save(entity);
-        ChiTietSanPhamResponse response = ObjectMapperUtils.map(entityRs, ChiTietSanPhamResponse.class);
-        return response;
-    }
-
-    @Override
-    public void delete(Integer id) {
-
-//        if (hoaDonChiTietRepo.findByChiTietSanPham(id) == null) {
-//            repo.deleteById(id);
-//        }
-//        ChiTietSanPhamRequest chiTietSanPhamRequest = ObjectMapperUtils.map(this.getOne(id), ChiTietSanPhamRequest.class);
-//        chiTietSanPhamRequest.setTrangThai(2);
-//        this.update(id, chiTietSanPhamRequest);
-    }
-
-    @Override
-    public Page<ChiTietSanPhamResponse> timKiem(String timKiem, String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<ChiTietSanPhamResponse> listPage = ObjectMapperUtils.mapEntityPageIntoDtoPage(repo.timKiem(timKiem, pageable), ChiTietSanPhamResponse.class);
-        return listPage;
+    public Page<ChiTietSanPham> search(String keyword, Integer page, Integer pageSize) {
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
+        return chiTietSanPhamRepo.search(keyword,pageable);
     }
 }

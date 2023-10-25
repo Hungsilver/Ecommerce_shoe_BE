@@ -1,8 +1,9 @@
 package com.example.projectshop.controller.rest;
 
-import com.example.projectshop.dto.khachhang.KhachHangRequest;
-import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaRequest;
-import com.example.projectshop.service.IKhachHangService;
+import com.example.projectshop.dto.danhmuc.DanhMucRequest;
+import com.example.projectshop.dto.diachi.DiaChiRequest;
+import com.example.projectshop.service.IDanhMucSevice;
+import com.example.projectshop.service.IDiaChiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/customer")
-public class KhachHangRestController {
+@RequestMapping("/api/category")
+public class DanhMucRestController {
 
     @Autowired
-    private IKhachHangService khachHangService;
+    private IDanhMucSevice danhMucSevice;
 
-    @GetMapping("/get-all")
+    @GetMapping()
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -32,33 +33,33 @@ public class KhachHangRestController {
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(khachHangService.findAll(page, pageSize, sortField, isSortDesc, keyword));
+        return ResponseEntity.ok(danhMucSevice.findAll(page,pageSize,sortField,isSortDesc,keyword));
     }
 
     @PostMapping()
     public ResponseEntity<?> create(
-            @RequestBody KhachHangRequest khachHangRequest
+            @RequestBody DanhMucRequest danhMucRequest
     ) {
-        return ResponseEntity.ok(khachHangService.create(khachHangRequest));
+        return ResponseEntity.ok(danhMucSevice.create(danhMucRequest));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(khachHangService.findById(id));
+        return ResponseEntity.ok(danhMucSevice.findById(id));
     }
 
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam KhachHangRequest khachHangRequest,
+            @RequestParam DanhMucRequest danhMucRequest,
             @PathVariable("id") Integer id
-    ) {
-        return ResponseEntity.ok(khachHangService.update(id, khachHangRequest));
+    ){
+        return ResponseEntity.ok(danhMucSevice.update(id,danhMucRequest));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(khachHangService.delete(id));
+        danhMucSevice.delete(id);
+        return ResponseEntity.ok(delete(id));
     }
-
 }

@@ -1,23 +1,30 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.PhieuGiamGia;
+import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaRequest;
 import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaResponse;
+import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IPhieuGiamGiaService {
 
-    List<PhieuGiamGiaResponse> findAll();
+    Page<PhieuGiamGia> findAll(
+            Integer page,
+            Integer pageSize,
+            String sortField,
+            Boolean isSortDesc,
+            String keyword
+    );
 
-    Page<PhieuGiamGiaResponse> getAll(String pageParam,String limitParam);
+    Optional<PhieuGiamGia> findById(Integer id);
 
-    PhieuGiamGiaResponse getOne(Integer id);
+    PhieuGiamGia create(PhieuGiamGiaRequest PhieuGiamGiaRequest);
 
-    PhieuGiamGiaResponse create(PhieuGiamGiaRequest phieuGiamGiaRequest);
+    PhieuGiamGia update(Integer id, PhieuGiamGiaRequest PhieuGiamGiaRequest);
 
-    PhieuGiamGiaResponse update(Integer id,PhieuGiamGiaRequest phieuGiamGiaRequest);
-
-    void delete(Integer id);
+    PhieuGiamGia delete(Integer id);
 }

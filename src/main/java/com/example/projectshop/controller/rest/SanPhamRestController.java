@@ -20,49 +20,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin
+@CrossOrigin(value = "*")
 @RestController
-@RequestMapping("/api/san-pham")
+@RequestMapping("/api/product")
 public class SanPhamRestController {
-    @Autowired
-    private HttpServletRequest request;
-
     @Autowired
     private ISanPhamService service;
 
 
-    @GetMapping("/find-all")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
-    @GetMapping("/get-all")
-    public ResponseEntity<?> getAll(
+    @GetMapping()
+    public ResponseEntity<?> findAll(
             @RequestParam(value = "pricemin",required = false) String pricemin,
             @RequestParam(value = "pricemax",required = false) String pricemax,
-            @RequestParam(value = "thuonghieu",required = false) String thuonghieu,
-            @RequestParam(value = "xuatxu",required = false) String xuatxu,
-            @RequestParam(value = "mausac",required = false) String mausac,
-            @RequestParam(value = "chatlieugiay",required = false) String chatlieugiay,
-            @RequestParam(value = "chatlieudegiay",required = false) String chatlieudegiay,
-            @RequestParam(value = "page",required = false) Integer page,
-            @RequestParam(value = "pageSize",required = false) Integer pageSize
+            @RequestParam(value = "trademark",required = false) String trademark,
+            @RequestParam(value = "origin",required = false) String origin,
+            @RequestParam(value = "color",required = false) String color,
+            @RequestParam(value = "shoe_material",required = false) String shoe_material,
+            @RequestParam(value = "shoe_sole_material",required = false) String shoe_sole_material,
+            @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize
     ){
-        System.out.println(thuonghieu);
-        return ResponseEntity.ok(service.getAllByParam(pricemin,pricemax,thuonghieu,xuatxu,mausac,chatlieugiay,chatlieudegiay, page,pageSize));
+        return ResponseEntity.ok(service.findAll(pricemin,pricemax,trademark,origin,color,shoe_material,shoe_sole_material, page,pageSize));
     }
 
-    @GetMapping("/get-one/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.getOne(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
         return ResponseEntity.ok(service.create(sanPhamRequest));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,
             @RequestBody SanPhamRequest sanPhamRequest
@@ -70,18 +61,19 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.update(id, sanPhamRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> timKiem() {
-        String timKiem = request.getParameter("timKiem");
-        String page = request.getParameter("page");
-        String limit = request.getParameter("limit");
-        return ResponseEntity.ok(service.timKiem(timKiem, page, limit));
+    public ResponseEntity<?> search(
+            @RequestParam("keyword")String keyword,
+            @RequestParam(value = "page",required = false,defaultValue = "1")Integer page,
+            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize
+    ) {
+        return ResponseEntity.ok(service.search(keyword,page,pageSize));
     }
 
 }

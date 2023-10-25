@@ -29,18 +29,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @CrossOrigin(origins = "*")
 public class XuatXuRestController {
 
-//    @Autowired
-//    private IXuatXuService service;
-
-//    @Autowired
-//    private HttpServletRequest request;
-//
-//    @GetMapping("/get-all")
-//    public ResponseEntity<?> findAll() {
-//        String page = request.getParameter("page");
-//        String limit = request.getParameter("limit");
-//        return ResponseEntity.ok(service.findAllXuatXu(page,limit));
-//    }
     @Autowired
     private XuatXuServiceImpl xuatXuService;
 

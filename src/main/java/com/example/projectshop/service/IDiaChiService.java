@@ -1,24 +1,32 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.DiaChi;
+import com.example.projectshop.domain.GioiThieu;
 import com.example.projectshop.dto.diachi.DiaChiRequest;
 import com.example.projectshop.dto.diachi.DiaChiResponse;
+import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IDiaChiService {
 
-    List<DiaChiResponse> findAll();
+    Page<DiaChi> findAll(
+            Integer page,
+            Integer pageSize,
+            String sortField,
+            Boolean isSortDesc,
+            String keyword
+    );
 
-    Page<DiaChiResponse> getAll(String pageParam, String limitParam);
+    Optional<DiaChi> findById(Integer id);
 
-    DiaChiResponse getOne(Integer id);
+    DiaChi create(DiaChiRequest gioiThieuRequest);
 
-    DiaChiResponse create(DiaChiRequest diaChiRequest);
+    DiaChi update(Integer id, DiaChiRequest gioiThieuRequest);
 
-    DiaChiResponse update(Integer id, DiaChiRequest diaChiRequest);
-
-    void delete(Integer id);
+    DiaChi delete(Integer id);
 
 
 }
