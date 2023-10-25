@@ -36,6 +36,9 @@ public class ChiTietSanPham {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "ma")
+    private String ma;
+
     @Column(name = "soluong")
     private Integer soLuong;
 
@@ -64,13 +67,14 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
 
-//    @JsonIgnore
-    @JsonBackReference
+    @JsonIgnore
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
 
-    @JsonManagedReference
+    @JsonIgnore
+//    @JsonManagedReference
     @OneToMany(mappedBy = "chiTietSanPham")
     private List<AnhSanPham> listAnhSanPham;
 

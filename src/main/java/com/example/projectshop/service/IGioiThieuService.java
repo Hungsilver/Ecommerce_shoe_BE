@@ -1,13 +1,15 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.GioiThieu;
 import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 
-public interface IThuongHieuService {
-    Page<ThuongHieu> findAll(
+public interface IGioiThieuService {
+    Page<GioiThieu> findAll(
             Integer page,
             Integer pageSize,
             String sortField,
@@ -15,11 +17,11 @@ public interface IThuongHieuService {
             String keyword
     );
 
-    Optional<ThuongHieu> findById(Integer id);
+    Optional<GioiThieu> findById(Integer id);
 
-    ThuongHieu create(ThuongHieuRequest thuongHieuRequest);
+    GioiThieu create(GioiThieuRequest gioiThieuRequest);
 
-    ThuongHieu update(Integer id, ThuongHieuRequest thuongHieuRequest);
+    GioiThieu update(Integer id, GioiThieuRequest gioiThieuRequest);
 
-    ThuongHieu delete(Integer id);
+    GioiThieu delete(Integer id);
 }

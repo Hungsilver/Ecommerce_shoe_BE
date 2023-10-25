@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/chat-lieu-de-giay")
+@RequestMapping("/api/shoe-sole-material")
 public class ChatLieuDeGiayRestController {
 
     @Autowired

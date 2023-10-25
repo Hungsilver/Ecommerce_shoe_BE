@@ -36,7 +36,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/chat-lieu-giay")
+@RequestMapping("/api/shoe-material")
 public class ChatLieuGiayRestController {
 
     @Autowired

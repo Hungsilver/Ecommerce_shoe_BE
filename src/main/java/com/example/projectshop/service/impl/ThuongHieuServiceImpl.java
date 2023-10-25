@@ -1,7 +1,7 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.Thuonghieu;
-import com.example.projectshop.dto.mausac.MauSacResponse;
+import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuResponse;
 import com.example.projectshop.repository.ThuongHieuRepository;
@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ThuongHieuServiceImpl implements IThuongHieuService {
@@ -22,51 +25,47 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
     private ThuongHieuRepository thuongHieuRepository;
 
     @Override
-    public List<ThuongHieuResponse> getAll() {
-        List<Thuonghieu> thu = thuongHieuRepository.findAll();
-        // ánh xạ từ thuonghieu sang thuonghieuReponse bằng mapAll
-        List<ThuongHieuResponse> reponse = ObjectMapperUtils.mapAll(thu, ThuongHieuResponse.class);
-        return reponse;
+    public Page<ThuongHieu> findAll(Integer page,
+                                    Integer pageSize,
+                                    String sortField,
+                                    Boolean isSortDesc,
+                                    String keyword) {
+        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        if (keyword != null && !keyword.isEmpty()) {
+            return thuongHieuRepository.findAllByName(keyword, pageable);
+        } else {
+            return thuongHieuRepository.findAll(pageable);
+        }
     }
 
     @Override
-    public ThuongHieuResponse findById(Integer id) {
-        Thuonghieu thchitiet = thuongHieuRepository.findById(id).orElse(null);
-        ThuongHieuResponse response = ObjectMapperUtils.map(thchitiet, ThuongHieuResponse.class);
-
-        return response;
+    public Optional<ThuongHieu> findById(Integer id) {
+        return thuongHieuRepository.findById(id);
     }
 
     @Override
-    public ThuongHieuResponse create(ThuongHieuRequest thuongHieuRequest) {
-        Thuonghieu th = ObjectMapperUtils.map(thuongHieuRequest, Thuonghieu.class);
-        th.setTen(thuongHieuRequest.getTen());
-        thuongHieuRepository.save(th);
-        ThuongHieuResponse response = ObjectMapperUtils.map(th, ThuongHieuResponse.class);
-        return response;
+    public ThuongHieu create(ThuongHieuRequest thuongHieuRequest) {
+        ThuongHieu thuongHieu = ObjectMapperUtils.map(thuongHieuRequest, ThuongHieu.class);
+        thuongHieu.setId(null);
+        return thuongHieuRepository.save(thuongHieu);
     }
 
     @Override
-    public ThuongHieuResponse update(ThuongHieuRequest thuongHieuRequest) {
-        Thuonghieu th = ObjectMapperUtils.map(thuongHieuRequest, Thuonghieu.class);
-        th.setTen(thuongHieuRequest.getTen());
-        th.setId(thuongHieuRequest.getId());
-        thuongHieuRepository.save(th);
-        ThuongHieuResponse response = ObjectMapperUtils.map(th, ThuongHieuResponse.class);
-        return response;
+    public ThuongHieu update(Integer id,ThuongHieuRequest thuongHieuRequest) {
+        ThuongHieu thuongHieu = ObjectMapperUtils.map(thuongHieuRequest, ThuongHieu.class);
+        thuongHieu.setId(id);
+        return thuongHieuRepository.save(thuongHieu);
     }
 
     @Override
-    public void delete(Integer id) {
-        thuongHieuRepository.deleteById(id);
+    public ThuongHieu delete(Integer id) {
+        Optional<ThuongHieu> thuongHieu = this.findById(id);
+        if (thuongHieu.isPresent()){
+            thuongHieu.get().setTrangThai(0);
+            return thuongHieuRepository.save(thuongHieu.get());
+        }
+        return null;
     }
 
-    @Override
-    public Page<ThuongHieuResponse> findAllThuongHieu(String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 3 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<ThuongHieuResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(thuongHieuRepository.findAll(pageable), ThuongHieuResponse.class);
-        return list;
-    }
 }

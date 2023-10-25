@@ -48,7 +48,7 @@ public class SanPham {
 
     @ManyToOne
     @JoinColumn(name = "id_thuonghieu")
-    private Thuonghieu thuongHieu;
+    private ThuongHieu thuongHieu;
 
     @ManyToOne
     @JoinColumn(name = "id_xuatxu")

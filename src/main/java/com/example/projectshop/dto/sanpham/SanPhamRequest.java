@@ -1,13 +1,10 @@
 package com.example.projectshop.dto.sanpham;
 
-import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.DanhMuc;
-import com.example.projectshop.domain.Thuonghieu;
+import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.domain.Xuatxu;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -25,7 +22,7 @@ public class SanPhamRequest {
 
     private Integer trangThai;
 
-    private Thuonghieu thuongHieu;
+    private ThuongHieu thuongHieu;
 
     private Xuatxu xuatXu;
 

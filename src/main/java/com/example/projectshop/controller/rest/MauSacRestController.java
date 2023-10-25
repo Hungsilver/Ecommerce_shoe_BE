@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin
-@RequestMapping("/api/mausac")
+@RequestMapping("/api/colors")
 public class MauSacRestController {
     @Autowired
     private IMauSacService mauSacService;

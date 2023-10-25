@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/nhan-vien")
+@RequestMapping("/api/staff")
 public class NhanVienRestController {
     @Autowired
     private INhanVienService nhanVienService;

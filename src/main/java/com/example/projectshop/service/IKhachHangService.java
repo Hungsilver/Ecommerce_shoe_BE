@@ -1,25 +1,30 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.KhachHang;
+import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.khachhang.KhachHangRespone;
+import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IKhachHangService {
 
-    List<KhachHang> findAll();
+    Page<KhachHang> findAll(
+            Integer page,
+            Integer pageSize,
+            String sortField,
+            Boolean isSortDesc,
+            String keyword
+    );
 
-    Page<KhachHang> getAll(String pageParam,String limitParam);
+    Optional<KhachHang> findById(Integer id);
 
-    KhachHangRespone getOne(Integer id);
+    KhachHang create(KhachHangRequest khachHangRequest);
 
-    KhachHangRespone create(KhachHangRequest khachHangRequest);
+    KhachHang update(Integer id, KhachHangRequest khachHangRequest);
 
-    KhachHangRespone update(Integer id,KhachHangRequest khachHangRequest);
-
-    void delete (Integer id);
-
-    Page<KhachHang> timKiem(String timKiem,String pageParam,String limitParam);
+    KhachHang delete(Integer id);
 }

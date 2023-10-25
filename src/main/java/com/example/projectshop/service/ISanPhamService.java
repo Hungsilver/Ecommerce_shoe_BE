@@ -8,29 +8,29 @@ import com.example.projectshop.dto.sanpham.SanPhamResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ISanPhamService {
 
-    List<SanPhamResponse> findAll();
 
-    Page<SanPham> getAllByParam(String priceMin,
+    Page<SanPham> findAll(      String priceMin,
                                 String priceMax,
-                                String thuongHieu,
-                                String xuatXu,
-                                String mauSac,
-                                String chatLieuGiay,
-                                String chatLieuDeGiay,
-                                Integer pageParam,
-                                Integer pageSizeParam
+                                String trademark,
+                                String origin,
+                                String color,
+                                String shoe_material,
+                                String shoe_sole_material,
+                                Integer page,
+                                Integer pageSize
     );
 
-    SanPhamResponse getOne(Integer id);
+    Optional<SanPham> findById(Integer id);
 
-    SanPhamResponse create(SanPhamRequest sanPhamRequest);
+    SanPham create(SanPhamRequest sanPhamRequest);
 
-    SanPhamResponse update(Integer id,SanPhamRequest sanPhamRequest);
+    SanPham update(Integer id,SanPhamRequest sanPhamRequest);
 
-    void delete(Integer id);
+    SanPham delete(Integer id);
 
-    Page<SanPhamResponse> timKiem (String timKiem,String pageParam,String limitParam);
+    Page<SanPham> search (String keyword,Integer page,Integer pageSize);
 }

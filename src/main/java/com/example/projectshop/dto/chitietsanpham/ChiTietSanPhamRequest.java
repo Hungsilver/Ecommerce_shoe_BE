@@ -18,6 +18,8 @@ import java.util.List;
 public class ChiTietSanPhamRequest {
     private Integer id;
 
+    private String ma;
+
     private Integer soLuong;
 
     private BigDecimal giaBan;
@@ -36,5 +38,4 @@ public class ChiTietSanPhamRequest {
 
     private SanPham sanpham;
 
-    private List<AnhSanPham> list;
 }

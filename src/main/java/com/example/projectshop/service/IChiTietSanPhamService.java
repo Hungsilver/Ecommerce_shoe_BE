@@ -6,20 +6,27 @@ import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IChiTietSanPhamService {
 
-    List<ChiTietSanPhamResponse> findAll();
+    Page<ChiTietSanPham> findAll(
+            String priceMin,
+            String priceMax,
+            String color,
+            String shoe_material,
+            String shoe_sole_material,
+            Integer page,
+            Integer pageSize
+    );
 
-    Page<ChiTietSanPhamResponse> getAll(String pageParam,String limitParam);
+    Optional<ChiTietSanPham> findById(Integer id);
 
-    ChiTietSanPhamResponse getOne(Integer id);
+    ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest);
 
-    ChiTietSanPhamResponse create(ChiTietSanPhamRequest chiTietSanPhamRequest);
+    ChiTietSanPham update(Integer id,ChiTietSanPhamRequest chiTietSanPhamRequest);
 
-    ChiTietSanPhamResponse update(Integer id,ChiTietSanPhamRequest chiTietSanPhamRequest);
+    ChiTietSanPham delete(Integer id);
 
-    void delete(Integer id);
-
-    Page<ChiTietSanPhamResponse> timKiem (String timKiem,String pageParam,String limitParam);
+    Page<ChiTietSanPham> search(String keyword,Integer page,Integer pageSize);
 }

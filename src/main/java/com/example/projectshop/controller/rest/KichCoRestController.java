@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/kichco")
+@RequestMapping("/api/size")
 public class KichCoRestController {
 
     @Autowired

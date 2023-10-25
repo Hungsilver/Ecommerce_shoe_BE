@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface XuatXuRepository extends JpaRepository<Xuatxu, Integer> {
-    @Query(value = "select * from xuatxu  limit 1",nativeQuery = true)
-    Xuatxu getTop1();
 
     @Query("select x from Xuatxu x where x.ten like :ten")
     Page<Xuatxu> findAllByTen(@Param("ten") String ten, Pageable pageable);
