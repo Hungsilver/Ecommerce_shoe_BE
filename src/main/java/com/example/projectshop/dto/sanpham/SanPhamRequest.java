@@ -5,6 +5,7 @@ import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.domain.Xuatxu;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -12,11 +13,9 @@ public class SanPhamRequest {
 
     private Integer id;
 
-    private String ma;
-
     private String ten;
 
-    private String anhChinh;
+    private MultipartFile anhChinh;
 
     private String moTa;
 

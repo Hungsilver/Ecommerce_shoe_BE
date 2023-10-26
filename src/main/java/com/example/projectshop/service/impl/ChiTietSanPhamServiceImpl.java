@@ -1,11 +1,14 @@
 package com.example.projectshop.service.impl;
 
+import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
+import com.example.projectshop.repository.AnhSanPhamRepository;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.HoaDonChiTietRepository;
+import com.example.projectshop.service.CloudinaryService;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
@@ -14,10 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,6 +31,12 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
+
+    @Autowired
+    private AnhSanPhamRepository anhSanPhamRepo;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     @Override
@@ -73,14 +84,33 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     public ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) {
         ChiTietSanPham chiTietSanPham = ObjectMapperUtils.map(chiTietSanPhamRequest,ChiTietSanPham.class);
         chiTietSanPham.setId(null);
+        for (Map map: cloudinaryService.uploadListFile(chiTietSanPhamRequest.getAnhSanPham())){
+            AnhSanPham anhSanPham = new AnhSanPham();
+            anhSanPham.setId(String.valueOf(map.get("public_id")));
+            anhSanPham.setTen(String.valueOf(map.get("url")));
+            anhSanPham.setChiTietSanPham(chiTietSanPham);
+            anhSanPhamRepo.save(anhSanPham);
+        }
         return chiTietSanPhamRepo.save(chiTietSanPham);
     }
 
     @Override
     public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
-        ChiTietSanPham chiTietSanPham = ObjectMapperUtils.map(chiTietSanPhamRequest, ChiTietSanPham.class);
-        chiTietSanPham.setId(id);
-        return chiTietSanPhamRepo.save(chiTietSanPham);
+        if (chiTietSanPhamRequest.getAnhSanPham()==null){
+            ChiTietSanPham chiTietSanPham = ObjectMapperUtils.map(chiTietSanPhamRequest, ChiTietSanPham.class);
+            chiTietSanPham.setId(id);
+            return chiTietSanPhamRepo.save(chiTietSanPham);
+        }
+        ChiTietSanPham chiTietSanPham2 = ObjectMapperUtils.map(chiTietSanPhamRequest,ChiTietSanPham.class);
+        chiTietSanPham2.setId(id);
+        for (Map map: cloudinaryService.uploadListFile(chiTietSanPhamRequest.getAnhSanPham())){
+            AnhSanPham anhSanPham = new AnhSanPham();
+            anhSanPham.setId(String.valueOf(map.get("public_id")));
+            anhSanPham.setTen(String.valueOf(map.get("url")));
+            anhSanPham.setChiTietSanPham(chiTietSanPham2);
+            anhSanPhamRepo.save(anhSanPham);
+        }
+        return chiTietSanPhamRepo.save(chiTietSanPham2);
     }
 
     @Override
