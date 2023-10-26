@@ -7,6 +7,7 @@ import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.dto.sanpham.SanPhamResponse;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.SanPhamRepository;
+import com.example.projectshop.service.CloudinaryService;
 import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,9 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     @Override
@@ -89,16 +94,25 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Override
     public SanPham create(SanPhamRequest sanPhamRequest) {
+        Map map = cloudinaryService.uploadFile(sanPhamRequest.getAnhChinh());
         SanPham sanPham = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
         sanPham.setId(null);
+        sanPham.setAnhChinh(String.valueOf(map.get("url")));
         return sanPhamrepo.save(sanPham);
     }
 
     @Override
     public SanPham update(Integer id, SanPhamRequest sanPhamRequest) {
-        SanPham sanPham = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
-        sanPham.setId(id);
-        return sanPham;
+        if (sanPhamRequest.getAnhChinh()==null){
+            SanPham sanPham = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
+            sanPham.setId(id);
+            return sanPham;
+        }
+        Map map = cloudinaryService.uploadFile(sanPhamRequest.getAnhChinh());
+        SanPham sanPham2 = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
+        sanPham2.setId(id);
+        sanPham2.setAnhChinh(String.valueOf(map.get("url")));
+        return sanPhamrepo.save(sanPham2);
     }
 
     @Override

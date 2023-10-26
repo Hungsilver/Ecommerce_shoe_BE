@@ -8,6 +8,7 @@ import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.SanPham;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -37,5 +38,7 @@ public class ChiTietSanPhamRequest {
     private ChatLieuDeGiay chatLieuDeGiay;
 
     private SanPham sanpham;
+
+    private MultipartFile[] anhSanPham;
 
 }
