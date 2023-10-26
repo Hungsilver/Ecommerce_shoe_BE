@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+
 public interface IDanhMucSevice {
     Page<DanhMuc> findAll(
             Integer page,

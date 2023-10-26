@@ -36,7 +36,7 @@ CREATE TABLE `ChatLieuGiay`
 
 CREATE TABLE `AnhSanPham`
 (
-    `id`        Integer AUTO_INCREMENT PRIMARY KEY,
+    `id`        varchar(255) PRIMARY KEY,
     `id_ChiTietSanPham` Integer,
     `ten`       varchar(100)
 );
@@ -461,7 +461,6 @@ Insert into GioiThieu value
 	(null,"gioithieu4","noidung4",null,null,"mota4",null,null,0,null),
 	(null,"gioithieu5","noidung5",null,null,"mota5",null,null,0,null)
 
--- Mô tả bản cập nhật 1.6:
--- Thêm bảng DanhMuc liến kết với bảng SanPham
--- Cập nhật mã sản phẩm từ bảng sanpham chuyển sang bảng chitietsanpham
+-- Mô tả bản cập nhật 1.7:
+-- Cập nhật id anhsanpham từ integer sang varchar(255)
 
