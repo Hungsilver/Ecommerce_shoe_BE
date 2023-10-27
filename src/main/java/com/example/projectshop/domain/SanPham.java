@@ -43,6 +43,12 @@ public class SanPham {
     @Column(name = "mota")
     private String moTa;
 
+    @Column(name = "ngaytao")
+    private String ngayTao;
+
+    @Column(name = "ngaycapnhat")
+    private String ngayCapNhat;
+
     @Column(name = "trangthai")
     private Integer trangThai;
 
@@ -58,7 +64,7 @@ public class SanPham {
     @JoinColumn(name = "id_danhmuc")
     private DanhMuc danhMuc;
 
-    @JsonIgnore
+//    @JsonIgnore
     @JsonManagedReference
     @OneToMany(mappedBy = "sanPham")
     private List<ChiTietSanPham> listChiTietSanPham = new ArrayList<>();

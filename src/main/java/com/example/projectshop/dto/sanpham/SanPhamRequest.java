@@ -3,6 +3,7 @@ package com.example.projectshop.dto.sanpham;
 import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.domain.Xuatxu;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,9 +16,13 @@ public class SanPhamRequest {
 
     private String ten;
 
-    private MultipartFile anhChinh;
+    private String anhChinh;
 
     private String moTa;
+
+    private String ngayTao;
+
+    private String ngayCapNhat;
 
     private Integer trangThai;
 

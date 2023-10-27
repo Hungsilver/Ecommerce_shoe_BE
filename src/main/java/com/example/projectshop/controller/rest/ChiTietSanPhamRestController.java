@@ -24,6 +24,16 @@ public class ChiTietSanPhamRestController {
 
     @GetMapping()
     public ResponseEntity<?> findAll(
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
+            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
+    ) {
+        return ResponseEntity.ok(chiTietSanPhamService.findAll(page,pageSize,sortField,isSortDesc));
+    }
+
+    @GetMapping("filter")
+    public ResponseEntity<?> filter(
             @RequestParam(value = "pricemin", required = false) String pricemin,
             @RequestParam(value = "pricemax", required = false) String pricemax,
             @RequestParam(value = "color", required = false) String color,
@@ -32,7 +42,7 @@ public class ChiTietSanPhamRestController {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.findAll(pricemin, pricemax, color, shoe_material, shoe_sole_material, page, pageSize));
+        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, page, pageSize));
     }
 
     @GetMapping("{id}")

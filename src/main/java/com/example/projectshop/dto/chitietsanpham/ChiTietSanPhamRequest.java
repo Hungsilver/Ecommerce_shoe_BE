@@ -27,6 +27,8 @@ public class ChiTietSanPhamRequest {
 
     private Date ngayTao;
 
+    private Date ngayCapNhat;
+
     private Integer trangThai;
 
     private MauSac mausac;
@@ -39,6 +41,5 @@ public class ChiTietSanPhamRequest {
 
     private SanPham sanpham;
 
-    private MultipartFile[] anhSanPham;
 
 }
