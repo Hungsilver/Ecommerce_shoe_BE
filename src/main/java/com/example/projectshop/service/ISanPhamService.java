@@ -1,6 +1,7 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.SanPham;
+import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
@@ -13,15 +14,23 @@ import java.util.Optional;
 public interface ISanPhamService {
 
 
-    Page<SanPham> findAll(      String priceMin,
-                                String priceMax,
-                                String trademark,
-                                String origin,
-                                String color,
-                                String shoe_material,
-                                String shoe_sole_material,
-                                Integer page,
-                                Integer pageSize
+    Page<SanPham> findAll(
+            Integer page,
+            Integer pageSize,
+            String sortField,
+            Boolean isSortDesc
+    );
+
+    Page<SanPham> filter(
+            String priceMin,
+            String priceMax,
+            String trademark,
+            String origin,
+            String color,
+            String shoe_material,
+            String shoe_sole_materal,
+            Integer page,
+            Integer pageSize
     );
 
     Optional<SanPham> findById(Integer id);

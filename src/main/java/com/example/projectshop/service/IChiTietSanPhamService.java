@@ -1,16 +1,22 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IChiTietSanPhamService {
 
     Page<ChiTietSanPham> findAll(
+            Integer page,
+            Integer pageSize,
+            String sortField,
+            Boolean isSortDesc
+    );
+
+    Page<ChiTietSanPham> filter(
             String priceMin,
             String priceMax,
             String color,
@@ -24,9 +30,9 @@ public interface IChiTietSanPhamService {
 
     ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest);
 
-    ChiTietSanPham update(Integer id,ChiTietSanPhamRequest chiTietSanPhamRequest);
+    ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest);
 
     ChiTietSanPham delete(Integer id);
 
-    Page<ChiTietSanPham> search(String keyword,Integer page,Integer pageSize);
+    Page<ChiTietSanPham> search(String keyword, Integer page, Integer pageSize);
 }
