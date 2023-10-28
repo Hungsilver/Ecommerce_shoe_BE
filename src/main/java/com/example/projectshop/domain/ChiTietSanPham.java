@@ -67,7 +67,7 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
 
-//    @JsonBackReference
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
