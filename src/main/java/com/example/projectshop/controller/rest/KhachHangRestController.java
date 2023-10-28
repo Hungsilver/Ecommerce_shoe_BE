@@ -23,7 +23,7 @@ public class KhachHangRestController {
 
     @Autowired
     private IKhachHangService khachHangService;
-
+    
     @GetMapping("/get-all")
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,

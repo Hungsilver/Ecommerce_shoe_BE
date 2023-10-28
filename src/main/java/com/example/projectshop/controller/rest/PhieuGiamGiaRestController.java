@@ -49,7 +49,7 @@ public class PhieuGiamGiaRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam PhieuGiamGiaRequest phieuGiamGiaRequest,
+            @RequestBody PhieuGiamGiaRequest phieuGiamGiaRequest,
             @PathVariable("id") Integer id
     ){
         return ResponseEntity.ok(phieuGiamGiaService.update(id,phieuGiamGiaRequest));
