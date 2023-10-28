@@ -50,7 +50,7 @@ public class GioiThieuRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam GioiThieuRequest gioiThieuRequest,
+            @RequestBody GioiThieuRequest gioiThieuRequest,
             @PathVariable("id") Integer id
     ){
         return ResponseEntity.ok(gioiThieuService.update(id,gioiThieuRequest));
