@@ -50,7 +50,7 @@ public class ChiTietSanPham {
     private Date ngayTao;
 
     @Column(name = "ngaycapnhat")
-    private Date ngaycapnhat;
+    private Date ngayCapNhat;
 
     @Column(name = "trangthai")
     private Integer trangThai;
@@ -70,6 +70,7 @@ public class ChiTietSanPham {
     @ManyToOne
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
+
 
     @JsonBackReference
 //    @JsonIgnoreProperties

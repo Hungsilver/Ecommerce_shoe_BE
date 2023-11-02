@@ -48,12 +48,15 @@ public class SanPhamRestController {
             @RequestParam(value = "brand",required = false) String brand,
             @RequestParam(value = "origin",required = false) String origin,
             @RequestParam(value = "color",required = false) String color,
+            @RequestParam(value = "size",required = false) String size,
             @RequestParam(value = "shoe_material",required = false) String shoe_material,
             @RequestParam(value = "shoe_sole_material",required = false) String shoe_sole_material,
+            @RequestParam(value = "keyword",required = false) String keyword,
+            @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
             @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize
     ){
-        return ResponseEntity.ok(service.filter(pricemin,pricemax,brand,origin,color,shoe_material,shoe_sole_material, page,pageSize));
+        return ResponseEntity.ok(service.filter(pricemin,pricemax,brand,origin,color,size,shoe_material,shoe_sole_material,keyword,isSortAsc, page,pageSize));
     }
 
     @GetMapping("/{id}")
@@ -78,15 +81,6 @@ public class SanPhamRestController {
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<?> search(
-            @RequestParam("keyword")String keyword,
-            @RequestParam(value = "page",required = false,defaultValue = "1")Integer page,
-            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize
-    ) {
-        return ResponseEntity.ok(service.search(keyword,page,pageSize));
     }
 
     @GetMapping("/attribute")

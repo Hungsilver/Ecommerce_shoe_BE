@@ -27,8 +27,11 @@ public interface ISanPhamService {
             String trademark,
             String origin,
             String color,
+            String size,
             String shoe_material,
             String shoe_sole_materal,
+            String keyword,
+            Boolean isSortAsc,
             Integer page,
             Integer pageSize
     );
@@ -41,5 +44,4 @@ public interface ISanPhamService {
 
     SanPham delete(Integer id);
 
-    Page<SanPham> search (String keyword,Integer page,Integer pageSize);
 }

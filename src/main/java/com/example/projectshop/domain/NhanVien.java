@@ -63,7 +63,6 @@ public class NhanVien {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "nhanVien")
     private List<GioiThieu> listGioiThieu;
@@ -72,7 +71,8 @@ public class NhanVien {
     @OneToMany(mappedBy = "nhanVien")
     private List<HoaDon> listHoaDon;
 
-    @JsonIgnoreProperties("nhanViens")
+    @JsonIgnore
+//    @JsonIgnoreProperties("nhanViens")
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "nhanvienchucvu",
             joinColumns = @JoinColumn(name = "id_nhanvien"),

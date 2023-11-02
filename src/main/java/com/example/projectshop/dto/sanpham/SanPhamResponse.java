@@ -7,6 +7,7 @@ import com.example.projectshop.domain.Xuatxu;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -14,8 +15,6 @@ import java.util.List;
 public class SanPhamResponse {
 
     private Integer id;
-
-    private String ma;
 
     private String ten;
 

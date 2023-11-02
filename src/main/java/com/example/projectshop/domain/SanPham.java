@@ -2,6 +2,7 @@ package com.example.projectshop.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,7 +66,8 @@ public class SanPham {
     private DanhMuc danhMuc;
 
 //    @JsonIgnore
-    @JsonManagedReference
+//    @JsonManagedReference
+@JsonIgnoreProperties("sanPham")
     @OneToMany(mappedBy = "sanPham")
     private List<ChiTietSanPham> listChiTietSanPham = new ArrayList<>();
 
