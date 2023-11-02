@@ -33,7 +33,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
 
-
     @Override
     public Page<SanPham> findAll(Integer page,
                                  Integer pageSize,
@@ -100,12 +99,12 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 listChatLieuDeGiay,
                 keyword,
                 pageable);
-        for(SanPham sanPham: listSanPham.getContent()){
+        for (SanPham sanPham : listSanPham.getContent()) {
             List<ChiTietSanPham> chiTietSanPhamList = sanPham.getListChiTietSanPham();
-            if (isSortAsc == false){
+            if (isSortAsc == false) {
                 // sort asc
                 Collections.sort(chiTietSanPhamList, (ctsp1, ctsp2) -> ctsp1.getGiaBan().compareTo(ctsp2.getGiaBan()));
-            }else{
+            } else {
                 // sort desc
                 Collections.sort(chiTietSanPhamList, (ctsp1, ctsp2) -> ctsp2.getGiaBan().compareTo(ctsp1.getGiaBan()));
             }

@@ -1,6 +1,7 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChatLieuGiay;
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
@@ -26,54 +28,39 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
 
-
-
     @Override
-    public List<ChatLieuGiayResponse> findAll() {
-        List<ChatLieuGiayResponse> list = ObjectMapperUtils.mapAll(chatLieuGiayRepository.findAll(), ChatLieuGiayResponse.class);
-        return list;
+    public Page<ChatLieuGiay> getAll(Pageable pageable) {
+        return chatLieuGiayRepository.findAll(pageable);
     }
 
     @Override
-    public Page<ChatLieuGiayResponse> getAll(String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<ChatLieuGiayResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(chatLieuGiayRepository.findAll(pageable), ChatLieuGiayResponse.class);
-        return list;
+    public Optional<ChatLieuGiay> findById(Integer id) {
+        return chatLieuGiayRepository.findById(id);
     }
 
     @Override
-    public ChatLieuGiayResponse findById(Integer id) {
-        return ObjectMapperUtils.map(chatLieuGiayRepository.findById(id).get(), ChatLieuGiayResponse.class);
+    public Page<ChatLieuGiay> findAllByName(String name, Pageable pageable) {
+        return chatLieuGiayRepository.findAllByTen("%"+name+"%", pageable);
     }
 
     @Override
-    public ChatLieuGiayResponse create(ChatLieuGiayRequest chatLieuDeGiayRequest) {
-        ChatLieuGiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, ChatLieuGiay.class);
-        entity.setId(null);
-        entity.setTen(chatLieuDeGiayRequest.getTen());
-        ChatLieuGiay entityRs = chatLieuGiayRepository.save(entity);
-        ChatLieuGiayResponse response = ObjectMapperUtils.map(entityRs, ChatLieuGiayResponse.class);
-        return response;
+    public ChatLieuGiay create(ChatLieuGiay chatLieuGiay) {
+        return chatLieuGiayRepository.save(chatLieuGiay);
     }
 
     @Override
-    public ChatLieuGiayResponse update(ChatLieuGiayRequest chatLieuDeGiayRequest, Integer id) {
-        ChatLieuGiay eDb = chatLieuGiayRepository.findById(id).get();
-        ChatLieuGiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, ChatLieuGiay.class);
-        entity.setId(eDb.getId());
-        entity.setTen(chatLieuDeGiayRequest.getTen());
-        entity = chatLieuGiayRepository.save(entity);
-        return ObjectMapperUtils.map(chatLieuGiayRepository.save(entity), ChatLieuGiayResponse.class);
+    public ChatLieuGiay update(ChatLieuGiay chatLieuGiay, Integer id) {
+        chatLieuGiay.setId(id);
+        return chatLieuGiayRepository.save(chatLieuGiay);
     }
 
     @Override
-    public void delete(Integer id) {
-        ChatLieuGiayRequest chatLieuGiayRequest = new ChatLieuGiayRequest();
-        chatLieuGiayRequest.setId(id);
-        chatLieuGiayRequest.setTen(this.findById(id).getTen());
-        chatLieuGiayRequest.setTrangThai(2);
-        this.update(chatLieuGiayRequest,id);
+    public ChatLieuGiay delete(Integer id) {
+        Optional<ChatLieuGiay> xx = chatLieuGiayRepository.findById(id);
+        if (xx.isPresent()) {
+            xx.get().setTrangThai(0);
+            return chatLieuGiayRepository.save(xx.get());
+        }
+        return null;
     }
 }

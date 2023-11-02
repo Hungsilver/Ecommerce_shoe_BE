@@ -1,22 +1,26 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.dto.mausac.MauSacRequest;
 import com.example.projectshop.dto.mausac.MauSacResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IMauSacService {
-    List<MauSacResponse> getAll();
+    Page<MauSac> getAll(Pageable pageable);
 
-    MauSacResponse findById(Integer id);
+    Optional<MauSac> findById(Integer id);
 
-    MauSacResponse create(MauSacRequest mauSacRequest);
+    Page<MauSac> findAllByName(String name,Pageable pageable);
 
-    MauSacResponse update(MauSacRequest mauSacRequest, Integer id);
+    MauSac create(MauSac mauSac);
 
-    void delete(Integer id);
+    MauSac update(MauSac  mauSac , Integer id);
 
-    Page<MauSacResponse> findAllMauSac(String pageParam, String limitParam);
+    MauSac delete(Integer id);
+
 
 }

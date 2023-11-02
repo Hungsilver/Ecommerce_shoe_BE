@@ -1,11 +1,20 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.ChatLieuDeGiay;
+import com.example.projectshop.domain.ChatLieuGiay;
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
+import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.repository.ChatLieuGiayRepository;
 import com.example.projectshop.service.IChatLieuGiayService;
+import com.example.projectshop.service.ObjectMapperUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,78 +36,56 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/chat-lieu-giay")
+@RequestMapping("/api/shoe-material")
 public class ChatLieuGiayRestController {
 
     @Autowired
-    private IChatLieuGiayService service;
+    private IChatLieuGiayService chatLieuGiayService;
 
     @Autowired
     private HttpServletRequest request;
 
     @Autowired
     ChatLieuGiayRepository chatLieuGiayRepo;
-
-    @GetMapping(value = "/find-all")
-    public ResponseEntity<?> findAll(@RequestParam(value = "id",required = false)String id) {
-        String[] idArray = id.split("-");
-        for (String ids: idArray){
-            System.out.println(ids);
+    @GetMapping
+    public ResponseEntity<?> findAll(
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
+            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "keyword", required = false) String keyword
+    ) {
+        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        Page<ChatLieuGiay>  chatLieuGiays;
+        if (keyword != null && !keyword.isEmpty()) {
+            chatLieuGiays = chatLieuGiayService.findAllByName(keyword, pageable);
+        } else {
+            chatLieuGiays = chatLieuGiayService.getAll(pageable);
         }
-//        List<String > list = new ArrayList<>();
-//        list.add("abc");
-//        list.add("adf");
-//        System.out.println(list);
-
-        return ResponseEntity.ok(chatLieuGiayRepo.test(1, idArray));
-
+        return ResponseEntity.ok(chatLieuGiays);
+    }
+    @GetMapping("{id}")
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(chatLieuGiayService.findById(id));
     }
 
-    @GetMapping(value = "/get-all")
-    public ResponseEntity<?> getALl() {
-        String page = request.getParameter("page");
-        String limt = request.getParameter("limit");
-        return ResponseEntity.ok(service.getAll(page, limt));
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody ChatLieuGiayRequest request) {
+        ChatLieuGiay xx = ObjectMapperUtils.map(request, ChatLieuGiay.class);
+        return ResponseEntity.ok(chatLieuGiayService.create(xx));
     }
 
-    @GetMapping(value = "/get-one/{id}")
-    public ResponseEntity<?> getALl(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+    @PutMapping("{id}")
+    public ResponseEntity<?> update(@RequestBody ChatLieuGiayRequest request, @PathVariable("id") Integer id) {
+        ChatLieuGiay xx = ObjectMapperUtils.map(request, ChatLieuGiay.class);
+        return ResponseEntity.ok(chatLieuGiayService.update(xx, id));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(chatLieuGiayService.delete(id));
     }
 
 
-    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> create(
-            @RequestBody @Valid ChatLieuGiayRequest request,
-            BindingResult result) {
-//        if (result.hasErrors()) {
-//            Map<String, String> mapError = new HashMap<>();
-//            result.getAllErrors().stream().forEach(
-//                    x -> mapError.put(((FieldError) x).getField(), x.getDefaultMessage())
-//            );
-//            return ResponseEntity.ok(mapError);
-//        }
-        return ResponseEntity.ok(service.create(request));
-    }
-
-    @PutMapping(value = "/update/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
-            @RequestBody @Valid ChatLieuGiayRequest request,
-            BindingResult result) {
-//        if (result.hasErrors()) {
-//            Map<String, String> mapError = new HashMap<>();
-//            result.getAllErrors().stream().forEach(
-//                    x -> mapError.put(((FieldError) x).getField(), x.getDefaultMessage())
-//            );
-//            return ResponseEntity.ok(mapError);
-//        }
-        return ResponseEntity.ok(service.update(request, id));
-    }
-
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.ok().build();
-    }
 }

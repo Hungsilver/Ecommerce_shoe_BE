@@ -1,6 +1,7 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChatLieuDeGiay;
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
 import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayResponse;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
@@ -24,59 +26,41 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
+
     @Override
-    public List<ChatLieuDeGiayResponse> findAll() {
-        return ObjectMapperUtils.mapAll(chatLieuDeGiayRepository.findAll(), ChatLieuDeGiayResponse.class);
+    public Page<ChatLieuDeGiay> getAll(Pageable pageable) {
+        return chatLieuDeGiayRepository.findAll(pageable);
     }
 
     @Override
-    public Page<ChatLieuDeGiayResponse> getAll(String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 2 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<ChatLieuDeGiayResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(chatLieuDeGiayRepository.findAll(pageable), ChatLieuDeGiayResponse.class);
-        return list;
+    public Optional<ChatLieuDeGiay> findById(Integer id) {
+        return chatLieuDeGiayRepository.findById(id);
     }
 
     @Override
-    public ChatLieuDeGiay findById(Integer id) {
-        return ObjectMapperUtils.map(chatLieuDeGiayRepository.findById(id).get(), ChatLieuDeGiay.class);
+    public Page<ChatLieuDeGiay> findAllByName(String ten, Pageable pageable) {
+        return chatLieuDeGiayRepository.findAllByTen("%"+ten+"%",pageable);
     }
 
     @Override
-    public Page<ChatLieuDeGiay> timKiem(String input, String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 5 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        return chatLieuDeGiayRepository.timKiem(input, pageable);
-//        return ObjectMapperUtils.mapEntityPageIntoDtoPage(chatLieuDeGiayRepository.timKiem(input,pageable), ChatLieuDeGiayResponse.class);
+    public ChatLieuDeGiay create(ChatLieuDeGiay chatLieuDeGiay) {
+        chatLieuDeGiay.setId(null);
+        return chatLieuDeGiayRepository.save(chatLieuDeGiay);
     }
 
     @Override
-    public ChatLieuDeGiayResponse create(ChatLieuDeGiayRequest chatLieuDeGiayRequest) {
-        ChatLieuDeGiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, ChatLieuDeGiay.class);
-        entity.setTen(chatLieuDeGiayRequest.getTen());
-        entity = chatLieuDeGiayRepository.save(entity);
-        ChatLieuDeGiayResponse response = ObjectMapperUtils.map(entity, ChatLieuDeGiayResponse.class);
-        return response;
-    }
-
-    @Override
-    public ChatLieuDeGiayResponse update(ChatLieuDeGiayRequest chatLieuDeGiayRequest, Integer id) {
-        ChatLieuDeGiay eDb = chatLieuDeGiayRepository.findById(id).get();
-        ChatLieuDeGiay entity = ObjectMapperUtils.map(chatLieuDeGiayRequest, ChatLieuDeGiay.class);
-        entity.setId(eDb.getId());
-        entity.setTen(chatLieuDeGiayRequest.getTen());
-        entity = chatLieuDeGiayRepository.save(entity);
-        return ObjectMapperUtils.map(chatLieuDeGiayRepository.save(entity), ChatLieuDeGiayResponse.class);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        ChatLieuDeGiayRequest chatLieuDeGiay = new ChatLieuDeGiayRequest();
+    public ChatLieuDeGiay update(ChatLieuDeGiay chatLieuDeGiay, Integer id) {
         chatLieuDeGiay.setId(id);
-        chatLieuDeGiay.setTen(this.findById(id).getTen());
-        chatLieuDeGiay.setTrangThai(2);
-        this.update(chatLieuDeGiay,id);
+        return chatLieuDeGiayRepository.save(chatLieuDeGiay);
+    }
+
+    @Override
+    public ChatLieuDeGiay delete(Integer id) {
+        Optional<ChatLieuDeGiay> xx = chatLieuDeGiayRepository.findById(id);
+        if (xx.isPresent()) {
+            xx.get().setTrangThai(0);
+            return chatLieuDeGiayRepository.save(xx.get());
+        }
+        return null;
     }
 }

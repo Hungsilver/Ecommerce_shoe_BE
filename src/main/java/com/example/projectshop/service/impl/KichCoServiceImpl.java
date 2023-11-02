@@ -1,6 +1,7 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.KichCo;
+import com.example.projectshop.domain.Xuatxu;
 import com.example.projectshop.dto.kichco.KichCoRequest;
 import com.example.projectshop.dto.kichco.KichCoResponse;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
@@ -14,59 +15,48 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class KichCoServiceImpl implements IKichCoService {
     @Autowired
     private KichCoRepository kichCoRepository;
 
-    @Autowired
-    private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
     @Override
-    public List<KichCoResponse> getAll() {
-        List<KichCoResponse> list = ObjectMapperUtils.mapAll(kichCoRepository.findAll(), KichCoResponse.class);
-        return list;
+    public Page<KichCo> getAll(Pageable pageable) {
+        return kichCoRepository.findAll(pageable);
     }
 
     @Override
-    public KichCoResponse findById(Integer id) {
-        return ObjectMapperUtils.map(kichCoRepository.findById(id).get(), KichCoResponse.class);
+    public Optional<KichCo> findById(Integer id) {
+        return kichCoRepository.findById(id);
     }
 
     @Override
-    public KichCoResponse create(KichCoRequest kichCoRequest) {
-        KichCo entity = ObjectMapperUtils.map(kichCoRequest, KichCo.class);
-        entity.setSize(kichCoRequest.getSize());
-        entity = kichCoRepository.save(entity);
-        KichCoResponse response = ObjectMapperUtils.map(entity, KichCoResponse.class);
-        return response;
+    public Page<KichCo> findAllByName(String size, Pageable pageable) {
+
+        return kichCoRepository.findAllBySize("%" +size+"%",pageable);
     }
 
     @Override
-    public KichCoResponse update(KichCoRequest kichCoRequest, Integer id) {
-        KichCo eDb = kichCoRepository.findById(id).get();
-        KichCo entity = ObjectMapperUtils.map(kichCoRequest, KichCo.class);
-        entity.setId(eDb.getId());
-        entity.setSize(kichCoRequest.getSize());
-        entity = kichCoRepository.save(entity);
-        return ObjectMapperUtils.map(kichCoRepository.save(entity), KichCoResponse.class);
+    public KichCo create(KichCo kc) {
+        return kichCoRepository.save(kc);
     }
 
     @Override
-    public void delete(Integer id) {
-        KichCoRequest kichCoRequest = new KichCoRequest();
-        kichCoRequest.setId(id);
-        kichCoRequest.setSize(this.findById(id).getSize());
-        kichCoRequest.setTrangThai(2);
-        this.update(kichCoRequest,id);
+    public KichCo update(KichCo kc, Integer id) {
+        kc.setId(id);
+        return kichCoRepository.save(kc);
     }
 
     @Override
-    public Page<KichCoResponse> findAllKichCo(String pageParam, String limitParam) {
-        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-        Integer limit = limitParam == null ? 3 : Integer.valueOf(limitParam);
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<KichCoResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(kichCoRepository.findAll(pageable), KichCoResponse.class);
-        return list;    }
+    public KichCo delete(Integer id) {
+        Optional<KichCo> xx = kichCoRepository.findById(id);
+        if (xx.isPresent()) {
+            xx.get().setTrangThai(0);
+            return kichCoRepository.save(xx.get());
+        }
+        return null;
+    }
 }
