@@ -50,7 +50,7 @@ public class DiaChiRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam DiaChiRequest diaChiRequest,
+            @RequestBody DiaChiRequest diaChiRequest,
             @PathVariable("id") Integer id
     ){
         return ResponseEntity.ok(diaChiService.update(id,diaChiRequest));

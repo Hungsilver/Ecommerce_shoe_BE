@@ -51,10 +51,10 @@ public class DanhMucRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestBody DanhMucRequest request,
+            @RequestBody DanhMucRequest danhMucRequest,
             @PathVariable("id") Integer id
     ){
-        return ResponseEntity.ok(danhMucSevice.update(id,request));
+        return ResponseEntity.ok(danhMucSevice.update(id,danhMucRequest));
     }
 
     @DeleteMapping("{id}")

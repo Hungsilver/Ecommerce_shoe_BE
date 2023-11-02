@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(value = "*")
 @RestController
-@RequestMapping("/api/product-details")
+    @RequestMapping("/api/product-details")
 public class ChiTietSanPhamRestController {
     @Autowired
     private IChiTietSanPhamService chiTietSanPhamService;
