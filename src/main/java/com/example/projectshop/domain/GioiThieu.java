@@ -42,7 +42,7 @@ public class GioiThieu {
     @Column(name = "banner")
     private String banner;
 
-    @Column(name = "mata")
+    @Column(name = "mota")
     private String moTa;
 
     @Column(name = "ngaytao")

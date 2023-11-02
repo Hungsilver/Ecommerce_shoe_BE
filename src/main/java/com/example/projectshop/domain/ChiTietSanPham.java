@@ -3,6 +3,7 @@ package com.example.projectshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,6 +49,9 @@ public class ChiTietSanPham {
     @Column(name = "ngaytao")
     private Date ngayTao;
 
+    @Column(name = "ngaycapnhat")
+    private Date ngaycapnhat;
+
     @Column(name = "trangthai")
     private Integer trangThai;
 
@@ -68,6 +72,7 @@ public class ChiTietSanPham {
     private ChatLieuDeGiay chatLieuDeGiay;
 
     @JsonBackReference
+//    @JsonIgnoreProperties
     @ManyToOne
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
