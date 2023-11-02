@@ -48,6 +48,9 @@ public class ChiTietSanPham {
     @Column(name = "ngaytao")
     private Date ngayTao;
 
+    @Column(name = "ngaycapnhat")
+    private Date ngayCapNhat;
+
     @Column(name = "trangthai")
     private Integer trangThai;
 
@@ -67,7 +70,7 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;

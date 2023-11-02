@@ -55,10 +55,6 @@ public class KhachHang {
     @OneToMany(mappedBy = "khachHang")
     private List<DiaChi> listDiaChi = new ArrayList<>();
 
-    @JsonIgnore
-//    @JsonManagedReference
-    @OneToMany(mappedBy = "khachHang")
-    private List<PhieuGiamGia> listPhieuGiamGia = new ArrayList<>();
 
     @JsonIgnore
 //    @JsonManagedReference

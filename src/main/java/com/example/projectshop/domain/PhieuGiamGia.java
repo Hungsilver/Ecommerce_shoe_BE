@@ -1,6 +1,7 @@
 package com.example.projectshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -57,11 +58,8 @@ public class PhieuGiamGia {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-    @JsonBackReference
-    @ManyToOne()
-    @JoinColumn(name = "id_khachhang", referencedColumnName = "id")
-    private KhachHang khachHang;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "phieuGiamGia")
     private List<HoaDon> listHoaDon;
 

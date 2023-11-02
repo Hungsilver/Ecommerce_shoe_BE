@@ -39,6 +39,7 @@ public class ChucVu {
     @Column(name = "trangthai")
     private Integer trangThai;
 
+
     @ManyToMany(mappedBy = "chucVus",fetch = FetchType.LAZY)
     private List<NhanVien> nhanViens;
 

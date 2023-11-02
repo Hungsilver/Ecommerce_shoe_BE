@@ -1,11 +1,11 @@
 package com.example.projectshop.service.impl;
 
 
+import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.SanPhamRepository;
-import com.example.projectshop.service.CloudinaryService;
 import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,8 +32,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
 
 
     @Override
@@ -52,8 +51,11 @@ public class SanPhamServiceImpl implements ISanPhamService {
                                 String brand,
                                 String origin,
                                 String color,
+                                String size,
                                 String shoe_material,
                                 String shoe_sole_material,
+                                String keyword,
+                                Boolean isSortAsc,
                                 Integer page,
                                 Integer pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
@@ -74,6 +76,10 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .map(Integer::valueOf)
                 .collect(Collectors.toList());
 
+        List<Integer> listKichCo = size == null ? null : Arrays.stream(URLDecode.getDecode(size).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
         List<Integer> listChatLieuGiay = shoe_material == null ? null : Arrays.stream(URLDecode.getDecode(shoe_material).split(","))
                 .map(Integer::valueOf)
                 .collect(Collectors.toList());
@@ -82,15 +88,30 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .map(Integer::valueOf)
                 .collect(Collectors.toList());
 
-        return sanPhamrepo.getAllByParam(
+        // sắp xếp list chitietsanpham theo giá
+        Page<SanPham> listSanPham = sanPhamrepo.getAllByParam(
                 priceMinOutput,
                 priceMaxOutput,
                 listThuongHieu,
                 listXuatXu,
                 listMauSac,
+                listKichCo,
                 listChatLieuGiay,
                 listChatLieuDeGiay,
+                keyword,
                 pageable);
+        for(SanPham sanPham: listSanPham.getContent()){
+            List<ChiTietSanPham> chiTietSanPhamList = sanPham.getListChiTietSanPham();
+            if (isSortAsc == false){
+                // sort asc
+                Collections.sort(chiTietSanPhamList, (ctsp1, ctsp2) -> ctsp1.getGiaBan().compareTo(ctsp2.getGiaBan()));
+            }else{
+                // sort desc
+                Collections.sort(chiTietSanPhamList, (ctsp1, ctsp2) -> ctsp2.getGiaBan().compareTo(ctsp1.getGiaBan()));
+            }
+        }
+
+        return listSanPham;
     }
 
 
@@ -123,9 +144,4 @@ public class SanPhamServiceImpl implements ISanPhamService {
         return null;
     }
 
-    @Override
-    public Page<SanPham> search(String keyword, Integer page, Integer pageSize) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
-        return sanPhamrepo.search(keyword, pageable);
-    }
 }

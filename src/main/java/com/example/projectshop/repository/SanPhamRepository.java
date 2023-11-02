@@ -19,14 +19,17 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             "inner join ThuongHieu t on t.id = s.thuongHieu.id\n" +
             "inner join Xuatxu x on x.id = s.xuatXu.id\n " +
             "inner join MauSac m on m.id = c.mauSac.id\n" +
+            "inner join KichCo k on k.id = c.kichCo.id\n" +
             "inner join ChatLieuGiay clg on clg.id = c.chatLieuGiay.id\n" +
             "inner join ChatLieuDeGiay cldg on cldg.id = c.chatLieuDeGiay.id\n "+
-            "where c.giaBan between :priceMin and :priceMax \n "+
+            "where c.giaBan between :priceMin and :priceMax \n " +
             "and (t.id in :thuongHieu or :thuongHieu is null)\n "+
             "and (x.id in :xuatXu or :xuatXu is null)\n " +
             "and (m.id in :mauSac or :mauSac is null)\n " +
+            "and (k.id in :kichCo or :kichCo is null)\n" +
             "and (clg.id in :chatLieuGiay or :chatLieuGiay is null)\n " +
-            "and (cldg.id in :chatLieuDeGiay or :chatLieuDeGiay is null)\n"
+            "and (cldg.id in :chatLieuDeGiay or :chatLieuDeGiay is null)\n" +
+            "and (s.ten like %:tensanpham% or :tensanpham is null)"
             )
     Page<SanPham> getAllByParam(
             @Param("priceMin") BigDecimal priceMin,
@@ -34,21 +37,12 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             @Param("thuongHieu") List<Integer> thuonghieu,
             @Param("xuatXu") List<Integer>  xuatXu,
             @Param("mauSac") List<Integer>  mauSac,
+            @Param("kichCo") List<Integer> kichCo,
             @Param("chatLieuGiay") List<Integer>  chatLieuGiay,
             @Param("chatLieuDeGiay") List<Integer>  chatLieuDeGiay,
+            @Param("tensanpham")String tensanpham,
             Pageable pageable
     );
-
-
-    @Query(value = "select s from SanPham s \n" +
-            "inner join ThuongHieu t on t.id = s.thuongHieu.id\n" +
-            "inner join Xuatxu x on x.id = s.xuatXu.id\n" +
-            "inner join DanhMuc d on d.id = s.danhMuc.id\n" +
-            "where s.ten like %:timKiem% \n" +
-            "or t.ten like %:keyword% \n" +
-            "or x.ten like %:keyword% \n" +
-            "or d.ten like %:keyword% ")
-    Page<SanPham> search(@Param("keyword")String keyword, Pageable pageable);
 
 
 }

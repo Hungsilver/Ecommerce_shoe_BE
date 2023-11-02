@@ -1,14 +1,9 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChiTietSanPham;
-import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
 import com.example.projectshop.repository.AnhSanPhamRepository;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
-import com.example.projectshop.repository.HoaDonChiTietRepository;
-import com.example.projectshop.service.CloudinaryService;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
@@ -18,12 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,8 +29,6 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     @Autowired
     private AnhSanPhamRepository anhSanPhamRepo;
 
-    @Autowired
-    private CloudinaryService cloudinaryService;
 
     @Override
     public Page<ChiTietSanPham> findAll(Integer page,
