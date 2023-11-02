@@ -51,7 +51,7 @@ public class DanhMucRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam DanhMucRequest danhMucRequest,
+            @RequestBody DanhMucRequest danhMucRequest,
             @PathVariable("id") Integer id
     ){
         return ResponseEntity.ok(danhMucSevice.update(id,danhMucRequest));

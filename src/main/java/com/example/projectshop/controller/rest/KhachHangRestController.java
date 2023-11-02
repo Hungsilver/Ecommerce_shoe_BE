@@ -23,7 +23,7 @@ public class KhachHangRestController {
 
     @Autowired
     private IKhachHangService khachHangService;
-
+    
     @GetMapping("/get-all")
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
@@ -50,7 +50,7 @@ public class KhachHangRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam KhachHangRequest khachHangRequest,
+            @RequestBody KhachHangRequest khachHangRequest,
             @PathVariable("id") Integer id
     ) {
         return ResponseEntity.ok(khachHangService.update(id, khachHangRequest));
