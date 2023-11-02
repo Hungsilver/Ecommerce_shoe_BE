@@ -75,8 +75,8 @@ public class NhanVien {
     @JsonIgnoreProperties("nhanViens")
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "nhanvienchucvu",
-            joinColumns = @JoinColumn(name = "idnhanvien"),
-            inverseJoinColumns =@JoinColumn(name = "idchucvu")
+            joinColumns = @JoinColumn(name = "id_nhanvien"),
+            inverseJoinColumns =@JoinColumn(name = "id_chucvu")
     )
     private List<ChucVu> chucVus;
 

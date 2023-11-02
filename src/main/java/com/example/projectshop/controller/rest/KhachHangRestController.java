@@ -50,7 +50,7 @@ public class KhachHangRestController {
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(
-            @RequestParam KhachHangRequest khachHangRequest,
+            @RequestBody KhachHangRequest khachHangRequest,
             @PathVariable("id") Integer id
     ) {
         return ResponseEntity.ok(khachHangService.update(id, khachHangRequest));
