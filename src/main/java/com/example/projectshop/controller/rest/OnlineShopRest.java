@@ -47,7 +47,8 @@ public class OnlineShopRest {
     }
 
     int check = 0;
-        // truyen id khach hang (TH khach đã đăng nhập và có 1 Cart trong DB) vao
+
+    // truyen id khach hang (TH khach đã đăng nhập và có 1 Cart trong DB) vao
     @PostMapping("/addcart/{id}")
     public ResponseEntity<?> themsp(@PathVariable("id") Integer idkh,
                                     @RequestBody ChiTietSanPhamRequest ctspRequest,
@@ -79,6 +80,23 @@ public class OnlineShopRest {
             iGioHangCTService.addSP(ctspRequest, soluongthem, gh.getId());
         }
 //        gioHangService.add(gh);
+        return ResponseEntity.ok().build();
+    }
+    // nut xoa tung san pham
+    // truyen id khachhang va id san pham muon xoa
+    @DeleteMapping("/remove/{idkh}/{idctsp}")
+    public ResponseEntity<?> remove(@PathVariable(name = "idkh") Integer idkh,
+                                    @PathVariable(name = "idctsp") Integer idctsp) {
+        Optional<KhachHang> khcanxoa = khachHangService.findById(idkh);
+        GioHang gh = khcanxoa.get().getGiohang();
+        List<GioHangChiTiet> listghct = gh.getListGioHangChiTiet();
+        for (GioHangChiTiet x : listghct) {
+            if (x.getChiTietSanPham().getId().equals(idctsp)) {
+                iGioHangCTService.delete(x.getId());
+                break;
+            }
+
+        }
         return ResponseEntity.ok().build();
     }
 

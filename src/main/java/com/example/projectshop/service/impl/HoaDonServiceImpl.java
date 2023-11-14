@@ -35,10 +35,10 @@ public class HoaDonServiceImpl implements HoaDonService {
     private IChiTietSanPhamService chiTietSanPhamService;
 
     @Override
-    public Page<HoaDon> findAll(Integer status, String keyword,String sortField,Boolean isSortDesc, Integer page, Integer pageSize) {
+    public Page<HoaDon> findAll(Integer status, String keyword, String sortField, Boolean isSortDesc, Integer page, Integer pageSize) {
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
-        return hoaDonRepo.findAll(status,keyword,pageable);
+        return hoaDonRepo.findAll(status, keyword, pageable);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setNhanVien(hoaDonRequest.getNhanVien());
         hoaDonRepo.save(hoaDon);
         // end add hoadon
-        for (HoaDonChiTietRequest x: hoaDonRequest.getHoaDonChiTietRequests()){
+        for (HoaDonChiTietRequest x : hoaDonRequest.getHoaDonChiTietRequests()) {
             // start add hoadonchitiet
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setId(null);
@@ -86,7 +86,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             // start update chitietsanpham
             ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(x.getChiTietSanPhamRequest().getId()).get();
             chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() - x.getSoLuong());
-            chiTietSanPhamService.update(x.getChiTietSanPhamRequest().getId(),ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
+            chiTietSanPhamService.update(x.getChiTietSanPhamRequest().getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
         }
         return hoaDon;
     }
@@ -118,7 +118,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         hoaDon.setNhanVien(hoaDonRequest.getNhanVien());
         hoaDonRepo.save(hoaDon);
         // end add hoadon
-        for (HoaDonChiTietRequest x: hoaDonRequest.getHoaDonChiTietRequests()){
+        for (HoaDonChiTietRequest x : hoaDonRequest.getHoaDonChiTietRequests()) {
             // start add hoadonchitiet
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setId(null);
@@ -132,7 +132,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             // start update chitietsanpham
             ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(x.getChiTietSanPhamRequest().getId()).get();
             chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() - x.getSoLuong());
-            chiTietSanPhamService.update(x.getChiTietSanPhamRequest().getId(),ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
+            chiTietSanPhamService.update(x.getChiTietSanPhamRequest().getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
             // and update chitietsanpham
 
             // start update giohangchitiet

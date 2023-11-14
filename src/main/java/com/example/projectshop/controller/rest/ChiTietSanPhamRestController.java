@@ -2,7 +2,12 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
+import com.example.projectshop.service.impl.ExcelProductDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +19,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 @CrossOrigin(value = "*")
 @RestController
-    @RequestMapping("/api/product-details")
+@RequestMapping("/api/product-details")
 public class ChiTietSanPhamRestController {
     @Autowired
+    private ExcelProductDetailsService execlService;
+    @Autowired
     private IChiTietSanPhamService chiTietSanPhamService;
+
 
     @GetMapping()
     public ResponseEntity<?> findAll(
@@ -29,7 +41,7 @@ public class ChiTietSanPhamRestController {
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.findAll(page,pageSize,sortField,isSortDesc));
+        return ResponseEntity.ok(chiTietSanPhamService.findAll(page, pageSize, sortField, isSortDesc));
     }
 
     @GetMapping("filter")
@@ -76,4 +88,24 @@ public class ChiTietSanPhamRestController {
     ) {
         return ResponseEntity.ok(chiTietSanPhamService.search(keyword, page, pageSize));
     }
+
+    @GetMapping("/excel/download")
+    public ResponseEntity<Resource> ExportExcel() {
+        String fileName = "ChiTietSanPham.xlsx";
+        ByteArrayInputStream data = execlService.load();
+        InputStreamResource file = new InputStreamResource(data);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+
+    }
+    @PostMapping("/excel/upload")
+    public  ResponseEntity<?> ImportExcel(@RequestParam("file") MultipartFile  file){
+        execlService.saveChiTietSanPhamsToDatabase(file);
+        return ResponseEntity.ok(Map.of("message"," Customers data uploaded and saved to database successfully"));
+    }
+
+
 }

@@ -70,6 +70,6 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
 
     @Override
     public void delete(Integer id) {
-
+        gioHangChiTietRepository.deleteById(id);
     }
 }

@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -45,10 +46,10 @@ public class SanPham {
     private String moTa;
 
     @Column(name = "ngaytao")
-    private String ngayTao;
+    private Date ngayTao;
 
     @Column(name = "ngaycapnhat")
-    private String ngayCapNhat;
+    private Date ngayCapNhat;
 
     @Column(name = "trangthai")
     private Integer trangThai;
