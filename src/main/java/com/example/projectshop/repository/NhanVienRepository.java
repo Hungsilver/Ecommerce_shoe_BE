@@ -17,4 +17,5 @@ public interface NhanVienRepository extends JpaRepository<NhanVien,Integer>{
     @Query("select x from  NhanVien x where x.hoTen like :ten")
     Page<NhanVien> findAllByTen(@Param("ten") String ten, Pageable pageable);
 
+    NhanVien findByEmail(String email);
 }

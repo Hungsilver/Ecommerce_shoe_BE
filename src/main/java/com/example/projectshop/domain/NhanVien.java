@@ -4,17 +4,7 @@ package com.example.projectshop.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "nhanvien")
@@ -71,14 +62,15 @@ public class NhanVien {
     @OneToMany(mappedBy = "nhanVien")
     private List<HoaDon> listHoaDon;
 
-    @JsonIgnore
+//    @JsonIgnore
 //    @JsonIgnoreProperties("nhanViens")
-    @ManyToMany(fetch = FetchType.LAZY)
+//    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "nhanvienchucvu",
             joinColumns = @JoinColumn(name = "id_nhanvien"),
             inverseJoinColumns =@JoinColumn(name = "id_chucvu")
     )
-    private List<ChucVu> chucVus;
+    private Set<ChucVu> chucVus;
 
     @Override
     public String toString() {

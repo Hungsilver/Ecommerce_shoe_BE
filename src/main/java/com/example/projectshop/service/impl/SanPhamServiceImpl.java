@@ -5,11 +5,13 @@ import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.repository.DanhMucRepository;
 import com.example.projectshop.repository.SanPhamRepository;
+import com.example.projectshop.repository.ThuongHieuRepository;
+import com.example.projectshop.repository.XuatXuRepository;
 import com.example.projectshop.service.IDanhMucSevice;
 import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.IThuongHieuService;
-import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
 import com.example.projectshop.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +34,15 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Autowired
     private SanPhamRepository sanPhamrepo;
+
+    @Autowired
+    ThuongHieuRepository thuongHieuRepository;
+
+    @Autowired
+    private DanhMucRepository danhMucRepository;
+
+    @Autowired
+    private XuatXuRepository xuatXuRepository;
 
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
@@ -163,10 +173,12 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))
                 .build();
         return sanPhamrepo.save(sanPham);
+
     }
 
     @Override
     public SanPham update(Integer id, SanPhamRequest sanPhamRequest) {
+
         SanPham sanPham = SanPham.builder()
                 .id(id)
                 .ma(this.findById(id).getMa())
