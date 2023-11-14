@@ -36,7 +36,7 @@ CREATE TABLE `ChatLieuGiay`
 
 CREATE TABLE `AnhSanPham`
 (
-    `id`        varchar(255) PRIMARY KEY,
+    `id`  Integer AUTO_INCREMENT PRIMARY KEY,
     `id_ChiTietSanPham` Integer,
     `ten`       varchar(255)
 );
@@ -65,6 +65,7 @@ CREATE TABLE `DanhMuc`
 CREATE TABLE `SanPham`
 (
     `id`           Integer AUTO_INCREMENT PRIMARY KEY,
+    `ma`    nvarchar(100),
     `ten`          nvarchar(100),
     `anhChinh`     varchar(250),
     `moTa`         nvarchar(500),
@@ -79,7 +80,7 @@ CREATE TABLE `SanPham`
 CREATE TABLE `ChiTietSanPham`
 (
     `id`               Integer AUTO_INCREMENT PRIMARY KEY,
-    `ma`           varchar(25),
+    `ma`               varchar(25),
     `soLuong`          int,
     `giaBan`           decimal(18, 2),
     `ngayTao`          date,
@@ -95,6 +96,7 @@ CREATE TABLE `ChiTietSanPham`
 CREATE TABLE `HoaDon`
 (
     `id`                  Integer AUTO_INCREMENT PRIMARY KEY,
+    `maHoaDon`            varchar(36),
     `tenKhachHang`        nvarchar(40),
     `soDienThoai`         varchar(10),
     `diaChi`              nvarchar(250),
@@ -104,6 +106,8 @@ CREATE TABLE `HoaDon`
     `ngayTao`             date,
     `ngayCapNhat`		  date,
     `tongTien`            Decimal(18, 2),
+    `tienGiam`            Decimal(18, 2),
+    `tongTienSauGiam`     Decimal(18, 2),
     `phiVanChuyen`        Decimal(18, 2),
     `phuongThucThanhToan` nvarchar(50),
     `trangThai`           int,
@@ -345,17 +349,17 @@ Insert into ChatLieuGiay value
     (null, "Vải lưới",0);
 
 -- Insert SanPham
-Insert into SanPham (id,ten,anhChinh,moTa,ngayTao,ngayCapNhat,trangThai,id_ThuongHieu,id_XuatXu) value
-    (null,"Air Jordan 1 Zoom CMFT 2","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/huqgjvxjzlkn6nywlz0z.jpg","Da lộn cao cấp và bọt Công thức 23 đặc trưng của Jordan Brand kết hợp với nhau để mang đến cho bạn chiếc AJ1 sang trọng hơn (và cực kỳ ấm cúng). Bạn không cần phải chơi trò hoặc khi chọn phong cách hoặc sự thoải mái với kiểu này—điều này thật tuyệt, vì bạn xứng đáng có được cả hai.","2023-10-27","2023-10-27",0,2,8),
-    (null,"GIÀY LG2 SPZL","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/iakvaepuk9oftfoq8qgr.jpg","LG2 lần đầu ra mắt với dòng sản phẩm SS22 SPZL và là phiên bản tiếp nối của Spezial LG nguyên bản từ mùa FW19. Đây là kiểu dáng kết hợp giữa giày bóng quần cổ điển và giày trong nhà.Mẫu Giày LG2 SPZL này có thân giày bằng vải nylon, 3 Sọc in nhung, các chi tiết phủ ngoài bằng da lộn cùng phần lỗ xỏ dây giày và viền gót giày bằng da. Mặt đến bao gồm đế giữa cắt theo khuôn bằng chất liệu EVA, phần bọc mũi giày bất đối xứng và đế ngoài bằng cao su. ","2023-10-27","2023-10-27",0,1,7),
-    (null,"Chuck 70s Low Cream White","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/jjmtsdklvfurp1o8fxah.jpg","Converse 1970s là 1 trong những dòng sản phẩm bán chạy nhất của Converse.Sunflower là một trong những phối màu hot nhất của dòng Converse 1970s, rất đẹp và dễ phối đồ, đồng thời có 2 bản là cao cổ và thấp cổ","2023-10-27","2023-10-27",0,3,2),
-    (null,"Giày Puma Cell Speed Reflective In 371868-01","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/jjmtsdklvfurp1o8fxah.jpg","Giày Puma Cell Speed Reflective In 371868-01 có thiết kế hiện đại và trẻ trung, phù hợp với nhiều đối tượng khác nhau, từ các vận động viên chuyên nghiệp đến những người đam mê thể thao và phong cách đường phố.","2023-10-27","2023-10-27",0,4,1),
-    (null,"VANS AUTHENTIC CLASSIC BLACK/WHITE","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/ppjedfjrz4mi55sw4wmu.jpg","Là phiên bản được ưa chuộng nhất trong bộ sưu tập Authentic của VANS với sự kết hợp 2 màu đen trắng dễ phối đồ và custom, đặc biệt là phiên bản cổ nhất có tuổi đời hơn 50 năm, dù vậy vẫn được fan hâm mộ săn đón và được sử dụng khá nhiều với những vận động viên trượt ván chuyên nghiệp. VANS CLASSIC AUTHENTIC BLACK/WHITE được đánh giá là một siêu phẩm cần có khi bạn quyết định sẽ trở thành một tín đồ của nhà VANS đấy!","2023-10-27","2023-10-27",0,5,2),
-    (null,"Unisex New Balance chuyển 90/60 giày","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/ndcbphfeezechiap0djn.jpg","Lưới phía trên với lớp phủ da lộn da lợn.Đế giữa mật độ kép có đệm ABZORB và SBS.Logo lưỡi lấy cảm hứng từ viên ngọc ren 991 nguyên bản.Thiết bị CR mờ ở gót chân.Mẫu đế ngoài kim cương lấy cảm hứng từ thiết kế 860 cổ điển.410 gram (14,5 oz)","2023-10-27","2023-10-27",0,6,8),
-    (null,"Balenciaga Triple S Trainer Black Red","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/vylqdfc5ddkskl4cugfj.jpg","Đây là thương hiệu thời trang lâu đời nổi tiếng, cao cấp nhất nhì thế giới được thành lập từ năm 1919. Tiếp nối sự thành công, thương hiệu tiếp tục tung ra Triple S – dòng giày đa sắc màu, phá bỏ mọi giới hạn, đủ đẹp, đủ chất để khiến giới mộ điệu lại một lần nữa phải điên đảo Đây là mẫu giày cũng được nhiều người nghệ sĩ thế giới lựa chọn. Tại Việt Nam, giày Triple S được rất nhiều nghệ sĩ nổi tiếng yêu thích.","2023-10-27","2023-10-27",0,7,10),
-    (null,"WALK'N'DIOR PLATFORM SNEAKER","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385134/smc36ptnecvlfkeimjpn.jpg","Giày thể thao nền tảng Walk'n'Dior nâng tầm dòng sản phẩm với sự sáng tạo hiện đại. Phần trên thêu bông Dior Oblique màu xanh đậm để lộ phần đế dày thoải mái, lưỡi và dây buộc Christian Dior Paris. Giày thể thao sẽ thêm một nét hiện đại cho bất kỳ vẻ ngoài thoải mái nào.","2023-10-27","2023-10-27",0,8,4),
-    (null,"Giày Sneaker Nam Dolce & Gabbana D&G NS1 CS1810 AD505","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385134/ad2knzjb4gq7zjv47jkr.jpg","Giày Sneaker Nam Dolce & Gabbana D&G NS1 CS1810 AD505 được làm từ chất liệu 70% polyamide, 20% calf leather, 10% spandex cao cap, bền đẹp trong suốt qua trình sử dụng. Form giày chuẩn từng chi tiết, các đường nét vô cùng tinh tế và sắc xảo","2023-10-27","2023-10-27",0,9,2),
-    (null,"Giày Sneaker Nam Gucci Screener GG Leather Canvas 546551-9Y920-9666","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385134/nouojqjpzpeexh3jdivw.jpg","Đôi giày Sneaker Gucci Screener GG Leather Canvas 546551-9Y920-9666 là sự kết hợp của những ảnh hưởng khác nhau trải qua nhiều thập kỷ. Chất liệu được sử dụng là da, 2 bên sườn giày nổi bật với sọc web và logo cổ điển của Gucci tạo nên phong cách thể thao khỏe khoắn, năng động nhưng không kém phân sành điệu","2023-10-27","2023-10-27",0,1,5);
+Insert into SanPham (id,ma,ten,anhChinh,moTa,ngayTao,ngayCapNhat,trangThai,id_ThuongHieu,id_XuatXu) value
+    (null,"SP00001","Air Jordan 1 Zoom CMFT 2","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/huqgjvxjzlkn6nywlz0z.jpg","Da lộn cao cấp và bọt Công thức 23 đặc trưng của Jordan Brand kết hợp với nhau để mang đến cho bạn chiếc AJ1 sang trọng hơn (và cực kỳ ấm cúng). Bạn không cần phải chơi trò hoặc khi chọn phong cách hoặc sự thoải mái với kiểu này—điều này thật tuyệt, vì bạn xứng đáng có được cả hai.","2023-10-27","2023-10-27",0,2,8),
+    (null,"SP00002","GIÀY LG2 SPZL","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/iakvaepuk9oftfoq8qgr.jpg","LG2 lần đầu ra mắt với dòng sản phẩm SS22 SPZL và là phiên bản tiếp nối của Spezial LG nguyên bản từ mùa FW19. Đây là kiểu dáng kết hợp giữa giày bóng quần cổ điển và giày trong nhà.Mẫu Giày LG2 SPZL này có thân giày bằng vải nylon, 3 Sọc in nhung, các chi tiết phủ ngoài bằng da lộn cùng phần lỗ xỏ dây giày và viền gót giày bằng da. Mặt đến bao gồm đế giữa cắt theo khuôn bằng chất liệu EVA, phần bọc mũi giày bất đối xứng và đế ngoài bằng cao su. ","2023-10-27","2023-10-27",0,1,7),
+    (null,"SP00003","Chuck 70s Low Cream White","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/jjmtsdklvfurp1o8fxah.jpg","Converse 1970s là 1 trong những dòng sản phẩm bán chạy nhất của Converse.Sunflower là một trong những phối màu hot nhất của dòng Converse 1970s, rất đẹp và dễ phối đồ, đồng thời có 2 bản là cao cổ và thấp cổ","2023-10-27","2023-10-27",0,3,2),
+    (null,"SP00004","Giày Puma Cell Speed Reflective In 371868-01","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/jjmtsdklvfurp1o8fxah.jpg","Giày Puma Cell Speed Reflective In 371868-01 có thiết kế hiện đại và trẻ trung, phù hợp với nhiều đối tượng khác nhau, từ các vận động viên chuyên nghiệp đến những người đam mê thể thao và phong cách đường phố.","2023-10-27","2023-10-27",0,4,1),
+    (null,"SP00005","VANS AUTHENTIC CLASSIC BLACK/WHITE","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/ppjedfjrz4mi55sw4wmu.jpg","Là phiên bản được ưa chuộng nhất trong bộ sưu tập Authentic của VANS với sự kết hợp 2 màu đen trắng dễ phối đồ và custom, đặc biệt là phiên bản cổ nhất có tuổi đời hơn 50 năm, dù vậy vẫn được fan hâm mộ săn đón và được sử dụng khá nhiều với những vận động viên trượt ván chuyên nghiệp. VANS CLASSIC AUTHENTIC BLACK/WHITE được đánh giá là một siêu phẩm cần có khi bạn quyết định sẽ trở thành một tín đồ của nhà VANS đấy!","2023-10-27","2023-10-27",0,5,2),
+    (null,"SP00006","Unisex New Balance chuyển 90/60 giày","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/ndcbphfeezechiap0djn.jpg","Lưới phía trên với lớp phủ da lộn da lợn.Đế giữa mật độ kép có đệm ABZORB và SBS.Logo lưỡi lấy cảm hứng từ viên ngọc ren 991 nguyên bản.Thiết bị CR mờ ở gót chân.Mẫu đế ngoài kim cương lấy cảm hứng từ thiết kế 860 cổ điển.410 gram (14,5 oz)","2023-10-27","2023-10-27",0,6,8),
+    (null,"SP00007","Balenciaga Triple S Trainer Black Red","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385135/vylqdfc5ddkskl4cugfj.jpg","Đây là thương hiệu thời trang lâu đời nổi tiếng, cao cấp nhất nhì thế giới được thành lập từ năm 1919. Tiếp nối sự thành công, thương hiệu tiếp tục tung ra Triple S – dòng giày đa sắc màu, phá bỏ mọi giới hạn, đủ đẹp, đủ chất để khiến giới mộ điệu lại một lần nữa phải điên đảo Đây là mẫu giày cũng được nhiều người nghệ sĩ thế giới lựa chọn. Tại Việt Nam, giày Triple S được rất nhiều nghệ sĩ nổi tiếng yêu thích.","2023-10-27","2023-10-27",0,7,10),
+    (null,"SP00008","WALK'N'DIOR PLATFORM SNEAKER","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385134/smc36ptnecvlfkeimjpn.jpg","Giày thể thao nền tảng Walk'n'Dior nâng tầm dòng sản phẩm với sự sáng tạo hiện đại. Phần trên thêu bông Dior Oblique màu xanh đậm để lộ phần đế dày thoải mái, lưỡi và dây buộc Christian Dior Paris. Giày thể thao sẽ thêm một nét hiện đại cho bất kỳ vẻ ngoài thoải mái nào.","2023-10-27","2023-10-27",0,8,4),
+    (null,"SP00009","Giày Sneaker Nam Dolce & Gabbana D&G NS1 CS1810 AD505","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385134/ad2knzjb4gq7zjv47jkr.jpg","Giày Sneaker Nam Dolce & Gabbana D&G NS1 CS1810 AD505 được làm từ chất liệu 70% polyamide, 20% calf leather, 10% spandex cao cap, bền đẹp trong suốt qua trình sử dụng. Form giày chuẩn từng chi tiết, các đường nét vô cùng tinh tế và sắc xảo","2023-10-27","2023-10-27",0,9,2),
+    (null,"SP00010","Giày Sneaker Nam Gucci Screener GG Leather Canvas 546551-9Y920-9666","https://res.cloudinary.com/dxmuvfnsp/image/upload/v1698385134/nouojqjpzpeexh3jdivw.jpg","Đôi giày Sneaker Gucci Screener GG Leather Canvas 546551-9Y920-9666 là sự kết hợp của những ảnh hưởng khác nhau trải qua nhiều thập kỷ. Chất liệu được sử dụng là da, 2 bên sườn giày nổi bật với sọc web và logo cổ điển của Gucci tạo nên phong cách thể thao khỏe khoắn, năng động nhưng không kém phân sành điệu","2023-10-27","2023-10-27",0,1,5);
 
 -- Insert ChiTietSanPham
 Insert into ChiTietSanPham(id,ma, soLuong, giaBan, ngayTao, ngayCapNhat, trangThai, id_MauSac, id_KichCo, id_ChatLieuGiay,
@@ -461,5 +465,5 @@ Insert into GioiThieu value
 	(null,"gioithieu5","noidung5",null,null,"mota5",null,null,0,null)
 
 -- Mô tả bản cập nhật 1.9:
--- Cập nhật sanpham thêm trường ngayCapNhat vào bảng hoadon, bỏ quan hệ giữa khachhang với phieugiamgia, bỏ mahoadon
+-- Cập nhật sanpham thêm trường ngayCapNhat vào bảng hoadon, bỏ quan hệ giữa khachhang với phieugiamgia
 

@@ -22,6 +22,9 @@ public interface IChiTietSanPhamService {
             String color,
             String shoe_material,
             String shoe_sole_material,
+            String keyword,
+            Boolean isSortAsc,
+            String sortField,
             Integer page,
             Integer pageSize
     );
@@ -33,6 +36,4 @@ public interface IChiTietSanPhamService {
     ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest);
 
     ChiTietSanPham delete(Integer id);
-
-    Page<ChiTietSanPham> search(String keyword, Integer page, Integer pageSize);
 }

@@ -34,8 +34,11 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
     }
 
     @Override
-    public Optional<ChatLieuGiay> findById(Integer id) {
-        return chatLieuGiayRepository.findById(id);
+    public ChatLieuGiay findById(Integer id) {
+        if (id != null) {
+        return chatLieuGiayRepository.findById(id).get();
+        }
+        return null;
     }
 
     @Override

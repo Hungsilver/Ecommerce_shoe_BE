@@ -49,27 +49,44 @@ public class KhachHangServiceImpl implements IKhachHangService {
     }
 
     @Override
-    public Optional<KhachHang> findById(Integer id) {
-        return khachHangRepo.findById(id);
+    public KhachHang findById(Integer id) {
+        if (id != null){
+            return khachHangRepo.findById(id).get();
+        }
+        return null;
     }
 
     @Override
-    public KhachHang create(KhachHangRequest KhachHangRequest) {
-        KhachHang khachHang = ObjectMapperUtils.map(KhachHangRequest, KhachHang.class);
-        khachHang.setId(null);
+    public KhachHang create(KhachHangRequest khachHangRequest) {
+        KhachHang khachHang = KhachHang.builder()
+                .id(null)
+                .hoTen(khachHangRequest.getHoTen())
+                .email(khachHangRequest.getEmail())
+                .matKhau(khachHangRequest.getMatKhau())
+                .soDienThoai(khachHangRequest.getSoDienThoai())
+                .ngaySinh(khachHangRequest.getNgaySinh())
+                .trangThai(khachHangRequest.getTrangThai())
+                .build();
         return khachHangRepo.save(khachHang);
     }
 
     @Override
-    public KhachHang update(Integer id, KhachHangRequest KhachHangRequest) {
-        KhachHang khachHang = ObjectMapperUtils.map(KhachHangRequest, KhachHang.class);
-        khachHang.setId(id);
+    public KhachHang update(Integer id, KhachHangRequest khachHangRequest) {
+        KhachHang khachHang = KhachHang.builder()
+                .id(id)
+                .hoTen(khachHangRequest.getHoTen())
+                .email(khachHangRequest.getEmail())
+                .matKhau(khachHangRequest.getMatKhau())
+                .soDienThoai(khachHangRequest.getSoDienThoai())
+                .ngaySinh(khachHangRequest.getNgaySinh())
+                .trangThai(khachHangRequest.getTrangThai())
+                .build();
         return khachHangRepo.save(khachHang);
     }
 
     @Override
     public KhachHang delete(Integer id) {
-        Optional<KhachHang> khachHang = this.findById(id);
+        Optional<KhachHang> khachHang = khachHangRepo.findById(id);
         if (khachHang.isPresent()) {
             khachHang.get().setTrangThai(0);
             return khachHangRepo.save(khachHang.get());

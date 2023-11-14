@@ -33,20 +33,4 @@ public class SanPhamRequest {
     private Integer xuatXu;
 
     private Integer danhMuc;
-
-//    @JsonCreator
-//    public SanPhamRequest(@JsonProperty("thuongHieu") ThuongHieu thuongHieu) {
-//        this.thuongHieu = thuongHieu;
-//    }
-//
-//    @JsonCreator
-//    public SanPhamRequest(@JsonProperty("xuatXu") Xuatxu xuatXu) {
-//        this.xuatXu = xuatXu;
-//    }
-//
-//    @JsonCreator
-//    public SanPhamRequest(@JsonProperty("danhMuc") DanhMuc danhMuc) {
-//        this.danhMuc = danhMuc;
-//    }
-
 }

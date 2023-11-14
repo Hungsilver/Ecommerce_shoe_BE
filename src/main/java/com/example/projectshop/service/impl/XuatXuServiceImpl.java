@@ -65,8 +65,11 @@ public class XuatXuServiceImpl {
         return xuatXuRepository.findAll(pageable);
     }
 
-    public Optional<Xuatxu> findById(Integer id) {
-        return xuatXuRepository.findById(id);
+    public Xuatxu findById(Integer id) {
+        if (id != null) {
+            return xuatXuRepository.findById(id).get();
+        }
+        return null;
     }
 
     public Page<Xuatxu> findAllByName(String name, Pageable pageable) {

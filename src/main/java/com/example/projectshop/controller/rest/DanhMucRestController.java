@@ -3,7 +3,6 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.dto.danhmuc.DanhMucRequest;
 import com.example.projectshop.service.IDanhMucSevice;
-import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,7 +32,7 @@ public class DanhMucRestController {
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(danhMucSevice.findAll(page,pageSize,sortField,isSortDesc,keyword));
+        return ResponseEntity.ok(danhMucSevice.findAll(page, pageSize, sortField, isSortDesc, keyword));
     }
 
     @PostMapping()
@@ -53,13 +52,12 @@ public class DanhMucRestController {
     public ResponseEntity<?> update(
             @RequestBody DanhMucRequest danhMucRequest,
             @PathVariable("id") Integer id
-    ){
-        return ResponseEntity.ok(danhMucSevice.update(id,danhMucRequest));
+    ) {
+        return ResponseEntity.ok(danhMucSevice.update(id, danhMucRequest));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        danhMucSevice.delete(id);
-        return ResponseEntity.ok(delete(id));
+        return ResponseEntity.ok(danhMucSevice.delete(id));
     }
 }

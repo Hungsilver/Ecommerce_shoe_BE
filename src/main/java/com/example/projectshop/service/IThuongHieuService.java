@@ -15,7 +15,7 @@ public interface IThuongHieuService {
             String keyword
     );
 
-    Optional<ThuongHieu> findById(Integer id);
+    ThuongHieu findById(Integer id);
 
     ThuongHieu create(ThuongHieuRequest thuongHieuRequest);
 

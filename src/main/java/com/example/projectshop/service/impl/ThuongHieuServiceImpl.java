@@ -40,8 +40,11 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
     }
 
     @Override
-    public Optional<ThuongHieu> findById(Integer id) {
-        return thuongHieuRepository.findById(id);
+    public ThuongHieu findById(Integer id) {
+        if (id != null) {
+            return thuongHieuRepository.findById(id).get();
+        }
+        return null;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
 
     @Override
     public ThuongHieu delete(Integer id) {
-        Optional<ThuongHieu> thuongHieu = this.findById(id);
+        Optional<ThuongHieu> thuongHieu = thuongHieuRepository.findById(id);
         if (thuongHieu.isPresent()){
             thuongHieu.get().setTrangThai(0);
             return thuongHieuRepository.save(thuongHieu.get());

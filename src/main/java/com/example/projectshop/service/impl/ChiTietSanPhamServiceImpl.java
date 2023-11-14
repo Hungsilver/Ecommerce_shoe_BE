@@ -1,12 +1,24 @@
 package com.example.projectshop.service.impl;
 
+import com.example.projectshop.domain.AnhSanPham;
+import com.example.projectshop.domain.ChatLieuDeGiay;
+import com.example.projectshop.domain.ChatLieuGiay;
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.KichCo;
+import com.example.projectshop.domain.MauSac;
+import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.repository.AnhSanPhamRepository;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.service.IChatLieuDeGiayService;
+import com.example.projectshop.service.IChatLieuGiayService;
 import com.example.projectshop.service.IChiTietSanPhamService;
+import com.example.projectshop.service.IKichCoService;
+import com.example.projectshop.service.IMauSacService;
+import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
+import com.example.projectshop.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +27,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,12 +43,30 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     @Autowired
     private AnhSanPhamRepository anhSanPhamRepo;
 
+    @Autowired
+    private IMauSacService mauSacService;
+
+    @Autowired
+    private IKichCoService kichCoService;
+
+    @Autowired
+    private IChatLieuGiayService chatLieuGiayService;
+
+    @Autowired
+    private IChatLieuDeGiayService chatLieuDeGiayService;
+
+    @Autowired
+    private ISanPhamService sanPhamService;
+
+    // lấy ra ngày hiện tại
+    private LocalDate curruntDate = LocalDate.now();
+
 
     @Override
     public Page<ChiTietSanPham> findAll(Integer page,
-                                 Integer pageSize,
-                                 String sortField,
-                                 Boolean isSortDesc
+                                        Integer pageSize,
+                                        String sortField,
+                                        Boolean isSortDesc
     ) {
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
@@ -44,14 +76,17 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Override
     public Page<ChiTietSanPham> filter(String priceMin,
-                                        String priceMax,
-                                        String color,
-                                        String shoe_material,
-                                        String shoe_sole_material,
-                                        Integer page,
-                                        Integer pageSize) {
-
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
+                                       String priceMax,
+                                       String color,
+                                       String shoe_material,
+                                       String shoe_sole_material,
+                                       String keyword,
+                                       Boolean isSortDesc,
+                                       String sortField,
+                                       Integer page,
+                                       Integer pageSize) {
+        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
 
         BigDecimal priceMinOutput = priceMin == null ? BigDecimal.valueOf(0) : BigDecimal.valueOf(Long.valueOf(priceMin));
         BigDecimal priceMaxOutput = priceMax == null ? chiTietSanPhamRepo.getTop1ByPriceMax().getGiaBan() : BigDecimal.valueOf(Long.valueOf(priceMax));
@@ -74,42 +109,103 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                 listMauSac,
                 listChatLieuGiay,
                 listChatLieuDeGiay,
+                keyword,
                 pageable);
     }
 
 
     @Override
     public Optional<ChiTietSanPham> findById(Integer id) {
+        if (id == null){
+            return null;
+        }
         return chiTietSanPhamRepo.findById(id);
     }
 
     @Override
     public ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) {
-        ChiTietSanPham chiTietSanPham = ObjectMapperUtils.map(chiTietSanPhamRequest,ChiTietSanPham.class);
-        chiTietSanPham.setId(null);
-        return chiTietSanPhamRepo.save(chiTietSanPham);
-    }
+        MauSac mauSac = mauSacService.findById(chiTietSanPhamRequest.getMauSac());
+        KichCo kichCo = kichCoService.findById(chiTietSanPhamRequest.getKichCo());
+        ChatLieuGiay chatLieuGiay = chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay());
+        ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay());
+        SanPham sanPham = sanPhamService.findById(chiTietSanPhamRequest.getSanPham());
+        String maMauSac = utils.tiengVietKhongDau(mauSac.getTen());
+        String maChatLieuGiay = utils.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s","");;
+        String maChatLieuDeGiay = utils.tiengVietKhongDau(chatLieuDeGiay.getTen());
+        String maChiTietSanPham = sanPham.getMa()+"_"+maMauSac+"_"+maChatLieuGiay+"_"+maChatLieuDeGiay+"_"+kichCo.getSize();
 
-    @Override
-    public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
-        ChiTietSanPham chiTietSanPham2 = ObjectMapperUtils.map(chiTietSanPhamRequest,ChiTietSanPham.class);
-        chiTietSanPham2.setId(id);
-        return chiTietSanPhamRepo.save(chiTietSanPham2);
-    }
-
-    @Override
-    public ChiTietSanPham delete(Integer id) {
-        Optional<ChiTietSanPham> chiTietSanPham = this.findById(id);
-        if (chiTietSanPham.isPresent()){
-            chiTietSanPham.get().setTrangThai(0);
-            return chiTietSanPhamRepo.save(chiTietSanPham.get());
+        if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isEmpty()){
+            ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
+                    .id(null)
+                    .ma(maChiTietSanPham)
+                    .soLuong(chiTietSanPhamRequest.getSoLuong())
+                    .giaBan(chiTietSanPhamRequest.getGiaBan())
+                    .ngayTao(Date.valueOf(curruntDate))
+                    .ngayCapNhat(null)
+                    .trangThai(0)
+                    .mauSac(mauSac)
+                    .kichCo(kichCo)
+                    .chatLieuGiay(chatLieuGiay)
+                    .chatLieuDeGiay(chatLieuDeGiay)
+                    .sanPham(sanPham)
+                    .build();
+            ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
+            if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) {
+                for (String x : chiTietSanPhamRequest.getAnhSanPhams()) {
+                    AnhSanPham anhSanPham = AnhSanPham.builder()
+                            .id(null)
+                            .chiTietSanPham(saveChiTietSanPham)
+                            .ten(x)
+                            .build();
+                    anhSanPhamRepo.save(anhSanPham);
+                }
+            }
+            return saveChiTietSanPham;
         }
         return null;
     }
 
     @Override
-    public Page<ChiTietSanPham> search(String keyword, Integer page, Integer pageSize) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
-        return chiTietSanPhamRepo.search(keyword,pageable);
+    public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
+        ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
+                .id(id)
+                .ma(this.findById(id).get().getMa())
+                .soLuong(chiTietSanPhamRequest.getSoLuong())
+                .giaBan(chiTietSanPhamRequest.getGiaBan())
+                .ngayTao(chiTietSanPhamRepo.findById(id).get().getNgayTao())
+                .ngayCapNhat(Date.valueOf(curruntDate))
+                .trangThai(chiTietSanPhamRequest.getTrangThai())
+                .mauSac(mauSacService.findById(chiTietSanPhamRequest.getMauSac()))
+                .kichCo(kichCoService.findById(chiTietSanPhamRequest.getKichCo()))
+                .chatLieuGiay(chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay()))
+                .chatLieuDeGiay(chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay()))
+                .sanPham(sanPhamService.findById(chiTietSanPhamRequest.getSanPham()))
+                .build();
+        ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
+        if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
+            for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
+                if (!anhSanPhamRepo.getByTen(x).isPresent()){ // check tên ảnh trong db nếu chưa có thì insert
+                    AnhSanPham anhSanPham = AnhSanPham.builder()
+                            .id(null)
+                            .chiTietSanPham(saveChiTietSanPham)
+                            .ten(x)
+                            .build();
+                    anhSanPhamRepo.save(anhSanPham);
+                }
+            }
+        }
+
+        return saveChiTietSanPham;
     }
+
+    @Override
+    public ChiTietSanPham delete(Integer id) {
+        Optional<ChiTietSanPham> chiTietSanPham = this.findById(id);
+        if (chiTietSanPham.isPresent()) {
+            chiTietSanPham.get().setTrangThai(1);
+            return chiTietSanPhamRepo.save(chiTietSanPham.get());
+        }
+        return null;
+    }
+
 }

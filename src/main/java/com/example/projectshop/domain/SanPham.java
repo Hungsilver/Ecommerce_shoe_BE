@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class SanPham {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "ma")
+    private String ma;
+
     @Column(name = "ten")
     private String ten;
 
@@ -46,10 +50,10 @@ public class SanPham {
     private String moTa;
 
     @Column(name = "ngaytao")
-    private String ngayTao;
+    private Date ngayTao;
 
     @Column(name = "ngaycapnhat")
-    private String ngayCapNhat;
+    private Date ngayCapNhat;
 
     @Column(name = "trangthai")
     private Integer trangThai;
