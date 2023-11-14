@@ -6,9 +6,12 @@ import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.SanPhamRepository;
+import com.example.projectshop.service.IDanhMucSevice;
 import com.example.projectshop.service.ISanPhamService;
+import com.example.projectshop.service.IThuongHieuService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
+import com.example.projectshop.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +36,18 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
+
+    @Autowired
+    private IThuongHieuService thuongHieuService;
+
+    @Autowired
+    private IDanhMucSevice danhMucSevice;
+
+    @Autowired
+    private XuatXuServiceImpl xuatXuService;
+
+    // lấy ra ngày hiện tại
+    private LocalDate curruntDate = LocalDate.now();
 
 
     @Override
@@ -115,32 +132,62 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
 
     @Override
-    public Optional<SanPham> findById(Integer id) {
-        return sanPhamrepo.findById(id);
+    public SanPham findById(Integer id) {
+        if (id != null) {
+        return sanPhamrepo.findById(id).get();
+        }
+        return null;
     }
 
     @Override
     public SanPham create(SanPhamRequest sanPhamRequest) {
-        SanPham sanPham = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
-        sanPham.setId(null);
+        String maSanPham = sanPhamrepo.getTop1ByIdMax().getMa();
+        String maMoi;
+        if (maSanPham == null){
+             maMoi = "SP00001";
+        }else{
+            maMoi = "SP"+utils.getNumberFromCode(maSanPham);
+        }
+
+        SanPham sanPham = SanPham.builder()
+                .id(null)
+                .ma(maMoi)
+                .ten(sanPhamRequest.getTen())
+                .anhChinh(sanPhamRequest.getAnhChinh())
+                .moTa(sanPhamRequest.getMoTa())
+                .ngayTao(Date.valueOf(curruntDate))
+                .ngayCapNhat(null)
+                .trangThai(0)
+                .thuongHieu(thuongHieuService.findById(sanPhamRequest.getThuongHieu()))
+                .danhMuc(danhMucSevice.findById(sanPhamRequest.getDanhMuc()))
+                .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))
+                .build();
         return sanPhamrepo.save(sanPham);
     }
 
     @Override
     public SanPham update(Integer id, SanPhamRequest sanPhamRequest) {
-        SanPham sanPham2 = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
-        sanPham2.setId(id);
-        return sanPhamrepo.save(sanPham2);
+        SanPham sanPham = SanPham.builder()
+                .id(id)
+                .ma(this.findById(id).getMa())
+                .ten(sanPhamRequest.getTen())
+                .anhChinh(sanPhamRequest.getAnhChinh())
+                .moTa(sanPhamRequest.getMoTa())
+                .ngayTao(sanPhamrepo.findById(id).get().getNgayTao())
+                .ngayCapNhat(Date.valueOf(curruntDate))
+                .trangThai(0)
+                .thuongHieu(thuongHieuService.findById(sanPhamRequest.getThuongHieu()))
+                .danhMuc(danhMucSevice.findById(sanPhamRequest.getDanhMuc()))
+                .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))
+                .build();
+        return sanPhamrepo.save(sanPham);
     }
 
     @Override
     public SanPham delete(Integer id) {
-        Optional<SanPham> sanPham = this.findById(id);
-        if (sanPham.isPresent()) {
-            sanPham.get().setTrangThai(0);
-            return sanPhamrepo.save(sanPham.get());
-        }
-        return null;
+        SanPham sanPham = this.findById(id);
+            sanPham.setTrangThai(0);
+            return sanPhamrepo.save(sanPham);
     }
 
 }

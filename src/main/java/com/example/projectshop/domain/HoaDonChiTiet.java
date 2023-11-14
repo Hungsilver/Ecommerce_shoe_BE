@@ -37,12 +37,12 @@ public class HoaDonChiTiet {
     @Column(name = "soluong")
     private Integer soLuong;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "id_hoadon")
     private HoaDon hoaDon;
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "id_chitietsanpham")
     private ChiTietSanPham chiTietSanPham;

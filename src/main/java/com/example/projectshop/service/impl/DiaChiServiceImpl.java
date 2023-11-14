@@ -4,6 +4,7 @@ import com.example.projectshop.domain.DiaChi;
 import com.example.projectshop.dto.diachi.DiaChiRequest;
 import com.example.projectshop.repository.DiaChiRepository;
 import com.example.projectshop.service.IDiaChiService;
+import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,9 @@ public class DiaChiServiceImpl implements IDiaChiService {
 
     @Autowired
     private DiaChiRepository diaChiRepo;
+
+    @Autowired
+    private IKhachHangService khachHangService;
 
     @Override
     public Page<DiaChi> findAll(Integer page,
@@ -42,15 +46,29 @@ public class DiaChiServiceImpl implements IDiaChiService {
 
     @Override
     public DiaChi create(DiaChiRequest diaChiRequest) {
-        DiaChi diaChi = ObjectMapperUtils.map(diaChiRequest, DiaChi.class);
-        diaChi.setId(null);
+        DiaChi diaChi = DiaChi.builder()
+                .id(null)
+                .diaChi(diaChiRequest.getDiaChi())
+                .phuongXa(diaChiRequest.getPhuongXa())
+                .quanHuyen(diaChiRequest.getQuanHuyen())
+                .tinhThanh(diaChiRequest.getTinhThanh())
+                .trangThai(diaChiRequest.getTrangThai())
+                .khachHang(khachHangService.findById(diaChiRequest.getKhachHang()))
+                .build();
         return diaChiRepo.save(diaChi);
     }
 
     @Override
-    public DiaChi update(Integer id, DiaChiRequest DiaChiRequest) {
-        DiaChi diaChi = ObjectMapperUtils.map(DiaChiRequest, DiaChi.class);
-        diaChi.setId(id);
+    public DiaChi update(Integer id, DiaChiRequest diaChiRequest) {
+        DiaChi diaChi = DiaChi.builder()
+                .id(id)
+                .diaChi(diaChiRequest.getDiaChi())
+                .phuongXa(diaChiRequest.getPhuongXa())
+                .quanHuyen(diaChiRequest.getQuanHuyen())
+                .tinhThanh(diaChiRequest.getTinhThanh())
+                .trangThai(diaChiRequest.getTrangThai())
+                .khachHang(khachHangService.findById(diaChiRequest.getKhachHang()))
+                .build();
         return diaChiRepo.save(diaChi);
     }
 
@@ -58,7 +76,7 @@ public class DiaChiServiceImpl implements IDiaChiService {
     public DiaChi delete(Integer id) {
         Optional<DiaChi> diaChi = this.findById(id);
         if (diaChi.isPresent()) {
-            diaChi.get().setTrangThai(0);
+            diaChi.get().setTrangThai(1);
             return diaChiRepo.save(diaChi.get());
         }
         return null;

@@ -17,7 +17,7 @@ public interface IDanhMucSevice {
             String keyword
     );
 
-    Optional<DanhMuc> findById(Integer id);
+    DanhMuc findById(Integer id);
 
     DanhMuc create(DanhMucRequest danhMucRequest);
 

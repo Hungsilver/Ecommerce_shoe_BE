@@ -20,7 +20,7 @@ public interface IKhachHangService {
             String keyword
     );
 
-    Optional<KhachHang> findById(Integer id);
+    KhachHang findById(Integer id);
 
     KhachHang create(KhachHangRequest khachHangRequest);
 

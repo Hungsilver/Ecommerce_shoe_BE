@@ -8,6 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class AnhSanPhamRequest {
     private Integer id;
-    private MultipartFile[] ten;
+    private String ten;
 
 }

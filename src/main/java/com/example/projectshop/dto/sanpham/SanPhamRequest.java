@@ -26,10 +26,10 @@ public class SanPhamRequest {
 
     private Integer trangThai;
 
-    private ThuongHieu thuongHieu;
+    private Integer thuongHieu;
 
-    private Xuatxu xuatXu;
+    private Integer xuatXu;
 
-    private DanhMuc danhMuc;
+    private Integer danhMuc;
 
 }

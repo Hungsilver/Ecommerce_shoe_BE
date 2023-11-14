@@ -11,7 +11,8 @@ import java.math.BigDecimal;
 @Setter
 public class HoaDonChiTietRequest {
     private Integer id;
+    private Integer idHoaDon;
     private BigDecimal donGia;
     private Integer soLuong;
-    private ChiTietSanPhamRequest chiTietSanPhamRequest;
+    private Integer idChiTietSanPham;
 }

@@ -36,7 +36,7 @@ public interface ISanPhamService {
             Integer pageSize
     );
 
-    Optional<SanPham> findById(Integer id);
+    SanPham findById(Integer id);
 
     SanPham create(SanPhamRequest sanPhamRequest);
 

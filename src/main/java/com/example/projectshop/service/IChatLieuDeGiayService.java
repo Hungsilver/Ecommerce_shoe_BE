@@ -15,7 +15,7 @@ public interface IChatLieuDeGiayService {
     Page<ChatLieuDeGiay> getAll(Pageable pageable);
 
 
-    Optional<ChatLieuDeGiay> findById(Integer id);
+    ChatLieuDeGiay findById(Integer id);
 
     Page<ChatLieuDeGiay> findAllByName(String ten,Pageable pageable);
 

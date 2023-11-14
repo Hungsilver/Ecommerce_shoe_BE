@@ -79,8 +79,11 @@ public class MauSacSeviceImpl implements IMauSacService {
     }
 
     @Override
-    public Optional<MauSac> findById(Integer id) {
-        return mauSacRepository.findById(id);
+    public MauSac findById(Integer id) {
+        if (id != null) {
+            return mauSacRepository.findById(id).get();
+        }
+        return null;
     }
 
     @Override

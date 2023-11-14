@@ -29,8 +29,11 @@ public class KichCoServiceImpl implements IKichCoService {
     }
 
     @Override
-    public Optional<KichCo> findById(Integer id) {
-        return kichCoRepository.findById(id);
+    public KichCo findById(Integer id) {
+        if (id != null) {
+        return kichCoRepository.findById(id).get();
+        }
+        return null;
     }
 
     @Override

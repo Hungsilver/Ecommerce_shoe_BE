@@ -20,7 +20,7 @@ public interface IPhieuGiamGiaService {
             String keyword
     );
 
-    Optional<PhieuGiamGia> findById(Integer id);
+    PhieuGiamGia findById(Integer id);
 
     PhieuGiamGia create(PhieuGiamGiaRequest PhieuGiamGiaRequest);
 

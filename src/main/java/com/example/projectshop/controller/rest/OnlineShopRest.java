@@ -54,8 +54,8 @@ public class OnlineShopRest {
                                     @RequestParam("quality") int soluongthem) {
 //        ChiTietSanPham ctspentity = ObjectMapperUtils.map(chiTietSanPhamRequest, ChiTietSanPham.class);
         System.out.println("chay vao 1");
-        Optional<KhachHang> kh = khachHangService.findById(idkh);
-        GioHang gh = kh.get().getGiohang();
+        KhachHang kh = khachHangService.findById(idkh);
+        GioHang gh = kh.getGiohang();
         System.out.println(" id gio hang" + gh.getId());
 
         List<GioHangChiTiet> listgiohangct = gh.getListGioHangChiTiet();

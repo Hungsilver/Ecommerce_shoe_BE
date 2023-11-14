@@ -27,7 +27,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             "where c.giaBan between :priceMin and :priceMax \n " +
             "and (m.id in :mauSac or :mauSac is null)\n " +
             "and (clg.id in :chatLieuGiay or :chatLieuGiay is null)\n " +
-            "and (cldg.id in :chatLieuDeGiay or :chatLieuDeGiay is null)\n"
+            "and (cldg.id in :chatLieuDeGiay or :chatLieuDeGiay is null)" +
+            "and (c.ma like %:ma% or :ma is null)\n"
     )
     Page<ChiTietSanPham> getAllByParam(
             @Param("priceMin") BigDecimal priceMin,
@@ -35,20 +36,14 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
             @Param("mauSac") List<Integer>  mauSac,
             @Param("chatLieuGiay") List<Integer>  chatLieuGiay,
             @Param("chatLieuDeGiay") List<Integer>  chatLieuDeGiay,
+            @Param("ma") String ma,
             Pageable pageable
     );
 
-    @Query(value = "select c from ChiTietSanPham c \n" +
-            "inner join MauSac m on m.id = c.mauSac.id\n" +
-            "inner join ChatLieuGiay cl on cl.id = c.chatLieuGiay.id\n" +
-            "inner join ChatLieuDeGiay cld on cld.id = c.chatLieuDeGiay.id\n" +
-            "inner join SanPham s on s.id = c.sanPham.id\n" +
-            "where c.ma like %:keyword% \n" +
-            "or m.ten like %:keyword% \n" +
-            "or cl.ten like %:keyword% \n" +
-            "or cld.ten like %:keyword% \n" +
-            "or s.ten like%:keyword% \n" )
-    Page<ChiTietSanPham> search(@Param("keyword") String keyword, Pageable pageable);
+    @Query(value = "select c from ChiTietSanPham c where c.ma = :ma")
+    List<ChiTietSanPham> findByMa(@Param("ma")String ma);
+
+
 
 
 

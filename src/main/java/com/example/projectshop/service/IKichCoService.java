@@ -15,7 +15,7 @@ public interface IKichCoService {
     Page<KichCo> getAll(Pageable pageable);
 
 
-    Optional<KichCo> findById(Integer id);
+    KichCo findById(Integer id);
 
     Page<KichCo> findAllByName(String size,Pageable pageable);
 

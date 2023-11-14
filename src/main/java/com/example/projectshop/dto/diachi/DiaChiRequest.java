@@ -19,5 +19,5 @@ public class DiaChiRequest {
 
     private Integer trangThai;
 
-    private KhachHang khachHang;
+    private Integer khachHang;
 }
