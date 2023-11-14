@@ -1,14 +1,13 @@
 package com.example.projectshop.service.impl;
 
 
-import com.example.projectshop.domain.ChiTietSanPham;
-import com.example.projectshop.domain.SanPham;
+import com.example.projectshop.domain.*;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
-import com.example.projectshop.repository.ChiTietSanPhamRepository;
-import com.example.projectshop.repository.SanPhamRepository;
+import com.example.projectshop.repository.*;
 import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.URLDecode;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +27,15 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Autowired
     private SanPhamRepository sanPhamrepo;
+
+    @Autowired
+    ThuongHieuRepository thuongHieuRepository;
+
+    @Autowired
+    private DanhMucRepository danhMucRepository;
+
+    @Autowired
+    private XuatXuRepository xuatXuRepository;
 
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
@@ -121,15 +129,48 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
     @Override
     public SanPham create(SanPhamRequest sanPhamRequest) {
-        SanPham sanPham = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
-        sanPham.setId(null);
-        return sanPhamrepo.save(sanPham);
+
+        SanPham sanPham2 = new SanPham();
+        sanPham2 = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
+//        sanPham2.setId(null);
+        ThuongHieu thuongHieu = thuongHieuRepository.findById(sanPhamRequest.getThuongHieu())
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thương hiệu"));
+        sanPham2.setThuongHieu(thuongHieu);
+
+        DanhMuc danhMuc = danhMucRepository.findById(sanPhamRequest.getDanhMuc())
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thương hiệu"));
+        sanPham2.setDanhMuc(danhMuc);
+
+        Xuatxu xuatxu = xuatXuRepository.findById(sanPhamRequest.getXuatXu())
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thương hiệu"));
+        sanPham2.setXuatXu(xuatxu);
+
+
+        return sanPhamrepo.save(sanPham2);
     }
 
     @Override
     public SanPham update(Integer id, SanPhamRequest sanPhamRequest) {
-        SanPham sanPham2 = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
+//        SanPham sanPham2 = ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
+//        sanPham2.setId(id);
+//        return sanPhamrepo.save(sanPham2);
+
+        SanPham sanPham2 = new SanPham();
+               sanPham2= ObjectMapperUtils.map(sanPhamRequest, SanPham.class);
         sanPham2.setId(id);
+        ThuongHieu thuongHieu=thuongHieuRepository.findById(sanPhamRequest.getThuongHieu())
+         .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thương hiệu"));
+        sanPham2.setThuongHieu(thuongHieu);
+
+        DanhMuc danhMuc=danhMucRepository.findById(sanPhamRequest.getDanhMuc())
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thương hiệu"));
+        sanPham2.setDanhMuc(danhMuc);
+
+        Xuatxu xuatxu=xuatXuRepository.findById(sanPhamRequest.getThuongHieu())
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy thương hiệu"));
+        sanPham2.setXuatXu(xuatxu);
+
+
         return sanPhamrepo.save(sanPham2);
     }
 

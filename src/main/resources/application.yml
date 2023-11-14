@@ -12,4 +12,9 @@ spring:
     max-file-size: 2MB
     multipart:
       max-request-size: 2MB
+  security:
+    user:
+      name: anhduc
+      password: 123
+
 

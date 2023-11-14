@@ -12,4 +12,6 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
     @Query(value = "select k from KhachHang k where k.email like %:input% " +
             "or k.soDienThoai like %:input%")
     Page<KhachHang> findAllByEmailOrSoDienThoai(@Param("input") String input, Pageable pageable);
+
+    KhachHang findByEmail(String email);
 }

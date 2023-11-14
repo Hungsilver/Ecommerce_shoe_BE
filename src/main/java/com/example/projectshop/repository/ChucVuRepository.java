@@ -14,4 +14,5 @@ public interface ChucVuRepository extends JpaRepository<ChucVu, Integer> {
     @Query("select x from  ChucVu x where x.tenChucVu like :ten")
     Page<ChucVu> findAllByTen(@Param("ten") String ten, Pageable pageable);
 
+    ChucVu findByTenChucVu(String name);
 }
