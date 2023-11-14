@@ -27,4 +27,8 @@ public interface IKhachHangService {
     KhachHang update(Integer id, KhachHangRequest khachHangRequest);
 
     KhachHang delete(Integer id);
+
+    KhachHang registerKhachHang(KhachHangRequest khachHangRequest);
+
+    KhachHang loginKhachHang(String email, String matKhau);
 }

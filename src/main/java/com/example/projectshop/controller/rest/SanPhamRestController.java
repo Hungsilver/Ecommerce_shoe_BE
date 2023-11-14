@@ -9,6 +9,7 @@ import com.example.projectshop.service.ISanPhamService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,12 +65,12 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
         return ResponseEntity.ok(service.create(sanPhamRequest));
     }
 
-    @PutMapping("{id}")
+    @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,
             @RequestBody SanPhamRequest sanPhamRequest

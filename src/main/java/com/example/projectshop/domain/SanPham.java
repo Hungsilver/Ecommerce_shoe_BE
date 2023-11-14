@@ -1,6 +1,7 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -65,9 +66,9 @@ public class SanPham {
     @JoinColumn(name = "id_danhmuc")
     private DanhMuc danhMuc;
 
-//    @JsonIgnore
+    //    @JsonIgnore
 //    @JsonManagedReference
-@JsonIgnoreProperties("sanPham")
+    @JsonIgnoreProperties("sanPham")
     @OneToMany(mappedBy = "sanPham")
     private List<ChiTietSanPham> listChiTietSanPham = new ArrayList<>();
 
