@@ -20,10 +20,13 @@ public class HoaDonRequest {
     private String quanHuyen;
     private String tinhThanh;
     private BigDecimal tongTien;
+    private BigDecimal tienGiam;
+    private BigDecimal tongTienSauGiam;
     private BigDecimal phiVanChuyen;
     private String phuongThucThanhToan;
-    private PhieuGiamGia phieuGiamGiaRequest;
-    private KhachHang khachHangRequest;
-    private NhanVien nhanVien;
+    private Integer trangThai;
+    private Integer phieuGiamGia;
+    private Integer khachHang;
+    private Integer nhanVien;
     private List<HoaDonChiTietRequest> hoaDonChiTietRequests;
 }

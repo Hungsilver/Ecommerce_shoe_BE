@@ -3,12 +3,15 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.impl.ExcelProductDetailsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin(value = "*")
 @RestController
-@RequestMapping("/api/product-details")
+@RequestMapping("/api/product-detail")
+
 public class ChiTietSanPhamRestController {
     @Autowired
     private ExcelProductDetailsService execlService;
@@ -51,10 +58,13 @@ public class ChiTietSanPhamRestController {
             @RequestParam(value = "color", required = false) String color,
             @RequestParam(value = "shoe_material", required = false) String shoe_material,
             @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
+            @RequestParam(value = "sortField", required = false) String sortField,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, page, pageSize));
+        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortAsc, sortField, page, pageSize));
     }
 
     @GetMapping("{id}")
@@ -63,7 +73,20 @@ public class ChiTietSanPhamRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest) {
+    public ResponseEntity<?> create(@RequestBody @Valid ChiTietSanPhamRequest chiTietSanPhamRequest,
+                                    BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> mapError = new HashMap<>();
+            result.getAllErrors().stream().forEach(
+                    x -> mapError.put(((FieldError) x).getField(), x.getDefaultMessage())
+            );
+            return ResponseEntity.ok(mapError);
+        }
+        if (chiTietSanPhamService.create(chiTietSanPhamRequest) == null) {
+            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+        }
+
+        System.out.println(chiTietSanPhamService.create(chiTietSanPhamRequest));
         return ResponseEntity.ok(chiTietSanPhamService.create(chiTietSanPhamRequest));
     }
 
@@ -80,14 +103,7 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.delete(id));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> timKiem(
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
-    ) {
-        return ResponseEntity.ok(chiTietSanPhamService.search(keyword, page, pageSize));
-    }
+
 
     @GetMapping("/excel/download")
     public ResponseEntity<Resource> ExportExcel() {

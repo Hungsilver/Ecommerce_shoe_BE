@@ -37,27 +37,48 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
     }
 
     @Override
-    public Optional<PhieuGiamGia> findById(Integer id) {
-        return phieuGiamGiaRepository.findById(id);
+    public PhieuGiamGia findById(Integer id) {
+        if (id != null){
+            return phieuGiamGiaRepository.findById(id).get();
+        }
+        return null;
     }
 
     @Override
-    public PhieuGiamGia create(PhieuGiamGiaRequest PhieuGiamGiaRequest) {
-        PhieuGiamGia phieuGiamGia = ObjectMapperUtils.map(PhieuGiamGiaRequest, PhieuGiamGia.class);
-        phieuGiamGia.setId(null);
+    public PhieuGiamGia create(PhieuGiamGiaRequest phieuGiamGiaRequest) {
+        PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
+                .id(null)
+                .ma(phieuGiamGiaRequest.getMa())
+                .ten(phieuGiamGiaRequest.getTen())
+                .chietKhau(phieuGiamGiaRequest.getChietKhau())
+                .hinhThucGiamGia(phieuGiamGiaRequest.getHinhThucGiamGia())
+                .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
+                .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
+                .ma(phieuGiamGiaRequest.getMoTa())
+                .trangThai(phieuGiamGiaRequest.getTrangThai())
+                .build();
         return phieuGiamGiaRepository.save(phieuGiamGia);
     }
 
     @Override
-    public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest PhieuGiamGiaRequest) {
-        PhieuGiamGia phieuGiamGia = ObjectMapperUtils.map(PhieuGiamGiaRequest, PhieuGiamGia.class);
-        phieuGiamGia.setId(id);
+    public PhieuGiamGia update(Integer id, PhieuGiamGiaRequest phieuGiamGiaRequest) {
+        PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
+                .id(id)
+                .ma(phieuGiamGiaRequest.getMa())
+                .ten(phieuGiamGiaRequest.getTen())
+                .chietKhau(phieuGiamGiaRequest.getChietKhau())
+                .hinhThucGiamGia(phieuGiamGiaRequest.getHinhThucGiamGia())
+                .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
+                .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
+                .ma(phieuGiamGiaRequest.getMoTa())
+                .trangThai(phieuGiamGiaRequest.getTrangThai())
+                .build();
         return phieuGiamGiaRepository.save(phieuGiamGia);
     }
 
     @Override
     public PhieuGiamGia delete(Integer id) {
-        Optional<PhieuGiamGia> phieuGiamGia = this.findById(id);
+        Optional<PhieuGiamGia> phieuGiamGia = phieuGiamGiaRepository.findById(id);
         if (phieuGiamGia.isPresent()) {
             phieuGiamGia.get().setTrangThai(0);
             return phieuGiamGiaRepository.save(phieuGiamGia.get());

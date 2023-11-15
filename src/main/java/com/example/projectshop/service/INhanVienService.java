@@ -2,6 +2,8 @@ package com.example.projectshop.service;
 
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.NhanVien;
+import com.example.projectshop.dto.BaseResponse;
+import com.example.projectshop.dto.nhanvien.NhanVienRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,5 +20,7 @@ public interface INhanVienService {
     NhanVien update(NhanVien nhanVien,Integer id);
     NhanVien delete(Integer id);
 
+    BaseResponse registerAccount(NhanVienRequest nhanVienRequest);
+    NhanVien insertNhanVien(NhanVienRequest nhanVienRequest);
 
 }

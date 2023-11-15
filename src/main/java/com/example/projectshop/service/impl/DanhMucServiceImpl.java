@@ -5,6 +5,7 @@ import com.example.projectshop.dto.danhmuc.DanhMucRequest;
 import com.example.projectshop.repository.DanhMucRepository;
 import com.example.projectshop.service.IDanhMucSevice;
 import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,8 +36,11 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
     }
 
     @Override
-    public Optional<DanhMuc> findById(Integer id) {
-        return danhMucRepo.findById(id);
+    public DanhMuc findById(Integer id) {
+        if (id != null) {
+        return danhMucRepo.findById(id).get();
+        }
+        return null;
     }
 
     @Override
@@ -55,10 +59,10 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
 
     @Override
     public DanhMuc delete(Integer id) {
-        Optional<DanhMuc> th = this.findById(id);
-        if (th.isPresent()) {
-            th.get().setTrangThai(0);
-            return danhMucRepo.save(th.get());
+        Optional<DanhMuc> danhMuc = danhMucRepo.findById(id);
+        if (danhMuc.isPresent()) {
+            danhMuc.get().setTrangThai(1);
+            return danhMucRepo.save(danhMuc.get());
         }
         return null;
     }

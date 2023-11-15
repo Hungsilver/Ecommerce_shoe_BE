@@ -40,8 +40,8 @@ public class ChucVu {
     private Integer trangThai;
 
 
-    @ManyToMany(mappedBy = "chucVus",fetch = FetchType.LAZY)
-    private List<NhanVien> nhanViens;
+//    @ManyToMany(mappedBy = "chucVus",fetch = FetchType.LAZY)
+//    private List<NhanVien> nhanViens;
 
     @Override
     public String toString() {

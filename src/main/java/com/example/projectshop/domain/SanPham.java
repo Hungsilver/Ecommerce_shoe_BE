@@ -1,6 +1,7 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -19,8 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -35,6 +36,9 @@ public class SanPham {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "ma")
+    private String ma;
 
     @Column(name = "ten")
     private String ten;
@@ -66,9 +70,9 @@ public class SanPham {
     @JoinColumn(name = "id_danhmuc")
     private DanhMuc danhMuc;
 
-//    @JsonIgnore
+    //    @JsonIgnore
 //    @JsonManagedReference
-@JsonIgnoreProperties("sanPham")
+    @JsonIgnoreProperties("sanPham")
     @OneToMany(mappedBy = "sanPham")
     private List<ChiTietSanPham> listChiTietSanPham = new ArrayList<>();
 

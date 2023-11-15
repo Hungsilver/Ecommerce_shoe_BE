@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface IMauSacService {
     Page<MauSac> getAll(Pageable pageable);
 
-    Optional<MauSac> findById(Integer id);
+    MauSac findById(Integer id);
 
     Page<MauSac> findAllByName(String name,Pageable pageable);
 

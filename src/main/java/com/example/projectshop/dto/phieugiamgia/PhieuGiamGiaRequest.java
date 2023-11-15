@@ -31,6 +31,5 @@ public class PhieuGiamGiaRequest {
 
     private Integer trangThai;
 
-    private KhachHang khachHang;
 
 }

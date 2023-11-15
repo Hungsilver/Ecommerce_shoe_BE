@@ -1,6 +1,7 @@
 package com.example.projectshop.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,11 +28,15 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class HoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "mahoadon")
+    private String maHoaDon;
 
     @Column(name = "tenkhachhang")
     private String tenKhachHang;
@@ -59,6 +65,12 @@ public class HoaDon {
     @Column(name = "tongtien")
     private BigDecimal tongTien;
 
+    @Column(name = "tiengiam")
+    private BigDecimal tienGiam;
+
+    @Column(name = "tongtiensaugiam")
+    private BigDecimal tongTienSauGiam;
+
     @Column(name = "phivanchuyen")
     private BigDecimal phiVanChuyen;
 
@@ -81,8 +93,8 @@ public class HoaDon {
     @JoinColumn(name = "id_nhanvien", referencedColumnName = "id")
     private NhanVien nhanVien;
 
-    @JsonManagedReference
-//    @JsonIgnore
+//    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "hoaDon")
     private List<HoaDonChiTiet> listHoaDonChiTiet;
 

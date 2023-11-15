@@ -20,11 +20,15 @@ public interface IKhachHangService {
             String keyword
     );
 
-    Optional<KhachHang> findById(Integer id);
+    KhachHang findById(Integer id);
 
     KhachHang create(KhachHangRequest khachHangRequest);
 
     KhachHang update(Integer id, KhachHangRequest khachHangRequest);
 
     KhachHang delete(Integer id);
+
+    KhachHang registerKhachHang(KhachHangRequest khachHangRequest);
+
+    KhachHang loginKhachHang(String email, String matKhau);
 }

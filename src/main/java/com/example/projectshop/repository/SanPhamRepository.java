@@ -44,5 +44,8 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             Pageable pageable
     );
 
+    @Query(value = "select * from sanpham order by id desc limit 1", nativeQuery = true)
+    SanPham getTop1ByIdMax();
+
 
 }

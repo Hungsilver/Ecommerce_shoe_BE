@@ -77,12 +77,12 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
         return ResponseEntity.ok(service.create(sanPhamRequest));
     }
 
-    @PutMapping("{id}")
+    @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,
             @RequestBody SanPhamRequest sanPhamRequest

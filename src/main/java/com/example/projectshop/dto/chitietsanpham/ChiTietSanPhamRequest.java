@@ -6,6 +6,9 @@ import com.example.projectshop.domain.ChatLieuGiay;
 import com.example.projectshop.domain.KichCo;
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.SanPham;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +22,6 @@ import java.util.List;
 public class ChiTietSanPhamRequest {
     private Integer id;
 
-    private String ma;
-
     private Integer soLuong;
 
     private BigDecimal giaBan;
@@ -31,15 +32,23 @@ public class ChiTietSanPhamRequest {
 
     private Integer trangThai;
 
-    private MauSac mausac;
+    @NotNull(message = "Vui lòng không để trống")
+    private Integer mauSac;
 
-    private KichCo kichco;
+    @NotNull(message = "Vui lòng không để trống")
+    private Integer kichCo;
 
-    private ChatLieuGiay chatLieuGiay;
+    @NotNull(message = "Vui lòng không để trống")
+    private Integer chatLieuGiay;
 
-    private ChatLieuDeGiay chatLieuDeGiay;
+    @NotNull(message = "Vui lòng không để trống")
+    private Integer chatLieuDeGiay;
 
-    private SanPham sanpham;
+    @NotNull(message = "Vui lòng không để trống")
+    private Integer sanPham;
+
+    @NotEmpty(message = "Vui lòng không để trống")
+    private List<String> anhSanPhams;
 
 
 }
