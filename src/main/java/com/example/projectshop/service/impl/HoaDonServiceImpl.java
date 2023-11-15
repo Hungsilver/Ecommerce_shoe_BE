@@ -14,16 +14,18 @@ import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.IPhieuGiamGiaService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.utils;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Table;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfCell;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -132,6 +135,17 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     @Override
     public HoaDon shopCreateInvoice(Integer idNhanVien) {
+        if (hoaDonRepo.getTop1ByIdMax() == null) {
+            String maHoaDonMoi = utils.renderCodeHoaDon("000000000000");
+            // tạo hóa đơn chờ
+            HoaDon hoaDon = new HoaDon();
+            hoaDon.setNgayTao(Date.valueOf(curruntDate));
+            hoaDon.setId(null);
+            hoaDon.setMaHoaDon(maHoaDonMoi);
+            hoaDon.setTrangThai(0);
+            hoaDon.setNhanVien(null);
+            return hoaDonRepo.save(hoaDon);
+        }
         String maHoaDon = hoaDonRepo.getTop1ByIdMax().getMaHoaDon();
         String maHoaDonMoi = utils.renderCodeHoaDon(maHoaDon);
         // tạo hóa đơn chờ
@@ -278,19 +292,177 @@ public class HoaDonServiceImpl implements IHoaDonService {
     }
 
     @Override
-    public void exportPDF(HttpServletResponse response) throws IOException, DocumentException {
-        HoaDon hoaDon = hoaDonRepo.getTop1ByIdMax();
+    public void exportPDF(HttpServletResponse response, Integer id) throws IOException {
+        HoaDon hoaDon = hoaDonRepo.findById(id).get();
+        BigDecimal tongTien = hoaDonChiTietRepo.tongTienByIdHoaDon(id);
 
         Document document = new Document(PageSize.A4);
-        PdfWriter writer = PdfWriter.getInstance(document,response.getOutputStream());
+        PdfWriter.getInstance(document, response.getOutputStream());
 
         document.open();
+        // font chữ
+        Font fontTitle = FontFactory.getFont("Arial Unicode MS", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        fontTitle.setSize(20);// size chữ
+        Paragraph title = new Paragraph("GENZ-S ", fontTitle);
+        title.setAlignment(Paragraph.ALIGN_CENTER);// set vị trí
 
-        Font font = new Font(  BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
-        );
-        document.add(new Paragraph("Xin chào, đây là một ví dụ xuất PDF bằng iText trong Spring Boot.",font));
+        Font fontContent = FontFactory.getFont("Arial Unicode MS", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Paragraph infoShop = new Paragraph("\nSố điện thoại: 0375111058\n" +
+                "Email: vuttph25379@fpt.edu.vn\n" +
+                "Địa chỉ: \n" +
+                "Ngân hàng: MBBank - Số tài khoản: 5678915032003 \n" +
+                "Chủ tài khoản: TRINH TRONG VU "
+                , fontContent);
+        infoShop.setAlignment(Paragraph.ALIGN_CENTER);
+
+        Paragraph titleInvoice = new Paragraph("\nHÓA ĐƠN BÁN HÀNG", fontTitle);
+        titleInvoice.setAlignment(Paragraph.ALIGN_CENTER);
+
+        Paragraph codeInvoice = new Paragraph(hoaDon.getMaHoaDon(), fontContent);
+        codeInvoice.setAlignment(Paragraph.ALIGN_CENTER);
+
+        Paragraph infoInvoice = new Paragraph("\nNgày mua: " + hoaDon.getNgayTao() +
+                "\nKhách hàng: " + hoaDon.getKhachHang() +
+                "\nĐịa chỉ: " + hoaDon.getDiaChi() +
+                "\nSố điện thoại: " + hoaDon.getSoDienThoai() +
+                "\nNhân viên bán hàng: " + hoaDon.getNhanVien().getHoTen()
+                , fontContent);
+        infoInvoice.setAlignment(Paragraph.ALIGN_LEFT);
+
+        Font fontTitleTable = FontFactory.getFont("Arial Unicode MS", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        fontTitle.setSize(17);
+        Paragraph titleTable = new Paragraph("\nDANH SÁCH SẢN PHẨM KHÁCH HÀNG MUA\n", fontTitleTable);
+        titleTable.setAlignment(Paragraph.ALIGN_CENTER);
+        titleTable.setSpacingAfter(15f);
+
+
+        // Tạo bảng với 5 cột
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        table.setWidths(new float[]{10, 40, 10, 20, 20});
+
+        PdfPCell cell = new PdfPCell();
+        cell.setPadding(5);
+        cell.setPhrase(new Phrase("STT"));
+        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("Sản phẩm"));
+        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("Số lượng"));
+        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("Đơn giá"));
+        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("Thành tiền"));
+        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        table.addCell(cell);
+
+        int index = 0;
+        for (HoaDonChiTiet x : hoaDon.getListHoaDonChiTiet()) {
+            ++index;
+            cell.setPhrase(new Phrase(String.valueOf(index)));
+            cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase(x.getChiTietSanPham().getSanPham().getTen() + "[" + x.getChiTietSanPham().getMa() + "]"));
+            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase(String.valueOf(x.getSoLuong())));
+            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase(String.valueOf(x.getDonGia()) + " đ"));
+            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            table.addCell(cell);
+
+            cell.setPhrase(new Phrase(String.valueOf(x.getDonGia().multiply(new BigDecimal(x.getSoLuong()))) + " đ"));
+            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            table.addCell(cell);
+        }
+
+
+        PdfPTable table1 = new PdfPTable(2);
+        table1.setWidthPercentage(100);
+        table1.setWidths(new float[]{80, 20});
+
+        PdfPCell cell1 = new PdfPCell();
+
+        cell1.setPhrase(new Phrase("Tổng tiền"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        table1.addCell(cell1);
+
+        cell1.setPhrase(new Phrase(String.valueOf(tongTien) + " đ"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        table1.addCell(cell1);
+
+
+        cell1.setPhrase(new Phrase("\nChiết khấu"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        if (hoaDon.getPhieuGiamGia() == null ) {
+            cell1.setPhrase(new Phrase(String.valueOf( "\n0 đ")));
+            cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+            table1.addCell(cell1);
+        }  else {
+            cell1.setPhrase(new Phrase(String.valueOf("\n"+hoaDon.getTienGiam()+ " đ")));
+            cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+            table1.addCell(cell1);
+        }
+
+        cell1.setPhrase(new Phrase("Phí ship"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        cell1.setPhrase(new Phrase(String.valueOf(hoaDon.getPhiVanChuyen())+" đ"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        cell1.setPhrase(new Phrase("Tổng tiền phải thanh toán"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        cell1.setPhrase(new Phrase(String.valueOf(hoaDon.getTongTienSauGiam())+" đ"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        cell1.setPhrase(new Phrase("Trạng thái đơn hàng"));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        cell1.setPhrase(new Phrase(String.valueOf(utils.trangThaiDonHang(hoaDon.getTrangThai()))));
+        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        table1.addCell(cell1);
+
+        Paragraph footer = new Paragraph("\n\n\n\n\n---Cám ơn quý khách---", fontContent);
+        footer.setAlignment(Paragraph.ALIGN_CENTER);// set vị trí
+
+        document.add(title);
+        document.add(infoShop);
+        document.add(titleInvoice);
+        document.add(codeInvoice);
+        document.add(infoInvoice);
+        document.add(titleTable);
+        document.add(table);
+        document.add(table1);
+        document.add(footer);
         document.close();
-
     }
 
 }
