@@ -155,7 +155,7 @@ CREATE TABLE `NhanVien`
     `hoTen`       nvarchar(50),
     `anhDaiDien`         varchar(100),
     `email`       varchar(50),
-    `matKhau`     varchar(25),
+    `matKhau`     varchar(255),
     `soDienThoai` varchar(10),
     `gioiTinh`    boolean,
     `ngaySinh`    varchar(10),
@@ -174,7 +174,7 @@ CREATE TABLE `KhachHang`
     `id`          Integer AUTO_INCREMENT PRIMARY KEY,
     `hoTen`       nvarchar(50),
     `email`       varchar(50),
-    `matKhau`     varchar(25),
+    `matKhau`     varchar(255),
     `soDienThoai` varchar(10),
     `ngaySinh`    varchar(10),
     `trangThai`   int
