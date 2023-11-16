@@ -22,9 +22,9 @@ public interface IHoaDonService {
 
     Optional<HoaDon> findById(Integer id);
 
-    HoaDon shopPayments(Integer idHoaDon,HoaDonRequest hoaDonRequest);
+    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
 
-    HoaDon shopCreateInvoice(Integer idNhanVien );
+    HoaDon shopCreateInvoice(Integer idNhanVien);
 
     HoaDonChiTiet shopCreateInvoiceDetail(HoaDonChiTietRequest hoaDonChiTietRequest);
 

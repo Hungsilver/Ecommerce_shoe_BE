@@ -71,6 +71,7 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.delete(id));
     }
 
+    // trả về chuỗi string đăng ký thành công hay thất bại
     @PostMapping("/register")
     public ResponseEntity<String> registerKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
@@ -82,13 +83,13 @@ public class KhachHangRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
+    public ResponseEntity<?> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
             KhachHang khachHang= khachHangService.loginKhachHang(khachHangRequest.getEmail(), khachHangRequest.getMatKhau());
             httpSession.setAttribute("khachHang",khachHang);
-            return ResponseEntity.ok("Đăng nhập thành công!");
+            return ResponseEntity.ok(khachHang); // đăng ký thành công trả về thông tin của khách hàng
         } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage()); // trả về thông báo lỗi
         }
     }
 
