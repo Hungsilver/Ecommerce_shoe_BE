@@ -3,8 +3,7 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
 import com.example.projectshop.service.IHoaDonService;
-//import com.itextpdf.text.DocumentException;
-//import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -117,19 +116,20 @@ public class HoaDonRestController {
         return ResponseEntity.ok(hoaDonService.traHang(id));
     }
 
-//    @GetMapping("/export")
-//    public void exportPDF(HttpServletResponse response) throws IOException, DocumentException {
-//        response.setContentType("application/pdf");
-//        response.setCharacterEncoding("UTF-8");
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
-//        String currentDateTime = dateFormat.format(new Date());
-//
-//        String headerKey = "Content-Dispostion";
-//        String headerValue = "attachment; filename=pdf_"+currentDateTime+".pdf";
-//
-//        response.setHeader(headerKey,headerValue);
-//        hoaDonService.exportPDF(response);
-//    }
+    @GetMapping("/export/{id}")
+    public void exportPDF(HttpServletResponse response,
+                          @PathVariable("id")Integer id) throws IOException {
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_"+currentDateTime+".pdf";
+
+        response.setHeader(headerKey,headerValue);
+        hoaDonService.exportPDF(response, id);
+    }
 
 
 }

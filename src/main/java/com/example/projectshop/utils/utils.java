@@ -56,4 +56,42 @@ public class utils {
 
         return tiengVietKhongDau;
     }
+
+    public static String trangThaiDonHang(Integer input) {
+        String trangThai;
+        if (input == 0){
+            trangThai = "Chờ thanh toán";
+        }else if (input == 1){
+            trangThai = "Hoàn thành";
+        }else if (input == 2){
+            trangThai = "Chờ xác nhận";
+        }else if (input == 3){
+            trangThai = "Chờ lấy hàng";
+        }else if (input == 4){
+            trangThai = "Đang giao hàng";
+        }else if (input == 5){
+            trangThai = "Đã giao hàng";
+        }else if (input == 6){
+            trangThai = "Đã hủy";
+        }else if (input == 7){
+            trangThai = "Trả hàng";
+        }else {
+            trangThai = null;
+        }
+        return trangThai;
+    }
+
+    public static String trangThaiThanhToan(Integer input) {
+        String trangThai;
+        if (input == 0){
+            trangThai = "Thanh toán tiền mặt";
+        }else if (input == 1){
+            trangThai = "Thanh toán online";
+        }else if (input == 2){
+            trangThai = "Trả sau";
+        }else {
+            trangThai = null;
+        }
+        return trangThai;
+    }
 }

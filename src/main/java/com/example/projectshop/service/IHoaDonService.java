@@ -4,8 +4,7 @@ import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.HoaDonChiTiet;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
-//import com.itextpdf.text.DocumentException;
-//import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
@@ -47,6 +46,6 @@ public interface IHoaDonService {
 
     HoaDon traHang(Integer id);
 
-//    void exportPDF(HttpServletResponse response) throws IOException, DocumentException;
+    void exportPDF(HttpServletResponse response, Integer id) throws IOException;
 
 }

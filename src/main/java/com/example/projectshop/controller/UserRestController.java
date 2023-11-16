@@ -9,8 +9,8 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/user")
 public class UserRestController {
-    @GetMapping("/get")
-    public String getAccount(Principal principal){
-        return "Welcome back : " + principal.getName();
-    }
+//    @GetMapping("/get")
+//    public String getAccount(Principal principal){
+//        return "Welcome back : " + principal.getName();
+//    }
 }
