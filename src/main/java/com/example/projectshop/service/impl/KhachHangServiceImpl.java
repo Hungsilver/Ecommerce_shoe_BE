@@ -110,6 +110,7 @@ public class KhachHangServiceImpl implements IKhachHangService {
             khachHang.setGiohang(gioHang);
             gioHangRepository.save(gioHang);
             return khachHang;
+
     }
 
     @Override
