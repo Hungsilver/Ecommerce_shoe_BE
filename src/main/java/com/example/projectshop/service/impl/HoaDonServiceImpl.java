@@ -14,17 +14,17 @@ import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.IPhieuGiamGiaService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utils.utils;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
-import jakarta.servlet.http.HttpServletResponse;
+//import com.itextpdf.text.BaseColor;
+//import com.itextpdf.text.Chunk;
+//import com.itextpdf.text.Document;
+//import com.itextpdf.text.DocumentException;
+//import com.itextpdf.text.Font;
+//import com.itextpdf.text.FontFactory;
+//import com.itextpdf.text.PageSize;
+//import com.itextpdf.text.Paragraph;
+//import com.itextpdf.text.pdf.BaseFont;
+//import com.itextpdf.text.pdf.PdfWriter;
+//import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -277,20 +277,20 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDonRepo.save(hoaDon);
     }
 
-    @Override
-    public void exportPDF(HttpServletResponse response) throws IOException, DocumentException {
-        HoaDon hoaDon = hoaDonRepo.getTop1ByIdMax();
+//    @Override
+//    public void exportPDF(HttpServletResponse response) throws IOException, DocumentException {
+//        HoaDon hoaDon = hoaDonRepo.getTop1ByIdMax();
+//
+//        Document document = new Document(PageSize.A4);
+//        PdfWriter writer = PdfWriter.getInstance(document,response.getOutputStream());
+//
+//        document.open();
+//
+//        Font font = new Font(  BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
+//        );
+//        document.add(new Paragraph("Xin chào, đây là một ví dụ xuất PDF bằng iText trong Spring Boot.",font));
+//        document.close();
 
-        Document document = new Document(PageSize.A4);
-        PdfWriter writer = PdfWriter.getInstance(document,response.getOutputStream());
-
-        document.open();
-
-        Font font = new Font(  BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
-        );
-        document.add(new Paragraph("Xin chào, đây là một ví dụ xuất PDF bằng iText trong Spring Boot.",font));
-        document.close();
-
-    }
+//    }
 
 }

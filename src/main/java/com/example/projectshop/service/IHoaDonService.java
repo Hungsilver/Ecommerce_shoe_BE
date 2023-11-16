@@ -4,8 +4,8 @@ import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.HoaDonChiTiet;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
-import com.itextpdf.text.DocumentException;
-import jakarta.servlet.http.HttpServletResponse;
+//import com.itextpdf.text.DocumentException;
+//import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ public interface IHoaDonService {
 
     Optional<HoaDon> findById(Integer id);
 
-    HoaDon shopPayments(Integer idHoaDon,HoaDonRequest hoaDonRequest);
+    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
 
-    HoaDon shopCreateInvoice(Integer idNhanVien );
+    HoaDon shopCreateInvoice(Integer idNhanVien);
 
     HoaDonChiTiet shopCreateInvoiceDetail(HoaDonChiTietRequest hoaDonChiTietRequest);
 
@@ -47,6 +47,6 @@ public interface IHoaDonService {
 
     HoaDon traHang(Integer id);
 
-    void exportPDF(HttpServletResponse response) throws IOException, DocumentException;
+//    void exportPDF(HttpServletResponse response) throws IOException, DocumentException;
 
 }

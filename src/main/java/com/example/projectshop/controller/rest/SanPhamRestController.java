@@ -69,7 +69,7 @@ public class SanPhamRestController {
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
         return ResponseEntity.ok(service.create(sanPhamRequest));
     }
-
+//,consumes = MediaType.APPLICATION_JSON_VALUE
     @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,

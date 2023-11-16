@@ -94,6 +94,8 @@ public class KhachHangServiceImpl implements IKhachHangService {
         return null;
     }
 
+
+    //đăng ký cho khách hàng
     @Override
     public KhachHang registerKhachHang(KhachHangRequest khachHangRequest) {
         if (khachHangRepo.findByEmail(khachHangRequest.getEmail()) != null){
@@ -103,6 +105,13 @@ public class KhachHangServiceImpl implements IKhachHangService {
         KhachHang khachHang = ObjectMapperUtils.map(khachHangRequest, KhachHang.class);
         khachHang.setId(null);
         khachHang.setMatKhau(passwordEncoder.encode(khachHangRequest.getMatKhau()));
+        khachHangRepo.save(khachHang);
+
+        // khi đăng ký thành công khởi tạo giỏ hàng cho khách hàng
+            GioHang gioHang= GioHang.builder().build();
+            gioHang.setKhachHang(khachHang);
+            khachHang.setGiohang(gioHang);
+            gioHangRepository.save(gioHang);
 
         return khachHangRepo.save(khachHang);
     }
@@ -113,13 +122,7 @@ public class KhachHangServiceImpl implements IKhachHangService {
         if (khachHang ==null || !passwordEncoder.matches(matKhau,khachHang.getMatKhau())){
             throw new UnauthorizedException("Email hoặc mật khẩu không đúng");
         }
-        if (khachHang.getGiohang()== null){
-            GioHang gioHang= GioHang.builder().build();
-            gioHang.setKhachHang(khachHang);
-            khachHang.setGiohang(gioHang);
-            gioHangRepository.save(gioHang);
-            khachHangRepo.save(khachHang);
-        }
+
         return khachHang;
     }
 }
