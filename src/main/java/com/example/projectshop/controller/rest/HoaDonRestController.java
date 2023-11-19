@@ -116,6 +116,7 @@ public class HoaDonRestController {
         return ResponseEntity.ok(hoaDonService.traHang(id));
     }
 
+
     @GetMapping("/export/{id}")
     public void exportPDF(HttpServletResponse response,
                           @PathVariable("id")Integer id) throws IOException {

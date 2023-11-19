@@ -80,7 +80,7 @@ public class NhanVienServiceImpl implements INhanVienService {
     public BaseResponse registerAccount(NhanVienRequest nhanVienRequest) {
         BaseResponse response =new BaseResponse();
         validateAccount(nhanVienRequest);
-        NhanVien nhanVien =insertNhanVien(nhanVienRequest);
+        NhanVien nhanVien = this.insertNhanVien(nhanVienRequest);
         try {
             nhanVienRepository.save(nhanVien);
             response.setCode(String.valueOf(HttpStatus.CREATED.value()));

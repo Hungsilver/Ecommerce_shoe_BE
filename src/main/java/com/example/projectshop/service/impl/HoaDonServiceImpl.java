@@ -466,5 +466,4 @@ public class HoaDonServiceImpl implements IHoaDonService {
         document.add(footer);
         document.close();
     }
-
 }

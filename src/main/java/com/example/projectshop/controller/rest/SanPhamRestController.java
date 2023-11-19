@@ -6,9 +6,13 @@ import com.example.projectshop.repository.ChatLieuDeGiayRepository;
 import com.example.projectshop.repository.SanPhamRepository;
 import com.example.projectshop.service.IAttributeSevice;
 import com.example.projectshop.service.ISanPhamService;
+import com.example.projectshop.service.impl.ExcelProductsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,11 +25,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/api/product")
 public class SanPhamRestController {
+
+    @Autowired
+    private ExcelProductsService excelProductsService;
+
     @Autowired
     private ISanPhamService service;
 
@@ -87,6 +99,24 @@ public class SanPhamRestController {
     @GetMapping("/attribute")
     public ResponseEntity<?> attribute() {
         return ResponseEntity.ok(attributeSevice.findAll());
+    }
+
+
+    @GetMapping("/excel/download")
+    public  ResponseEntity<Resource> ExportExcel(){
+        String filename = "SanPham.xlsx";
+        ByteArrayInputStream data = excelProductsService.loadProducts();
+        InputStreamResource file = new InputStreamResource(data);
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+filename)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+    }
+
+    @PostMapping("/excel/upload")
+    public  ResponseEntity<?> ImportExcel(@RequestParam("fileProduct")MultipartFile file){
+        excelProductsService.saveProductsToDatabase(file);
+        return ResponseEntity.ok(Map.of("message","success"));
     }
 
 }
