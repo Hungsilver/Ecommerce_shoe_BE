@@ -17,12 +17,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class AppConfig {
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new UserDetailServiceCustom();
     }
 
@@ -38,13 +38,16 @@ public class AppConfig {
                 .httpBasic()
                 .and()
                 .authorizeHttpRequests()
-//                .requestMatchers("/**").permitAll()
-//                .requestMatchers("/account/**").permitAll()
 //                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
 //                .requestMatchers("/user/**").hasRole("USER")
-//                .requestMatchers("/home/**").authenticated()
-//                .anyRequest().permitAll()
+
+                .requestMatchers("/api/customer/login").permitAll()
+                .requestMatchers("/api/customer/register").permitAll()
+                .requestMatchers("/auth/admin/register-account").permitAll()
+                .requestMatchers("/auth/admin/login").permitAll()
+                .requestMatchers("/auth/admin/**").hasAnyAuthority("ADMIN", "STAFF")
                 .anyRequest().permitAll()
+//                .anyRequest().authenticated()
                 .and()
                 .authenticationManager(manager)
                 .sessionManagement()

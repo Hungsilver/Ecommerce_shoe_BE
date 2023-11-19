@@ -25,9 +25,9 @@ public class utils {
         LocalDate ngayHienTai = LocalDate.now();
 
         // bỏ dấu `-` trong ngày hiện tại
-        String ngayHienTaiMoi = String.valueOf(ngayHienTai).replaceAll("-","");
+        String ngayHienTaiMoi = String.valueOf(ngayHienTai).replaceAll("-", "");
 
-        if (input != null){
+        if (input != null) {
             // lấy ra các ký còn lại bắt đầu từ ký tự số 8
             Integer soHienTai = Integer.valueOf(input.substring(8));
 
@@ -37,10 +37,10 @@ public class utils {
             // Format số mới với độ dài cố định (vd: "00101")
             String soMoiChuoi = String.format("%04d", soMoi);
 
-            return ngayHienTaiMoi+soMoiChuoi;
+            return ngayHienTaiMoi + soMoiChuoi;
         }
 
-        return ngayHienTaiMoi+"0001";
+        return ngayHienTaiMoi + "0001";
 
     }
 
@@ -52,7 +52,7 @@ public class utils {
         String tiengVietKhongDau = transliterator.transliterate(input);
 
         // Bỏ các khoảng trắng
-        String chuoiLienKet = tiengVietKhongDau.replaceAll("\\s","");
+        String chuoiLienKet = tiengVietKhongDau.replaceAll("\\s", "");
 
         return tiengVietKhongDau;
     }

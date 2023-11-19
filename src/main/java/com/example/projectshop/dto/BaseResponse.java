@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+// class dùng để ném các ngoại lệ tùy chỉnh
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
