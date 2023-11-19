@@ -9,13 +9,10 @@ import com.example.projectshop.repository.KhachHangRepository;
 import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -102,23 +99,26 @@ public class KhachHangServiceImpl implements IKhachHangService {
             // tao khach hang
         KhachHang khachHang = ObjectMapperUtils.map(khachHangRequest, KhachHang.class);
         khachHang.setId(null);
-        khachHang.setMatKhau(passwordEncoder.encode(khachHangRequest.   getMatKhau()));
-        khachHangRepo.save(khachHang);
+        khachHang.setMatKhau(passwordEncoder.encode(khachHangRequest.getMatKhau()));
+        KhachHang khachHang1 = khachHangRepo.save(khachHang);
 
-        //tao gio hang moi
-        GioHang gioHang = GioHang.builder().build();
-        gioHang.setKhachHang(khachHang);
-        khachHang.setGiohang(gioHang);
+
+        GioHang gioHang = GioHang.builder()
+                .id(null)
+                .khachHang(khachHang)
+                .build();
         gioHangRepository.save(gioHang);
 
 
-        return khachHangRepo.save(khachHang);
+        return khachHang1;
     }
 
     @Override
     public KhachHang loginKhachHang(String email, String matKhau) {
         KhachHang khachHang = khachHangRepo.findByEmail(email);
+
         System.out.println("khach hang"+khachHang.getEmail() + khachHang.getMatKhau());
+
         if (khachHang == null || !passwordEncoder.matches(matKhau, khachHang.getMatKhau())) {
             throw new UnauthorizedException("Email hoặc mật khẩu không đúng");
         }

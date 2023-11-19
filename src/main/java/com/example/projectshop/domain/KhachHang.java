@@ -50,7 +50,6 @@ public class KhachHang {
     private List<DiaChi> listDiaChi = new ArrayList<>();
 
 
-
     //    @JsonManagedReference
 //    @OneToMany(mappedBy = "khachHang")
 //    private List<GioHang> listGioHang = new ArrayList<>();

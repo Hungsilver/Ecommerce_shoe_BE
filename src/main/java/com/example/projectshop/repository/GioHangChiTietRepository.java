@@ -17,7 +17,7 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet,I
     @Query(value = "select sp.ten,ctsp.mauSac.ten as mausacten,ctsp.kichCo.size as  kichcoTen,ctsp.kichCo.size, gio.giaBan,gio.soLuong from GioHangChiTiet  gio join gio.chiTietSanPham ctsp join  ctsp.sanPham sp")
     Page<GioHangChiTiet> findGioHangChiTietInfo(Pageable pageable);
 
-//    @Query("SELECT giohangchiTiet FROM GioHang gioHang JOIN gioHang.listGioHangChiTiet giohangchiTiet WHERE gioHang.id = :gioHangId")
+   @Query("SELECT giohangchiTiet FROM GioHang gioHang JOIN gioHang.listGioHangChiTiet giohangchiTiet WHERE gioHang.id = :id")
     List<GioHangChiTiet> findGioHangChiTietByGioHangId(Integer id);
 
 }
