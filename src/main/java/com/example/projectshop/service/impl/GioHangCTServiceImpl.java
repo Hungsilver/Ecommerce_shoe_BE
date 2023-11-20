@@ -114,7 +114,7 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
             list.stream().forEach(x -> {
                 if (x.getChiTietSanPham().getId().equals(idctsp)) {
                     x.setSoLuong(x.getSoLuong() + 1);
-                    System.out.println("gia ban" +x.getChiTietSanPham().getGiaBan());
+                    System.out.println("gia ban" + x.getChiTietSanPham().getGiaBan());
                     BigDecimal giacong = x.getChiTietSanPham().getGiaBan();
                     BigDecimal sum = x.getGiaBan().add(giacong);
                     x.setGiaBan(sum);
@@ -133,19 +133,21 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
     public boolean reduce(KhachHang kh, Integer idctsp) {
         GioHang gh = kh.getGiohang();
         List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
-        if (kh != null && idctsp !=null){
+        if (kh != null && idctsp != null) {
             list.stream().forEach(x -> {
                 if (x.getChiTietSanPham().getId().equals(idctsp)) {
-                   x.setSoLuong(x.getSoLuong() - 1);
-                    BigDecimal giatru = x.getChiTietSanPham().getGiaBan();
-                    // lay gia hien tai trong gio tru di gia của sản phẩm
-                    BigDecimal difference = x.getGiaBan().subtract(giatru);
-
-                    x.setGiaBan(difference);
-                    gioHangChiTietRepository.save(x);
+                    if (x.getSoLuong() == 1) {
+                        gioHangChiTietRepository.delete(x);
+//                        gioHangRepository.save(gh);
+                    } else {
+                        x.setSoLuong(x.getSoLuong() - 1);
+                        BigDecimal giatru = x.getChiTietSanPham().getGiaBan();
+                        // lay gia hien tai trong gio tru di gia của sản phẩm
+                        BigDecimal difference = x.getGiaBan().subtract(giatru);
+                        x.setGiaBan(difference);
+                        gioHangChiTietRepository.save(x);
+                    }
                 }
-
-
             });
 
         }
