@@ -25,9 +25,9 @@ public class utils {
         LocalDate ngayHienTai = LocalDate.now();
 
         // bỏ dấu `-` trong ngày hiện tại
-        String ngayHienTaiMoi = String.valueOf(ngayHienTai).replaceAll("-","");
+        String ngayHienTaiMoi = String.valueOf(ngayHienTai).replaceAll("-", "");
 
-        if (input != null){
+        if (input != null) {
             // lấy ra các ký còn lại bắt đầu từ ký tự số 8
             Integer soHienTai = Integer.valueOf(input.substring(8));
 
@@ -37,10 +37,10 @@ public class utils {
             // Format số mới với độ dài cố định (vd: "00101")
             String soMoiChuoi = String.format("%04d", soMoi);
 
-            return ngayHienTaiMoi+soMoiChuoi;
+            return ngayHienTaiMoi + soMoiChuoi;
         }
 
-        return ngayHienTaiMoi+"0001";
+        return ngayHienTaiMoi + "0001";
 
     }
 
@@ -52,8 +52,46 @@ public class utils {
         String tiengVietKhongDau = transliterator.transliterate(input);
 
         // Bỏ các khoảng trắng
-        String chuoiLienKet = tiengVietKhongDau.replaceAll("\\s","");
+        String chuoiLienKet = tiengVietKhongDau.replaceAll("\\s", "");
 
         return tiengVietKhongDau;
+    }
+
+    public static String trangThaiDonHang(Integer input) {
+        String trangThai;
+        if (input == 0){
+            trangThai = "Chờ thanh toán";
+        }else if (input == 1){
+            trangThai = "Hoàn thành";
+        }else if (input == 2){
+            trangThai = "Chờ xác nhận";
+        }else if (input == 3){
+            trangThai = "Chờ lấy hàng";
+        }else if (input == 4){
+            trangThai = "Đang giao hàng";
+        }else if (input == 5){
+            trangThai = "Đã giao hàng";
+        }else if (input == 6){
+            trangThai = "Đã hủy";
+        }else if (input == 7){
+            trangThai = "Trả hàng";
+        }else {
+            trangThai = null;
+        }
+        return trangThai;
+    }
+
+    public static String trangThaiThanhToan(Integer input) {
+        String trangThai;
+        if (input == 0){
+            trangThai = "Thanh toán tiền mặt";
+        }else if (input == 1){
+            trangThai = "Thanh toán online";
+        }else if (input == 2){
+            trangThai = "Trả sau";
+        }else {
+            trangThai = null;
+        }
+        return trangThai;
     }
 }

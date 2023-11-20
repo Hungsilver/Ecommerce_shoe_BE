@@ -4,6 +4,7 @@ import com.example.projectshop.domain.ChucVu;
 import com.example.projectshop.domain.NhanVien;
 import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.nhanvien.NhanVienRequest;
+import com.example.projectshop.dto.nhanvien.NhanVienResponse;
 import com.example.projectshop.exception.BaseException;
 import com.example.projectshop.repository.ChucVuRepository;
 import com.example.projectshop.repository.NhanVienRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -78,7 +80,7 @@ public class NhanVienServiceImpl implements INhanVienService {
     public BaseResponse registerAccount(NhanVienRequest nhanVienRequest) {
         BaseResponse response =new BaseResponse();
         validateAccount(nhanVienRequest);
-        NhanVien nhanVien =insertNhanVien(nhanVienRequest);
+        NhanVien nhanVien = this.insertNhanVien(nhanVienRequest);
         try {
             nhanVienRepository.save(nhanVien);
             response.setCode(String.valueOf(HttpStatus.CREATED.value()));
@@ -86,14 +88,12 @@ public class NhanVienServiceImpl implements INhanVienService {
         }catch (Exception e){
             response.setCode(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()));
             response.setMessage("Service Unavailable");
-            //throw new BaseException(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Service Unavailable");
         }
         return response;
     }
 
     @Override
     public NhanVien insertNhanVien(NhanVienRequest nhanVienRequest) {
-//        NhanVien nhanVien = ObjectMapperUtils.map(nhanVienRequest,NhanVien.class);
         NhanVien nhanVien =new NhanVien();
         nhanVien.setId(null);
         nhanVien.setHoTen(nhanVienRequest.getHoTen());
@@ -111,19 +111,31 @@ public class NhanVienServiceImpl implements INhanVienService {
         return nhanVien;
     }
 
+    // xác thực người dùng khi đâng nhập
+    @Override
+    public NhanVienResponse authenticateUser(NhanVienRequest nhanVienRequest) {
+        NhanVien nhanVien = nhanVienRepository.findByEmail(nhanVienRequest.getEmail()); // truy vấn dữ liệu để lấy thông tin người dùng dựa trên email
+        if (nhanVien != null && passwordEncoder.matches(nhanVienRequest.getMatKhau(), nhanVien.getMatKhau())) { // kiểm tra mật khẩu có đúng hay không
+            return NhanVienResponse.fromNhanVien(nhanVien); // trả về thông tin nhân viên
+        }
+        throw new UsernameNotFoundException("User not found");
+    }
+
+    // check dữ liệu khi đăng ký
     private void validateAccount(NhanVienRequest nhanVienRequest){
-        if(ObjectUtils.isEmpty(nhanVienRequest)){
-            throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
-        }
+//        if(ObjectUtils.isEmpty(nhanVienRequest)){
+//            throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
+//        }
+//
+//        try {
+//            if(!ObjectUtils.isEmpty(nhanVienRequest.checkProperties())){
+//                throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
+//            }
+//        }catch (IllegalAccessException e){
+//            throw new BaseException(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Service Unavailable");
+//        }
 
-        try {
-            if(!ObjectUtils.isEmpty(nhanVienRequest.checkProperties())){
-                throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
-            }
-        }catch (IllegalAccessException e){
-            throw new BaseException(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Service Unavailable");
-        }
-
+        // check role có tồn tồn tại trong cơ sở dữ liệu hay không
         List<String> roles = chucVuRepository.findAll()
                 .stream()
                 .map(ChucVu::getTenChucVu)
@@ -136,6 +148,7 @@ public class NhanVienServiceImpl implements INhanVienService {
 
         NhanVien user = nhanVienRepository.findByEmail(nhanVienRequest.getEmail());
 
+        // kiểm tra email tồn tại hay chưa nếu có sẽ ném ngoại lệ
         if(!ObjectUtils.isEmpty(user)){
             throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Email had existed!!!");
         }

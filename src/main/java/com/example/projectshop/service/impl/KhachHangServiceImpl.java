@@ -9,13 +9,10 @@ import com.example.projectshop.repository.KhachHangRepository;
 import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +47,7 @@ public class KhachHangServiceImpl implements IKhachHangService {
 
     @Override
     public KhachHang findById(Integer id) {
-        if (id != null){
+        if (id != null) {
             return khachHangRepo.findById(id).get();
         }
         return null;
@@ -94,32 +91,40 @@ public class KhachHangServiceImpl implements IKhachHangService {
         return null;
     }
 
+
+    //đăng ký cho khách hàng
     @Override
     public KhachHang registerKhachHang(KhachHangRequest khachHangRequest) {
-        if (khachHangRepo.findByEmail(khachHangRequest.getEmail()) != null){
+        if (khachHangRepo.findByEmail(khachHangRequest.getEmail()) != null) {
             throw new UnauthorizedException("Email đã tồn tại");
         }
-
+            // tao khach hang
         KhachHang khachHang = ObjectMapperUtils.map(khachHangRequest, KhachHang.class);
         khachHang.setId(null);
         khachHang.setMatKhau(passwordEncoder.encode(khachHangRequest.getMatKhau()));
+        khachHangRepo.save(khachHang);
 
-        return khachHangRepo.save(khachHang);
-    }
 
-    @Override
-    public KhachHang loginKhachHang(String email, String matKhau) {
-        KhachHang khachHang=khachHangRepo.findByEmail(email);
-        if (khachHang ==null || !passwordEncoder.matches(matKhau,khachHang.getMatKhau())){
-            throw new UnauthorizedException("Email hoặc mật khẩu không đúng");
-        }
-        if (khachHang.getGiohang()== null){
+        // khi đăng ký thành công khởi tạo giỏ hàng cho khách hàng
             GioHang gioHang= GioHang.builder().build();
             gioHang.setKhachHang(khachHang);
             khachHang.setGiohang(gioHang);
             gioHangRepository.save(gioHang);
-            khachHangRepo.save(khachHang);
+            return khachHang;
+
+
+    }
+
+    @Override
+    public KhachHang loginKhachHang(String email, String matKhau) {
+        KhachHang khachHang = khachHangRepo.findByEmail(email);
+
+        System.out.println("khach hang"+khachHang.getEmail() + khachHang.getMatKhau());
+
+        if (khachHang == null || !passwordEncoder.matches(matKhau, khachHang.getMatKhau())) {
+            throw new UnauthorizedException("Email hoặc mật khẩu không đúng");
         }
+
         return khachHang;
     }
 }

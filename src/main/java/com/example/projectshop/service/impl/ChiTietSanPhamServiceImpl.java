@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -207,5 +208,13 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         }
         return null;
     }
+
+    @Override
+    @Transactional
+    public ChiTietSanPham fetchctspWithgiohangchitiet(Integer id) {
+
+        return null;
+    }
+
 
 }

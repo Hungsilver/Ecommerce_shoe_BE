@@ -36,4 +36,6 @@ public interface IChiTietSanPhamService {
     ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest);
 
     ChiTietSanPham delete(Integer id);
+
+    ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
 }

@@ -33,7 +33,7 @@ public class KhachHangRestController {
 
     @Autowired
     private HttpSession httpSession;
-    
+
     @GetMapping("/get-all")
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
@@ -71,33 +71,34 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.delete(id));
     }
 
+    // trả về chuỗi string đăng ký thành công hay thất bại
     @PostMapping("/register")
     public ResponseEntity<String> registerKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
-             khachHangService.registerKhachHang(khachHangRequest);
+            khachHangService.registerKhachHang(khachHangRequest);
             return ResponseEntity.ok("Đăng Ký thành công!");
-        }catch (UnauthorizedException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
-        try {
-            KhachHang khachHang= khachHangService.loginKhachHang(khachHangRequest.getEmail(), khachHangRequest.getMatKhau());
-            httpSession.setAttribute("khachHang",khachHang);
-            return ResponseEntity.ok("Đăng nhập thành công!");
         } catch (UnauthorizedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
+        try {
+            KhachHang khachHang = khachHangService.loginKhachHang(khachHangRequest.getEmail(), khachHangRequest.getMatKhau());
+            httpSession.setAttribute("khachHang", khachHang);
+            return ResponseEntity.ok(khachHang); // đăng ký thành công trả về thông tin của khách hàng
+        } catch (UnauthorizedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage()); // trả về thông báo lỗi
+        }
+    }
+
     @GetMapping("/check-login-status")
-    public ResponseEntity<String> checkLoginStatus(){
-        KhachHang khachHang= (KhachHang) httpSession.getAttribute("khachHang");
+    public ResponseEntity<String> checkLoginStatus() {
+        KhachHang khachHang = (KhachHang) httpSession.getAttribute("khachHang");
         if (khachHang != null) {
             return ResponseEntity.ok("khách hàng đã đăng nhập");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("khách hàng chưa đăng nhập");
         }
     }
