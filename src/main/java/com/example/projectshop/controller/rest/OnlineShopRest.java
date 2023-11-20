@@ -58,7 +58,7 @@ public class OnlineShopRest {
     KhachHang kh;
 
     // them san pham vao gio hang online
-    @PostMapping("/addsp/{id}")
+    @GetMapping ("/addToCart/{id}")
     public ResponseEntity<?> addSPVaoGio(HttpServletRequest request,
                                          @PathVariable("id") Integer idctsp,
                                          @RequestParam("quality") int soluongthem) {
