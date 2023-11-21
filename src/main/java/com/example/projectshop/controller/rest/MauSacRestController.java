@@ -19,16 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin
-@RequestMapping("/api/colors")
+@RequestMapping("/api/color")
 public class MauSacRestController {
     @Autowired
     private IMauSacService mauSacService;
 
-    @Autowired
-    private HttpServletRequest request;
-
-
-    @GetMapping
+    @GetMapping//localhost:8080/api/color
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -47,24 +43,24 @@ public class MauSacRestController {
         return ResponseEntity.ok(mauSacs);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/color/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(mauSacService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/color
     public ResponseEntity<?> create(@RequestBody MauSacRequest request) {
         MauSac xx = ObjectMapperUtils.map(request, MauSac.class);
         return ResponseEntity.ok(mauSacService.create(xx));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/color/1
     public ResponseEntity<?> update(@RequestBody MauSacRequest request, @PathVariable("id") Integer id) {
         MauSac xx = ObjectMapperUtils.map(request, MauSac.class);
         return ResponseEntity.ok(mauSacService.update(xx, id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/color/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(mauSacService.delete(id));
     }

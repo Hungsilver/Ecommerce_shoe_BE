@@ -24,7 +24,7 @@ public class DiaChiRestController {
     @Autowired
     private IDiaChiService diaChiService;
 
-    @GetMapping()
+    @GetMapping()//localhost:8080/api/address
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -35,20 +35,20 @@ public class DiaChiRestController {
         return ResponseEntity.ok(diaChiService.findAll(page,pageSize,sortField,isSortDesc,keyword));
     }
 
-    @PostMapping()
+    @PostMapping()//localhost:8080/api/address
     public ResponseEntity<?> create(
             @RequestBody DiaChiRequest diaChiRequest
     ) {
         return ResponseEntity.ok(diaChiService.create(diaChiRequest));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/address/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(diaChiService.findById(id));
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/address/1
     public ResponseEntity<?> update(
             @RequestBody DiaChiRequest diaChiRequest,
             @PathVariable("id") Integer id
@@ -56,9 +56,8 @@ public class DiaChiRestController {
         return ResponseEntity.ok(diaChiService.update(id,diaChiRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/address/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        diaChiService.delete(id);
-        return ResponseEntity.ok(delete(id));
+        return ResponseEntity.ok(diaChiService.delete(id));
     }
 }

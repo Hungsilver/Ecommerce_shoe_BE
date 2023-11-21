@@ -11,7 +11,8 @@ import java.security.Principal;
 @Slf4j
 @RequestMapping("/admin")
 public class AdminRestController {
-    @GetMapping("/get")
+
+    @GetMapping("/get")//localhost:8080/api/admin/get
     public String getAccount(Principal principal){
         log.info(principal.getName() + "access to API/admin");
         return "Welcome back admin : "+ principal.getName();

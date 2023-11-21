@@ -16,9 +16,10 @@ import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IKichCoService;
 import com.example.projectshop.service.IMauSacService;
 import com.example.projectshop.service.ISanPhamService;
-import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.QRCodeGenerator;
 import com.example.projectshop.utils.URLDecode;
 import com.example.projectshop.utils.utils;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -116,25 +118,25 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Override
     public Optional<ChiTietSanPham> findById(Integer id) {
-        if (id == null){
+        if (id == null) {
             return null;
         }
         return chiTietSanPhamRepo.findById(id);
     }
 
     @Override
-    public ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) {
+    public ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) throws IOException, WriterException {
         MauSac mauSac = mauSacService.findById(chiTietSanPhamRequest.getMauSac());
         KichCo kichCo = kichCoService.findById(chiTietSanPhamRequest.getKichCo());
         ChatLieuGiay chatLieuGiay = chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay());
         ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay());
         SanPham sanPham = sanPhamService.findById(chiTietSanPhamRequest.getSanPham());
         String maMauSac = utils.tiengVietKhongDau(mauSac.getTen());
-        String maChatLieuGiay = utils.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s","");;
+        String maChatLieuGiay = utils.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
         String maChatLieuDeGiay = utils.tiengVietKhongDau(chatLieuDeGiay.getTen());
-        String maChiTietSanPham = sanPham.getMa()+"_"+maMauSac+"_"+maChatLieuGiay+"_"+maChatLieuDeGiay+"_"+kichCo.getSize();
+        String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
 
-        if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isEmpty()){
+        if (chiTietSanPhamRepo.findByMa(maChiTietSanPham) == null) {
             ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
                     .id(null)
                     .ma(maChiTietSanPham)
@@ -150,6 +152,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                     .sanPham(sanPham)
                     .build();
             ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
+            QRCodeGenerator.generateQRCodeCTSP(saveChiTietSanPham);// tạo mã qrcode
             if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) {
                 for (String x : chiTietSanPhamRequest.getAnhSanPhams()) {
                     AnhSanPham anhSanPham = AnhSanPham.builder()
@@ -160,9 +163,12 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                     anhSanPhamRepo.save(anhSanPham);
                 }
             }
+            System.out.println(1);
             return saveChiTietSanPham;
+        } else {
+            System.out.println(2);
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -184,7 +190,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
         if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
             for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
-                if (!anhSanPhamRepo.getByTen(x).isPresent()){ // check tên ảnh trong db nếu chưa có thì insert
+                if (!anhSanPhamRepo.getByTen(x).isPresent()) { // check tên ảnh trong db nếu chưa có thì insert
                     AnhSanPham anhSanPham = AnhSanPham.builder()
                             .id(null)
                             .chiTietSanPham(saveChiTietSanPham)

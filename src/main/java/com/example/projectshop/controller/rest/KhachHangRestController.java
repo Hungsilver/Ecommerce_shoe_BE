@@ -34,7 +34,7 @@ public class KhachHangRestController {
     @Autowired
     private HttpSession httpSession;
     
-    @GetMapping("/get-all")
+    @GetMapping()//localhost:8080/api/customer
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -45,20 +45,20 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.findAll(page, pageSize, sortField, isSortDesc, keyword));
     }
 
-    @PostMapping()
+    @PostMapping()//localhost:8080/api/customer
     public ResponseEntity<?> create(
             @RequestBody KhachHangRequest khachHangRequest
     ) {
         return ResponseEntity.ok(khachHangService.create(khachHangRequest));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(khachHangService.findById(id));
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> update(
             @RequestBody KhachHangRequest khachHangRequest,
             @PathVariable("id") Integer id
@@ -66,12 +66,12 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.update(id, khachHangRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(khachHangService.delete(id));
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register")//localhost:8080/api/customer/register
     public ResponseEntity<String> registerKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
              khachHangService.registerKhachHang(khachHangRequest);
@@ -81,7 +81,7 @@ public class KhachHangRestController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login")//localhost:8080/api/customer/login
     public ResponseEntity<String> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
             KhachHang khachHang= khachHangService.loginKhachHang(khachHangRequest.getEmail(), khachHangRequest.getMatKhau());
@@ -92,7 +92,7 @@ public class KhachHangRestController {
         }
     }
 
-    @GetMapping("/check-login-status")
+    @GetMapping("/check-login-status")//localhost:8080/api/customer/check-login-status
     public ResponseEntity<String> checkLoginStatus(){
         KhachHang khachHang= (KhachHang) httpSession.getAttribute("khachHang");
         if (khachHang != null) {
@@ -103,7 +103,7 @@ public class KhachHangRestController {
     }
 
 
-    @GetMapping("/checkSession")
+    @GetMapping("/checkSession")//localhost:8080/api/customer/checkSession
     public ResponseEntity<String> checkSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
