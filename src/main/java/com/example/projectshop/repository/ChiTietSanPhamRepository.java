@@ -4,6 +4,7 @@ import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -43,6 +44,8 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "select c from ChiTietSanPham c where c.ma = :ma")
     ChiTietSanPham findByMa(@Param("ma")String ma);
 
+//    @Query("SELECT ctsp FROM ChiTietSanPham ctsp LEFT JOIN FETCH ctsp.listGioHangChiTiet WHERE ctsp.id = :id")
+//    ChiTietSanPham fetchWithGioHangChiTiet(@Param("id") Integer id);
 
 
 

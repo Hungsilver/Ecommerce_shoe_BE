@@ -14,4 +14,5 @@ public class UserRestController {
     public String getAccount(Principal principal){
         return "Welcome back : " + principal.getName();
     }
+
 }

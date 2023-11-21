@@ -71,10 +71,12 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.delete(id));
     }
 
+
     @PostMapping("/register")//localhost:8080/api/customer/register
+    // trả về chuỗi string đăng ký thành công hay thất bại
     public ResponseEntity<String> registerKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
-             khachHangService.registerKhachHang(khachHangRequest);
+            khachHangService.registerKhachHang(khachHangRequest);
             return ResponseEntity.ok("Đăng Ký thành công!");
         }catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -82,22 +84,23 @@ public class KhachHangRestController {
     }
 
     @PostMapping("/login")//localhost:8080/api/customer/login
-    public ResponseEntity<String> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
+    public ResponseEntity<?> loginKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
         try {
-            KhachHang khachHang= khachHangService.loginKhachHang(khachHangRequest.getEmail(), khachHangRequest.getMatKhau());
-            httpSession.setAttribute("khachHang",khachHang);
-            return ResponseEntity.ok("Đăng nhập thành công!");
+            KhachHang khachHang = khachHangService.loginKhachHang(khachHangRequest.getEmail(), khachHangRequest.getMatKhau());
+            httpSession.setAttribute("khachHang", khachHang);
+            return ResponseEntity.ok(khachHang); // đăng ký thành công trả về thông tin của khách hàng
         } catch (UnauthorizedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage()); // trả về thông báo lỗi
         }
     }
 
     @GetMapping("/check-login-status")//localhost:8080/api/customer/check-login-status
     public ResponseEntity<String> checkLoginStatus(){
         KhachHang khachHang= (KhachHang) httpSession.getAttribute("khachHang");
+
         if (khachHang != null) {
             return ResponseEntity.ok("khách hàng đã đăng nhập");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("khách hàng chưa đăng nhập");
         }
     }

@@ -4,6 +4,7 @@ import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.NhanVien;
 import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.nhanvien.NhanVienRequest;
+import com.example.projectshop.dto.nhanvien.NhanVienResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,5 +23,5 @@ public interface INhanVienService {
 
     BaseResponse registerAccount(NhanVienRequest nhanVienRequest);
     NhanVien insertNhanVien(NhanVienRequest nhanVienRequest);
-
+    public NhanVienResponse authenticateUser(NhanVienRequest nhanVienRequest);
 }

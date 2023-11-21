@@ -22,9 +22,9 @@ public interface IHoaDonService {
 
     Optional<HoaDon> findById(Integer id);
 
-    HoaDon shopPayments(Integer idHoaDon,HoaDonRequest hoaDonRequest);
+    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
 
-    HoaDon shopCreateInvoice(Integer idNhanVien );
+    HoaDon shopCreateInvoice(Integer idNhanVien);
 
     HoaDonChiTiet shopCreateInvoiceDetail(HoaDonChiTietRequest hoaDonChiTietRequest);
 
@@ -47,5 +47,6 @@ public interface IHoaDonService {
     HoaDon traHang(Integer id);
 
     void exportPDF(HttpServletResponse response, Integer id) throws IOException;
+
 
 }

@@ -29,10 +29,28 @@ public class utils {
 
         // bỏ dấu `-` trong ngày hiện tại
         String ngayHienTaiMoi = String.valueOf(ngayHienTai).replaceAll("-", "");
+<<<<<<< HEAD
         LocalTime currentTimeWithNanos = LocalTime.now().truncatedTo(ChronoUnit.NANOS);
         String currentTimeWithNanosString = String.valueOf(currentTimeWithNanos.getNano());
 
         return "HD" + ngayHienTaiMoi + localTime.getHour() + localTime.getMinute() + localTime.getSecond() + currentTimeWithNanosString.substring(0, 2);
+=======
+
+        if (input != null) {
+            // lấy ra các ký còn lại bắt đầu từ ký tự số 8
+            Integer soHienTai = Integer.valueOf(input.substring(8));
+
+            // lấy soHienTai +1
+            Integer soMoi = soHienTai + 1;
+
+            // Format số mới với độ dài cố định (vd: "00101")
+            String soMoiChuoi = String.format("%04d", soMoi);
+
+            return ngayHienTaiMoi + soMoiChuoi;
+        }
+
+        return ngayHienTaiMoi + "0001";
+>>>>>>> develop
 
     }
 

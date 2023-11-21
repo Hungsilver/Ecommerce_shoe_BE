@@ -9,42 +9,42 @@ import lombok.Setter;
 
 import java.lang.reflect.Field;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class NhanVienRequest {
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class NhanVienRequest {
 
-    private Integer id;
-
-
-    private String hoTen;
+        private Integer id;
 
 
-    private String anhDaiDien;
+        private String hoTen;
 
 
-    private String email;
+        private String anhDaiDien;
 
 
-    private String matKhau;
+        private String email;
 
 
-    private String soDienThoai;
+        private String matKhau;
 
 
-    private Byte gioiTinh;
+        private String soDienThoai;
 
 
-    private String ngaySinh;
+        private Byte gioiTinh;
 
 
-    private String diaChi;
+        private String ngaySinh;
 
 
-    private Integer trangThai;
+        private String diaChi;
 
-    private String role;
+
+        private Integer trangThai;
+
+        private String role;
 
     public String checkProperties() throws IllegalAccessException {
         for (Field f : getClass().getDeclaredFields()) {

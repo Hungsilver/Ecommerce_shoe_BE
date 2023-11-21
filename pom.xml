@@ -73,6 +73,11 @@
             <artifactId>modelmapper</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
 
         <dependency>
             <groupId>com.ibm.icu</groupId>
@@ -99,6 +104,7 @@
             <artifactId>zxing-spring-boot-starter</artifactId>
             <version>2.0.0.RELEASE</version>
         </dependency>
+
 
 
 

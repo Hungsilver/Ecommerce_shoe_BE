@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account")
 
 public class AccountRestController {
+
     @Autowired
     private NhanVienServiceImpl service;
 
@@ -23,5 +24,6 @@ public class AccountRestController {
     public ResponseEntity<BaseResponse> registerAccount(@RequestBody NhanVienRequest nhanVienRequest) {
         return ResponseEntity.ok(service.registerAccount(nhanVienRequest));
     }
+
 
 }

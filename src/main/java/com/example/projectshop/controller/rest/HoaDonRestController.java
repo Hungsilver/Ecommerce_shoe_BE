@@ -48,18 +48,20 @@ public class HoaDonRestController {
 
     @PutMapping("{id}")//localhost:8080/api/invoice/1
     public ResponseEntity<?> update(
-            @PathVariable("id")Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody HoaDonRequest hoaDonRequest) {
-        return ResponseEntity.ok(hoaDonService.update(id,hoaDonRequest));
+        return ResponseEntity.ok(hoaDonService.update(id, hoaDonRequest));
     }
 
     // start bán hàng tại quầy
+
     // Thanh toán hóa đơn
     @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
     public ResponseEntity<?> shopCheckout(@PathVariable("id")Integer idHoaDon,
                                           @RequestBody HoaDonRequest hoaDonRequest) {
         return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
     }
+
 
     // Tạo hóa đơn chờ với id là idNhanVien
     @PostMapping("/shop/create/{id}")//localhost:8080/api/invoice/shop/create/1
@@ -76,7 +78,7 @@ public class HoaDonRestController {
     // Xóa hóa đơn chi tiết với id của hóa đơn chi tiết
     //localhost:8080/api/invoice/shop/delete-invoie-detail/1
     @DeleteMapping("/shop/delete-invoice-detail/{id}")
-    public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id")Integer id) {
+    public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") Integer id) {
         hoaDonService.shopDeleteInvoiceDetail(id);
         return ResponseEntity.ok().build();
     }
@@ -85,10 +87,10 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/shop/update-invoie-detail
     @GetMapping("/shop/update-invoice-detail")
     public ResponseEntity<?> shopUpdateInvoiceDetail(
-            @RequestParam(value = "id",required = false)Integer id,
-            @RequestParam(value = "soLuong",required = false)Integer soLuong
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "soLuong", required = false) Integer soLuong
     ) {
-        return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(id,soLuong));
+        return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(id, soLuong));
     }
     // end bán hàng tại quầy
 
@@ -100,6 +102,7 @@ public class HoaDonRestController {
     public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) {
         return ResponseEntity.ok(hoaDonService.onlinePayments(hoaDonRequest));
     }
+
 
     // cập nhật trạng thái hóa đơn với id của hóa đơn
     //localhost:8080/api/invoice/cho-van-chuyen/1
