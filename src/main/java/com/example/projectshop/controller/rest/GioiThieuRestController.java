@@ -24,7 +24,7 @@ public class GioiThieuRestController {
     @Autowired
     private IGioiThieuService gioiThieuService;
 
-    @GetMapping()
+    @GetMapping()//localhost:8080/api/blog
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -35,20 +35,20 @@ public class GioiThieuRestController {
         return ResponseEntity.ok(gioiThieuService.findAll(page,pageSize,sortField,isSortDesc,keyword));
     }
 
-    @PostMapping()
+    @PostMapping()//localhost:8080/api/blog
     public ResponseEntity<?> create(
             @RequestBody GioiThieuRequest gioiThieuRequest
     ) {
         return ResponseEntity.ok(gioiThieuService.create(gioiThieuRequest));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/blog/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(gioiThieuService.findById(id));
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/blog/1
     public ResponseEntity<?> update(
             @RequestBody GioiThieuRequest gioiThieuRequest,
             @PathVariable("id") Integer id
@@ -56,9 +56,8 @@ public class GioiThieuRestController {
         return ResponseEntity.ok(gioiThieuService.update(id,gioiThieuRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/blog/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        gioiThieuService.delete(id);
-        return ResponseEntity.ok(delete(id));
+        return ResponseEntity.ok(gioiThieuService.delete(id));
     }
 }

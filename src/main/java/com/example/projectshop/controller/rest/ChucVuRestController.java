@@ -21,7 +21,7 @@ public class ChucVuRestController {
     @Autowired
     private ChucVuServiceImpl chucVuService;
 
-    @GetMapping
+    @GetMapping()//localhost:8080/api/position
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -39,24 +39,24 @@ public class ChucVuRestController {
         }
         return ResponseEntity.ok(chucVus);
     }
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/position/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(chucVuService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/position
     public ResponseEntity<?> create(@RequestBody XuatXuRequest request) {
         ChucVu xx = ObjectMapperUtils.map(request, ChucVu.class);
         return ResponseEntity.ok(chucVuService.create(xx));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/position/1
     public ResponseEntity<?> update(@RequestBody XuatXuRequest request, @PathVariable("id") Integer id) {
         ChucVu xx = ObjectMapperUtils.map(request, ChucVu.class);
         return ResponseEntity.ok(chucVuService.update(xx, id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/position/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(chucVuService.delete(id));
     }

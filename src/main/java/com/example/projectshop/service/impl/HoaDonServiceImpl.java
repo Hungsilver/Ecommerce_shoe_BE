@@ -13,15 +13,16 @@ import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.IPhieuGiamGiaService;
 import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.QRCodeGenerator;
 import com.example.projectshop.utils.utils;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.Table;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfCell;
 import com.lowagie.text.pdf.PdfPCell;
@@ -37,8 +38,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -75,7 +74,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDonRepo.findById(id);
     }
 
-    @Override
+    @Override // update hóa đơn
     public HoaDon update(Integer id, HoaDonRequest hoaDonRequest) {
         Optional<HoaDon> resultFindById = this.findById(id);
 
@@ -101,7 +100,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDon;
     }
 
-    @Override
+    @Override // thanh toán tại quầy
     public HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest) {
         HoaDon hoaDon = this.findById(idHoaDon).get();
 
@@ -134,32 +133,29 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDon;
     }
 
-    @Override
+    @Override // tạo hóa đơn chờ
     public HoaDon shopCreateInvoice(Integer idNhanVien) {
         if (hoaDonRepo.getTop1ByIdMax() == null) {
-            String maHoaDonMoi = utils.renderCodeHoaDon("000000000000");
             // tạo hóa đơn chờ
             HoaDon hoaDon = new HoaDon();
             hoaDon.setNgayTao(Date.valueOf(curruntDate));
             hoaDon.setId(null);
-            hoaDon.setMaHoaDon(maHoaDonMoi);
+            hoaDon.setMaHoaDon(utils.renderCodeHoaDon());
             hoaDon.setTrangThai(0);
             hoaDon.setNhanVien(null);
             return hoaDonRepo.save(hoaDon);
         }
-        String maHoaDon = hoaDonRepo.getTop1ByIdMax().getMaHoaDon();
-        String maHoaDonMoi = utils.renderCodeHoaDon(maHoaDon);
         // tạo hóa đơn chờ
         HoaDon hoaDon = new HoaDon();
         hoaDon.setNgayTao(Date.valueOf(curruntDate));
         hoaDon.setId(null);
-        hoaDon.setMaHoaDon(maHoaDonMoi);
+        hoaDon.setMaHoaDon(utils.renderCodeHoaDon());
         hoaDon.setTrangThai(0);
         hoaDon.setNhanVien(null);
         return hoaDonRepo.save(hoaDon);
     }
 
-    @Override
+    @Override // tạo mới hóa đơn chi tiết
     public HoaDonChiTiet shopCreateInvoiceDetail(HoaDonChiTietRequest hoaDonChiTietRequest) {
         // thêm sản phẩm vào hóa đơn => tạo hóa đơn chi tiết
         //start insert hoadonchitiet
@@ -178,7 +174,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDonChiTietRepo.save(hoaDonChiTiet);
     }
 
-    @Override
+    @Override // cập nhật hóa đơn chi tiết
     public HoaDonChiTiet shopUpdateInvoiceDetail(Integer id, Integer soLuong) {
         // cập nhật lại số lượng sản phẩm trong hóa đơn chi tiết
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
@@ -188,7 +184,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDonChiTietRepo.save(hoaDonChiTiet);
     }
 
-    @Override
+    @Override // xóa hóa đơn chi tiết
     public void shopDeleteInvoiceDetail(Integer id) {
         // xóa hóa đơn chi tiết
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
@@ -204,14 +200,13 @@ public class HoaDonServiceImpl implements IHoaDonService {
     }
 
 
-    @Override
+    @Override // thanh toán online
     public HoaDon onlinePayments(HoaDonRequest hoaDonRequest) {
         String maHoaDon = hoaDonRepo.getTop1ByIdMax().getMaHoaDon();
-        String maHoaDonMoi = utils.renderCodeHoaDon(maHoaDon);
         // start add hoadon
         HoaDon hoaDon = HoaDon.builder()
                 .id(null)
-                .maHoaDon(maHoaDonMoi)
+                .maHoaDon(utils.renderCodeHoaDon())
                 .tenKhachHang(hoaDonRequest.getTenKhachHang())
                 .soDienThoai(hoaDonRequest.getSoDienThoai())
                 .diaChi(hoaDonRequest.getDiaChi())
@@ -257,46 +252,54 @@ public class HoaDonServiceImpl implements IHoaDonService {
     }
 
 
-    @Override
+    @Override // cập nhật trạng thái hóa đơn => chờ vận chuyển
     public HoaDon choVanChuyen(Integer id) {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         hoaDon.setTrangThai(2);
         return hoaDonRepo.save(hoaDon);
     }
 
-    @Override
+    @Override // cập nhật trạng thái hóa đơn => đang giao hàng
     public HoaDon dangGiao(Integer id) {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         hoaDon.setTrangThai(3);
         return hoaDonRepo.save(hoaDon);
     }
 
-    @Override
+    @Override // cập nhật trạng thái hóa đơn => đã giao hàng
     public HoaDon daGiao(Integer id) {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         hoaDon.setTrangThai(4);
         return hoaDonRepo.save(hoaDon);
     }
 
-    @Override
+    @Override // cập nhật trạng thái hóa đơn => đã hủy
     public HoaDon daHuy(Integer id) {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         hoaDon.setTrangThai(5);
         return hoaDonRepo.save(hoaDon);
     }
 
-    @Override
+    @Override // cập nhật trạng thái hóa đơn => trả hàng
     public HoaDon traHang(Integer id) {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         hoaDon.setTrangThai(6);
         return hoaDonRepo.save(hoaDon);
     }
 
+<<<<<<< HEAD
+    @Override // xuất file pdf
+=======
 
     @Override
+>>>>>>> develop
     public void exportPDF(HttpServletResponse response, Integer id) throws IOException {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         BigDecimal tongTien = hoaDonChiTietRepo.tongTienByIdHoaDon(id);
+        String nhanVien = null;
+        if (hoaDon.getNhanVien() != null){
+            nhanVien = hoaDon.getNhanVien().getHoTen();
+        }
 
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
@@ -311,11 +314,30 @@ public class HoaDonServiceImpl implements IHoaDonService {
         Font fontContent = FontFactory.getFont("Arial Unicode MS", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Paragraph infoShop = new Paragraph("\nSố điện thoại: 0375111058\n" +
                 "Email: vuttph25379@fpt.edu.vn\n" +
-                "Địa chỉ: \n" +
+                "Địa chỉ: Số 15 - Xã Quảng Bị - Huyện Chương Mỹ - TP.Hà Nội\n" +
                 "Ngân hàng: MBBank - Số tài khoản: 5678915032003 \n" +
                 "Chủ tài khoản: TRINH TRONG VU "
                 , fontContent);
         infoShop.setAlignment(Paragraph.ALIGN_CENTER);
+
+        PdfPTable tableInfoShop = new PdfPTable(3);
+        tableInfoShop.setWidthPercentage(100);
+        tableInfoShop.setWidths(new float[]{20, 70,10});
+        Image qrCodeImage = Image.getInstance(QRCodeGenerator.generateQrCodeHoaDon(hoaDon));
+
+        PdfPCell cellInfoShop = new PdfPCell();
+        cellInfoShop.addElement(qrCodeImage);
+        cellInfoShop.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cellInfoShop.setBorder(PdfPCell.NO_BORDER);
+        tableInfoShop.addCell(cellInfoShop);
+        cellInfoShop.setPhrase(infoShop);
+        cellInfoShop.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        cellInfoShop.setBorder(PdfPCell.NO_BORDER);
+        tableInfoShop.addCell(cellInfoShop);
+        cellInfoShop.setPhrase(new Phrase(""));
+        cellInfoShop.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        cellInfoShop.setBorder(PdfPCell.NO_BORDER);
+        tableInfoShop.addCell(cellInfoShop);
 
         Paragraph titleInvoice = new Paragraph("\nHÓA ĐƠN BÁN HÀNG", fontTitle);
         titleInvoice.setAlignment(Paragraph.ALIGN_CENTER);
@@ -327,7 +349,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
                 "\nKhách hàng: " + hoaDon.getKhachHang() +
                 "\nĐịa chỉ: " + hoaDon.getDiaChi() +
                 "\nSố điện thoại: " + hoaDon.getSoDienThoai() +
-                "\nNhân viên bán hàng: " + hoaDon.getNhanVien().getHoTen()
+                "\nNhân viên bán hàng: " + nhanVien
                 , fontContent);
         infoInvoice.setAlignment(Paragraph.ALIGN_LEFT);
 
@@ -339,130 +361,131 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
 
         // Tạo bảng với 5 cột
-        PdfPTable table = new PdfPTable(5);
-        table.setWidthPercentage(100);
-        table.setWidths(new float[]{10, 40, 10, 20, 20});
+        PdfPTable tableProduct = new PdfPTable(5);
+        tableProduct.setWidthPercentage(100);
+        tableProduct.setWidths(new float[]{10, 40, 10, 20, 20});
 
-        PdfPCell cell = new PdfPCell();
-        cell.setPadding(5);
-        cell.setPhrase(new Phrase("STT"));
-        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-        table.addCell(cell);
+        PdfPCell cellProduct = new PdfPCell();
+        cellProduct.setPadding(5);
+        cellProduct.setPhrase(new Phrase("STT"));
+        cellProduct.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        tableProduct.addCell(cellProduct);
 
-        cell.setPhrase(new Phrase("Sản phẩm"));
-        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-        table.addCell(cell);
+        cellProduct.setPhrase(new Phrase("Sản phẩm"));
+        cellProduct.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        tableProduct.addCell(cellProduct);
 
-        cell.setPhrase(new Phrase("Số lượng"));
-        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-        table.addCell(cell);
+        cellProduct.setPhrase(new Phrase("Số lượng"));
+        cellProduct.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        tableProduct.addCell(cellProduct);
 
-        cell.setPhrase(new Phrase("Đơn giá"));
-        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-        table.addCell(cell);
+        cellProduct.setPhrase(new Phrase("Đơn giá"));
+        cellProduct.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        tableProduct.addCell(cellProduct);
 
-        cell.setPhrase(new Phrase("Thành tiền"));
-        cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-        table.addCell(cell);
+        cellProduct.setPhrase(new Phrase("Thành tiền"));
+        cellProduct.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        tableProduct.addCell(cellProduct);
 
         int index = 0;
         for (HoaDonChiTiet x : hoaDon.getListHoaDonChiTiet()) {
             ++index;
-            cell.setPhrase(new Phrase(String.valueOf(index)));
-            cell.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-            table.addCell(cell);
+            cellProduct.setPhrase(new Phrase(String.valueOf(index)));
+            cellProduct.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+            tableProduct.addCell(cellProduct);
 
-            cell.setPhrase(new Phrase(x.getChiTietSanPham().getSanPham().getTen() + "[" + x.getChiTietSanPham().getMa() + "]"));
-            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-            table.addCell(cell);
+            cellProduct.setPhrase(new Phrase(x.getChiTietSanPham().getSanPham().getTen() + "[" + x.getChiTietSanPham().getMa() + "]"));
+            cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            tableProduct.addCell(cellProduct);
 
-            cell.setPhrase(new Phrase(String.valueOf(x.getSoLuong())));
-            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-            table.addCell(cell);
+            cellProduct.setPhrase(new Phrase(String.valueOf(x.getSoLuong())));
+            cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            tableProduct.addCell(cellProduct);
 
-            cell.setPhrase(new Phrase(String.valueOf(x.getDonGia()) + " đ"));
-            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-            table.addCell(cell);
+            cellProduct.setPhrase(new Phrase(String.valueOf(x.getDonGia()) + " đ"));
+            cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            tableProduct.addCell(cellProduct);
 
-            cell.setPhrase(new Phrase(String.valueOf(x.getDonGia().multiply(new BigDecimal(x.getSoLuong()))) + " đ"));
-            cell.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-            table.addCell(cell);
+            cellProduct.setPhrase(new Phrase(String.valueOf(x.getDonGia().multiply(new BigDecimal(x.getSoLuong()))) + " đ"));
+            cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            tableProduct.addCell(cellProduct);
         }
 
 
-        PdfPTable table1 = new PdfPTable(2);
-        table1.setWidthPercentage(100);
-        table1.setWidths(new float[]{80, 20});
+        PdfPTable tableTotalAmout = new PdfPTable(2);
+        tableTotalAmout.setWidthPercentage(100);
+        tableTotalAmout.setWidths(new float[]{80, 20});
 
-        PdfPCell cell1 = new PdfPCell();
+        PdfPCell cellTotalAmout = new PdfPCell();
 
-        cell1.setPhrase(new Phrase("Tổng tiền"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase("Tổng tiền"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_CENTER);
+        tableTotalAmout.addCell(cellTotalAmout);
 
-        cell1.setPhrase(new Phrase(String.valueOf(tongTien) + " đ"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase(String.valueOf(tongTien) + " đ"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        tableTotalAmout.addCell(cellTotalAmout);
 
 
-        cell1.setPhrase(new Phrase("\nChiết khấu"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase("\nChiết khấu"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
         if (hoaDon.getPhieuGiamGia() == null ) {
-            cell1.setPhrase(new Phrase(String.valueOf( "\n0 đ")));
-            cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-            cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-            table1.addCell(cell1);
+            cellTotalAmout.setPhrase(new Phrase(String.valueOf( "\n0 đ")));
+            cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+            tableTotalAmout.addCell(cellTotalAmout);
         }  else {
-            cell1.setPhrase(new Phrase(String.valueOf("\n"+hoaDon.getTienGiam()+ " đ")));
-            cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-            cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-            table1.addCell(cell1);
+            cellTotalAmout.setPhrase(new Phrase(String.valueOf("\n"+hoaDon.getTienGiam()+ " đ")));
+            cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+            tableTotalAmout.addCell(cellTotalAmout);
         }
 
-        cell1.setPhrase(new Phrase("Phí ship"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase("Phí ship"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
-        cell1.setPhrase(new Phrase(String.valueOf(hoaDon.getPhiVanChuyen())+" đ"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase(String.valueOf(hoaDon.getPhiVanChuyen())+" đ"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
-        cell1.setPhrase(new Phrase("Tổng tiền phải thanh toán"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase("Tổng tiền phải thanh toán"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
-        cell1.setPhrase(new Phrase(String.valueOf(hoaDon.getTongTienSauGiam())+" đ"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase(String.valueOf(hoaDon.getTongTienSauGiam())+" đ"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
-        cell1.setPhrase(new Phrase("Trạng thái đơn hàng"));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase("Trạng thái đơn hàng"));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
-        cell1.setPhrase(new Phrase(String.valueOf(utils.trangThaiDonHang(hoaDon.getTrangThai()))));
-        cell1.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-        cell1.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        table1.addCell(cell1);
+        cellTotalAmout.setPhrase(new Phrase(String.valueOf(utils.trangThaiDonHang(hoaDon.getTrangThai()))));
+        cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+        cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+        tableTotalAmout.addCell(cellTotalAmout);
 
         Paragraph footer = new Paragraph("\n\n\n\n\n---Cám ơn quý khách---", fontContent);
         footer.setAlignment(Paragraph.ALIGN_CENTER);// set vị trí
 
+
         document.add(title);
-        document.add(infoShop);
+        document.add(tableInfoShop);
         document.add(titleInvoice);
         document.add(codeInvoice);
         document.add(infoInvoice);
         document.add(titleTable);
-        document.add(table);
-        document.add(table1);
+        document.add(tableProduct);
+        document.add(tableTotalAmout);
         document.add(footer);
         document.close();
     }

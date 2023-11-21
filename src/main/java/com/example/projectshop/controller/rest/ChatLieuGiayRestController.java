@@ -43,11 +43,9 @@ public class ChatLieuGiayRestController {
     private IChatLieuGiayService chatLieuGiayService;
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
     ChatLieuGiayRepository chatLieuGiayRepo;
-    @GetMapping
+
+    @GetMapping()//localhost:8080/api/shoe-materiall
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -65,24 +63,24 @@ public class ChatLieuGiayRestController {
         }
         return ResponseEntity.ok(chatLieuGiays);
     }
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/shoe-materiall/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(chatLieuGiayService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/shoe-materiall
     public ResponseEntity<?> create(@RequestBody ChatLieuGiayRequest request) {
         ChatLieuGiay xx = ObjectMapperUtils.map(request, ChatLieuGiay.class);
         return ResponseEntity.ok(chatLieuGiayService.create(xx));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/shoe-materiall
     public ResponseEntity<?> update(@RequestBody ChatLieuGiayRequest request, @PathVariable("id") Integer id) {
         ChatLieuGiay xx = ObjectMapperUtils.map(request, ChatLieuGiay.class);
         return ResponseEntity.ok(chatLieuGiayService.update(xx, id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/shoe-materiall/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(chatLieuGiayService.delete(id));
     }

@@ -23,7 +23,7 @@ public class PhieuGiamGiaRestController {
     @Autowired
     private IPhieuGiamGiaService phieuGiamGiaService;
 
-    @GetMapping("")
+    @GetMapping()//localhost:8080/api/voucher
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -34,20 +34,20 @@ public class PhieuGiamGiaRestController {
         return ResponseEntity.ok(phieuGiamGiaService.findAll(page,pageSize,sortField,isSortDesc,keyword));
     }
 
-    @PostMapping()
+    @PostMapping()//localhost:8080/api/voucher
     public ResponseEntity<?> create(
             @RequestBody PhieuGiamGiaRequest phieuGiamGiaRequest
     ) {
         return ResponseEntity.ok(phieuGiamGiaService.create(phieuGiamGiaRequest));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/voucher/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(phieuGiamGiaService.findById(id));
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/voucher/1
     public ResponseEntity<?> update(
             @RequestBody PhieuGiamGiaRequest phieuGiamGiaRequest,
             @PathVariable("id") Integer id
@@ -55,7 +55,7 @@ public class PhieuGiamGiaRestController {
         return ResponseEntity.ok(phieuGiamGiaService.update(id,phieuGiamGiaRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/voucher/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(phieuGiamGiaService.delete(id));
     }

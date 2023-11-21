@@ -24,7 +24,7 @@ public class DanhMucRestController {
     @Autowired
     private IDanhMucSevice danhMucSevice;
 
-    @GetMapping()
+    @GetMapping()//localhost:8080/api/category
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -35,20 +35,20 @@ public class DanhMucRestController {
         return ResponseEntity.ok(danhMucSevice.findAll(page, pageSize, sortField, isSortDesc, keyword));
     }
 
-    @PostMapping()
+    @PostMapping()//localhost:8080/api/category
     public ResponseEntity<?> create(
             @RequestBody DanhMucRequest danhMucRequest
     ) {
         return ResponseEntity.ok(danhMucSevice.create(danhMucRequest));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/category/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(danhMucSevice.findById(id));
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/category/1
     public ResponseEntity<?> update(
             @RequestBody DanhMucRequest danhMucRequest,
             @PathVariable("id") Integer id
@@ -56,7 +56,7 @@ public class DanhMucRestController {
         return ResponseEntity.ok(danhMucSevice.update(id, danhMucRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/category/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(danhMucSevice.delete(id));
     }

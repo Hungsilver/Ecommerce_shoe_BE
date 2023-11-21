@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/account")
 
 public class AccountRestController {
-//    @Autowired
-//    private NhanVienServiceImpl service;
-//
-//    @PostMapping("/register-account")
-//    public ResponseEntity<BaseResponse> registerAccount(@RequestBody NhanVienRequest nhanVienRequest) {
-//        return ResponseEntity.ok(service.registerAccount(nhanVienRequest));
-//    }
+
+    @Autowired
+    private NhanVienServiceImpl service;
+
+    @PostMapping("/register-account")//localhost:8080/api/account/register-account
+    public ResponseEntity<BaseResponse> registerAccount(@RequestBody NhanVienRequest nhanVienRequest) {
+        return ResponseEntity.ok(service.registerAccount(nhanVienRequest));
+    }
+
 
 }

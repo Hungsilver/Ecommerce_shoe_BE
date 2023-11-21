@@ -21,7 +21,7 @@ public class NhanVienRestController {
     private INhanVienService nhanVienService;
 
 
-    @GetMapping
+    @GetMapping//localhost:8080/api/staff
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -40,24 +40,24 @@ public class NhanVienRestController {
         return ResponseEntity.ok(nhanViens);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/staff/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(nhanVienService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/staff
     public ResponseEntity<?> create(@RequestBody NhanVienRequest request) {
         NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
         return ResponseEntity.ok(nhanVienService.create(xx));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/staff/1
     public ResponseEntity<?> update(@RequestBody NhanVienRequest request, @PathVariable("id") Integer id) {
         NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
         return ResponseEntity.ok(nhanVienService.update(xx, id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/staff/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(nhanVienService.delete(id));
     }

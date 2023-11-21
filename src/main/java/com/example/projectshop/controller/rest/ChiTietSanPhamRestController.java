@@ -1,7 +1,9 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
+import com.google.zxing.WriterException;
 import com.example.projectshop.service.impl.ExcelProductDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +44,7 @@ public class ChiTietSanPhamRestController {
     private IChiTietSanPhamService chiTietSanPhamService;
 
 
-    @GetMapping()
+    @GetMapping()//localhost:8080/api/product-detail
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -51,30 +54,30 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.findAll(page, pageSize, sortField, isSortDesc));
     }
 
-    @GetMapping("filter")
+    @GetMapping("filter")//localhost:8080/api/product-detail/filter
     public ResponseEntity<?> filter(
             @RequestParam(value = "pricemin", required = false) String pricemin,
             @RequestParam(value = "pricemax", required = false) String pricemax,
             @RequestParam(value = "color", required = false) String color,
-            @RequestParam(value = "shoe_material", required = false) String shoe_material,
-            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "shoe-material", required = false) String shoe_material,
+            @RequestParam(value = "shoe-sole-material", required = false) String shoe_sole_material,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "sortField", required = false) String sortField,
+            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortAsc, sortField, page, pageSize));
+        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortDesc, sortField, page, pageSize));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(chiTietSanPhamService.findById(id));
     }
 
-    @PostMapping("")
+    @PostMapping("")//localhost:8080/api/product-detail
     public ResponseEntity<?> create(@RequestBody @Valid ChiTietSanPhamRequest chiTietSanPhamRequest,
-                                    BindingResult result) {
+                                    BindingResult result) throws IOException, WriterException {
         if (result.hasErrors()) {
             Map<String, String> mapError = new HashMap<>();
             result.getAllErrors().stream().forEach(
@@ -82,15 +85,15 @@ public class ChiTietSanPhamRestController {
             );
             return ResponseEntity.ok(mapError);
         }
-        if (chiTietSanPhamService.create(chiTietSanPhamRequest) == null) {
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.create(chiTietSanPhamRequest);
+        if (chiTietSanPham == null) {
             return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+        } else {
+            return ResponseEntity.ok(chiTietSanPham);
         }
-
-        System.out.println(chiTietSanPhamService.create(chiTietSanPhamRequest));
-        return ResponseEntity.ok(chiTietSanPhamService.create(chiTietSanPhamRequest));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,
             @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
@@ -98,7 +101,7 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.update(id, chiTietSanPhamRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(chiTietSanPhamService.delete(id));
     }

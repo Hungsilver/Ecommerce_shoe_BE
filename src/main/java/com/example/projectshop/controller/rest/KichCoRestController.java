@@ -23,7 +23,8 @@ public class KichCoRestController {
 
     @Autowired
     private IKichCoService kichCoService;
-    @GetMapping
+
+    @GetMapping//localhost:8080/api/size
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -42,24 +43,24 @@ public class KichCoRestController {
         return ResponseEntity.ok(kichCos);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/size/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(kichCoService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/size/1
     public ResponseEntity<?> create(@RequestBody KichCoRequest request) {
         KichCo xx = ObjectMapperUtils.map(request, KichCo.class);
         return ResponseEntity.ok(kichCoService.create(xx));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")///localhost:8080/api/size/1
     public ResponseEntity<?> update(@RequestBody KichCoRequest request, @PathVariable("id") Integer id) {
         KichCo xx = ObjectMapperUtils.map(request, KichCo.class);
         return ResponseEntity.ok(kichCoService.update(xx, id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/size/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(kichCoService.delete(id));
     }

@@ -44,7 +44,7 @@ public class SanPhamRestController {
     @Autowired
     private IAttributeSevice attributeSevice;
 
-    @GetMapping()
+    @GetMapping()//localhost:8080/api/product
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -54,7 +54,7 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.findAll(page,pageSize,sortField,isSortDesc));
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filter")//localhost:8080/api/product/filter
     public ResponseEntity<?> filter(
             @RequestParam(value = "pricemin",required = false) String pricemin,
             @RequestParam(value = "pricemax",required = false) String pricemax,
@@ -72,17 +72,18 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.filter(pricemin,pricemax,brand,origin,color,size,shoe_material,shoe_sole_material,keyword,isSortAsc, page,pageSize));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}")//localhost:8080/api/product/1
     public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
         return ResponseEntity.ok(service.create(sanPhamRequest));
     }
-//,consumes = MediaType.APPLICATION_JSON_VALUE
-    @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
+
+
+    @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product/1
     public ResponseEntity<?> update(
             @PathVariable("id") Integer id,
             @RequestBody SanPhamRequest sanPhamRequest
@@ -90,13 +91,13 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.update(id, sanPhamRequest));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/product/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         service.delete(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/attribute")
+    @GetMapping("/attribute")//localhost:8080/api/product/attribute
     public ResponseEntity<?> attribute() {
         return ResponseEntity.ok(attributeSevice.findAll());
     }

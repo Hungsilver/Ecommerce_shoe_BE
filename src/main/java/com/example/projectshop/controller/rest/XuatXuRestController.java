@@ -32,7 +32,7 @@ public class XuatXuRestController {
     @Autowired
     private XuatXuServiceImpl xuatXuService;
 
-    @GetMapping
+    @GetMapping//localhost:8080/api/origin...
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
@@ -51,24 +51,24 @@ public class XuatXuRestController {
         return ResponseEntity.ok(xuatxus);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{id}")//localhost:8080/api/origin/1
     public ResponseEntity<?> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(xuatXuService.findById(id));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/origin
     public ResponseEntity<?> create(@RequestBody XuatXuRequest request) {
         Xuatxu xx = ObjectMapperUtils.map(request, Xuatxu.class);
         return ResponseEntity.ok(xuatXuService.create(xx));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/origin/1
     public ResponseEntity<?> update(@RequestBody XuatXuRequest request, @PathVariable("id") Integer id) {
         Xuatxu xx = ObjectMapperUtils.map(request, Xuatxu.class);
         return ResponseEntity.ok(xuatXuService.update(xx, id));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}")//localhost:8080/api/origin/1
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(xuatXuService.delete(id));
     }
