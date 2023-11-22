@@ -29,97 +29,162 @@ public class HoaDonRestController {
     @Autowired
     private IHoaDonService hoaDonService;
 
-    @GetMapping()
+    private String p_chu = "\\d+";
+
+    @GetMapping()//localhost:8080/api/invoice
     public ResponseEntity<?> findAll(
-            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
+            @RequestParam(value = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
     ) {
-        return ResponseEntity.ok(hoaDonService.findAll(status, keyword, sortField, isSortDesc, page, pageSize));
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)|| !status.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize || status phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.findAll(Integer.valueOf(status), keyword, sortField, isSortDesc, Integer.valueOf(page), Integer.valueOf(pageSize)));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(hoaDonService.findById(id));
+    @GetMapping("{id}")//localhost:8080/api/invoice/1
+    public ResponseEntity<?> findById(@PathVariable("id")String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.findById(Integer.valueOf(id)));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/invoice/1
     public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
-            @RequestBody HoaDonRequest hoaDonRequest) {
-        return ResponseEntity.ok(hoaDonService.update(id, hoaDonRequest));
+            @PathVariable("id") String id,
+            @RequestBody HoaDonRequest hoaDonRequest)
+    {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.update(Integer.valueOf(id), hoaDonRequest));
     }
 
     // start bán hàng tại quầy
-    @PostMapping("/shop/payments/{id}")
-    public ResponseEntity<?> shopCheckout(@PathVariable("id") Integer idHoaDon,
-                                          @RequestBody HoaDonRequest hoaDonRequest) {
-        return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
+
+    // Thanh toán hóa đơn
+    @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
+    public ResponseEntity<?> shopCheckout(@PathVariable("id")String idHoaDon,
+                                          @RequestBody HoaDonRequest hoaDonRequest)
+    {
+        if (!idHoaDon.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.shopPayments(Integer.valueOf(idHoaDon), hoaDonRequest));
     }
 
-    @PostMapping("/shop/create/{id}")
-    public ResponseEntity<?> shopCreateInvoice(@PathVariable("id") Integer idNhanVien) {
+
+    // Tạo hóa đơn chờ với id là idNhanVien
+    @PostMapping("/shop/create/{id}")//localhost:8080/api/invoice/shop/create/1
+    public ResponseEntity<?> shopCreateInvoice(@PathVariable("id")Integer idNhanVien) {
         return ResponseEntity.ok(hoaDonService.shopCreateInvoice(idNhanVien));
     }
 
-    @PostMapping("/shop/add-product")
+    // Thêm sản phẩm vào hóa đơn chi tiết
+    @PostMapping("/shop/add-product")//localhost:8080/api/invoice/shop/add-product
     public ResponseEntity<?> shopCreateInvoiceDetail(@RequestBody HoaDonChiTietRequest hoaDonChiTietRequest) {
         return ResponseEntity.ok(hoaDonService.shopCreateInvoiceDetail(hoaDonChiTietRequest));
     }
 
+    // Xóa hóa đơn chi tiết với id của hóa đơn chi tiết
+    //localhost:8080/api/invoice/shop/delete-invoie-detail/1
     @DeleteMapping("/shop/delete-invoice-detail/{id}")
-    public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") Integer id) {
-        hoaDonService.shopDeleteInvoiceDetail(id);
+    public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id nhân viên phải là số");
+        }
+        hoaDonService.shopDeleteInvoiceDetail(Integer.valueOf(id));
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/shop/update-invoice-detail")
+    // cập nhật số lượng sản phẩm trong hóa đơn chi tiết
+    //localhost:8080/api/invoice/shop/update-invoie-detail
+    @GetMapping("/shop/update-invoice-detail")
     public ResponseEntity<?> shopUpdateInvoiceDetail(
-            @RequestParam(value = "id", required = false) Integer id,
-            @RequestParam(value = "soLuong", required = false) Integer soLuong
+            @RequestParam(value = "id", required = false) String id,
+            @RequestParam(value = "soLuong", required = false) String soLuong
     ) {
-        return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(id, soLuong));
+        if (!id.matches(p_chu)||soLuong.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn chi tiết || số lượng phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(Integer.valueOf(id), Integer.valueOf(soLuong)));
     }
     // end bán hàng tại quầy
 
     // start bán hàng online
+
+    // thanh toán online
+    //localhost:8080/api/invoice/online/payments
     @PostMapping("/online/payments")
     public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) {
         return ResponseEntity.ok(hoaDonService.onlinePayments(hoaDonRequest));
     }
 
-    @PostMapping("/cho-van-chuyen/{id}")
-    public ResponseEntity<?> choVanChuyen(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(hoaDonService.choVanChuyen(id));
+
+    // cập nhật trạng thái hóa đơn với id của hóa đơn
+    //localhost:8080/api/invoice/cho-van-chuyen/1
+    @PutMapping("/cho-van-chuyen/{id}")
+    public ResponseEntity<?> choVanChuyen(@PathVariable("id")String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.choVanChuyen(Integer.valueOf(id)));
     }
 
-    @PostMapping("/dang-giao/{id}")
-    public ResponseEntity<?> dangGiao(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(hoaDonService.dangGiao(id));
+    // cập nhật trạng thái hóa đơn với id của hóa đơn
+    //localhost:8080/api/invoice/dang-giao/1
+    @PutMapping("/dang-giao/{id}")
+    public ResponseEntity<?> dangGiao(@PathVariable("id")String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.dangGiao(Integer.valueOf(id)));
     }
 
-    @PostMapping("/da-giao/{id}")
-    public ResponseEntity<?> daGiao(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(hoaDonService.daGiao(id));
+    // cập nhật trạng thái hóa đơn với id của hóa đơn
+    //localhost:8080/api/invoice/da-giao/1
+    @PutMapping("/da-giao/{id}")
+    public ResponseEntity<?> daGiao(@PathVariable("id")String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.daGiao(Integer.valueOf(id)));
     }
 
-    @PostMapping("/da-huy/{id}")
-    public ResponseEntity<?> daHuy(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(hoaDonService.daHuy(id));
+    // cập nhật trạng thái hóa đơn với id của hóa đơn
+    //localhost:8080/api/invoice/da-huy/1
+    @PutMapping("/da-huy/{id}")
+    public ResponseEntity<?> daHuy(@PathVariable("id")String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.daHuy(Integer.valueOf(id)));
     }
 
-    @PostMapping("/tra-hang/{id}")
-    public ResponseEntity<?> traHang(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(hoaDonService.traHang(id));
+    // cập nhật trạng thái hóa đơn với id của hóa đơn
+    //localhost:8080/api/invoice/tra-hang/1
+    @PutMapping("/tra-hang/{id}")
+    public ResponseEntity<?> traHang(@PathVariable("id")String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
+        return ResponseEntity.ok(hoaDonService.traHang(Integer.valueOf(id)));
     }
 
-
+    // xuất hóa đơn file pdf với id hóa đơn
+    //localhost:8080/api/invoice/export/1
     @GetMapping("/export/{id}")
-    public void exportPDF(HttpServletResponse response,
-                          @PathVariable("id")Integer id) throws IOException {
+    public ResponseEntity<?> exportPDF(HttpServletResponse response,
+                          @PathVariable("id")String id) throws IOException
+    {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id hóa đơn phải là số");
+        }
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
@@ -129,7 +194,8 @@ public class HoaDonRestController {
         String headerValue = "attachment; filename=pdf_"+currentDateTime+".pdf";
 
         response.setHeader(headerKey,headerValue);
-        hoaDonService.exportPDF(response, id);
+        hoaDonService.exportPDF(response, Integer.valueOf(id));
+        return ResponseEntity.ok().build();
     }
 
 

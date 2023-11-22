@@ -24,40 +24,54 @@ public class DanhMucRestController {
     @Autowired
     private IDanhMucSevice danhMucSevice;
 
-    @GetMapping()
+    private String p_chu = "\\d+";
+
+    @GetMapping()//localhost:8080/api/category
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(danhMucSevice.findAll(page, pageSize, sortField, isSortDesc, keyword));
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải danh mục là số");
+        }
+        return ResponseEntity.ok(danhMucSevice.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc, keyword));
     }
 
-    @PostMapping()
+    @PostMapping()//localhost:8080/api/category
     public ResponseEntity<?> create(
             @RequestBody DanhMucRequest danhMucRequest
     ) {
         return ResponseEntity.ok(danhMucSevice.create(danhMucRequest));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(danhMucSevice.findById(id));
+    @GetMapping("{id}")//localhost:8080/api/category/1
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id danh mục phải là số");
+        }
+        return ResponseEntity.ok(danhMucSevice.findById(Integer.valueOf(id)));
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/category/1
     public ResponseEntity<?> update(
             @RequestBody DanhMucRequest danhMucRequest,
-            @PathVariable("id") Integer id
+            @PathVariable("id") String id
     ) {
-        return ResponseEntity.ok(danhMucSevice.update(id, danhMucRequest));
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id danh mục phải là số");
+        }
+        return ResponseEntity.ok(danhMucSevice.update(Integer.valueOf(id), danhMucRequest));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(danhMucSevice.delete(id));
+    @DeleteMapping("{id}")//localhost:8080/api/category/1
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id danh mục phải là số");
+        }
+        return ResponseEntity.ok(danhMucSevice.delete(Integer.valueOf(id)));
     }
 }
