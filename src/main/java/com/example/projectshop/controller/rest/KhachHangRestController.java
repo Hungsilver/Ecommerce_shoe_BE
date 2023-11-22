@@ -33,16 +33,21 @@ public class KhachHangRestController {
 
     @Autowired
     private HttpSession httpSession;
+
+    private String p_chu = "\\d+";
     
     @GetMapping()//localhost:8080/api/customer
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(khachHangService.findAll(page, pageSize, sortField, isSortDesc, keyword));
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
+        return ResponseEntity.ok(khachHangService.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc, keyword));
     }
 
     @PostMapping()//localhost:8080/api/customer
@@ -53,22 +58,31 @@ public class KhachHangRestController {
     }
 
     @GetMapping("{id}")//localhost:8080/api/customer/1
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(khachHangService.findById(id));
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id khách hàng phải là số");
+        }
+        return ResponseEntity.ok(khachHangService.findById(Integer.valueOf(id)));
     }
 
 
     @PutMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> update(
             @RequestBody KhachHangRequest khachHangRequest,
-            @PathVariable("id") Integer id
+            @PathVariable("id") String id
     ) {
-        return ResponseEntity.ok(khachHangService.update(id, khachHangRequest));
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id khách hàng phải là số");
+        }
+        return ResponseEntity.ok(khachHangService.update(Integer.valueOf(id), khachHangRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/customer/1
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(khachHangService.delete(id));
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id khách hàng phải là số");
+        }
+        return ResponseEntity.ok(khachHangService.delete(Integer.valueOf(id)));
     }
 
 

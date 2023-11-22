@@ -24,15 +24,20 @@ public class DiaChiRestController {
     @Autowired
     private IDiaChiService diaChiService;
 
+    private String p_chu = "\\d+";
+
     @GetMapping()//localhost:8080/api/address
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(diaChiService.findAll(page,pageSize,sortField,isSortDesc,keyword));
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize dịa chỉ phải là số");
+        }
+        return ResponseEntity.ok(diaChiService.findAll(Integer.valueOf(page),Integer.valueOf(pageSize),sortField,isSortDesc,keyword));
     }
 
     @PostMapping()//localhost:8080/api/address
@@ -43,21 +48,30 @@ public class DiaChiRestController {
     }
 
     @GetMapping("{id}")//localhost:8080/api/address/1
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(diaChiService.findById(id));
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id địa chỉ phải là số");
+        }
+        return ResponseEntity.ok(diaChiService.findById(Integer.valueOf(id)));
     }
 
 
     @PutMapping("{id}")//localhost:8080/api/address/1
     public ResponseEntity<?> update(
             @RequestBody DiaChiRequest diaChiRequest,
-            @PathVariable("id") Integer id
+            @PathVariable("id") String id
     ){
-        return ResponseEntity.ok(diaChiService.update(id,diaChiRequest));
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id địa chỉ phải là số ");
+        }
+        return ResponseEntity.ok(diaChiService.update(Integer.valueOf(id),diaChiRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/address/1
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(diaChiService.delete(id));
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id địa chỉ phải là số");
+        }
+        return ResponseEntity.ok(diaChiService.delete(Integer.valueOf(id)));
     }
 }
