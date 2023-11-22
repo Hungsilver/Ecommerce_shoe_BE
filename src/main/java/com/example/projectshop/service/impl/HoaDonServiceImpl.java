@@ -287,12 +287,8 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDonRepo.save(hoaDon);
     }
 
-<<<<<<< HEAD
-    @Override // xuất file pdf
-=======
 
-    @Override
->>>>>>> develop
+    @Override // xuất file pdf
     public void exportPDF(HttpServletResponse response, Integer id) throws IOException {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         BigDecimal tongTien = hoaDonChiTietRepo.tongTienByIdHoaDon(id);

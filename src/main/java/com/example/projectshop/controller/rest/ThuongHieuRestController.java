@@ -20,15 +20,20 @@ public class ThuongHieuRestController {
     @Autowired
     private IThuongHieuService service;
 
+    private String p_chu = "\\d+";
+
     @GetMapping()// localhost:8080/api/brand...
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        return ResponseEntity.ok(service.findAll(page,pageSize,sortField,isSortDesc,keyword));
+        if (!page.matches(p_chu) || !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
+        return ResponseEntity.ok(service.findAll(Integer.valueOf(page),Integer.valueOf(pageSize),sortField,isSortDesc,keyword));
     }
 
     @PostMapping()//localhost:8080/api/brand
@@ -39,22 +44,31 @@ public class ThuongHieuRestController {
     }
 
     @GetMapping("{id}")//localhost:8080/api/brand/1
-    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id thương hiệu phải là số");
+        }
+        return ResponseEntity.ok(service.findById(Integer.valueOf(id)));
     }
 
 
     @PutMapping("{id}")//localhost:8080/api/brand/1
     public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") String id,
             @RequestBody ThuongHieuRequest thuongHieuRequest
 
     ){
-        return ResponseEntity.ok(service.update(id,thuongHieuRequest));
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id thương hiệu phải là số");
+        }
+        return ResponseEntity.ok(service.update(Integer.valueOf(id),thuongHieuRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/brand/1
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) throws IOException, WriterException {
-        return ResponseEntity.ok(service.delete(id));
+    public ResponseEntity<?> delete(@PathVariable("id") String id) throws IOException, WriterException {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id thương hiệu phải là số");
+        }
+        return ResponseEntity.ok(service.delete(Integer.valueOf(id)));
     }
 }

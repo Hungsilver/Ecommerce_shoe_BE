@@ -44,37 +44,62 @@ public class SanPhamRestController {
     @Autowired
     private IAttributeSevice attributeSevice;
 
+    private String p_chu = "\\d+";
+
     @GetMapping()//localhost:8080/api/product
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        return ResponseEntity.ok(service.findAll(page,pageSize,sortField,isSortDesc));
+        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
+        return ResponseEntity.ok(service.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc));
     }
 
     @GetMapping("/filter")//localhost:8080/api/product/filter
     public ResponseEntity<?> filter(
-            @RequestParam(value = "pricemin",required = false) String pricemin,
-            @RequestParam(value = "pricemax",required = false) String pricemax,
-            @RequestParam(value = "brand",required = false) String brand,
-            @RequestParam(value = "origin",required = false) String origin,
-            @RequestParam(value = "color",required = false) String color,
-            @RequestParam(value = "size",required = false) String size,
-            @RequestParam(value = "shoe_material",required = false) String shoe_material,
-            @RequestParam(value = "shoe_sole_material",required = false) String shoe_sole_material,
-            @RequestParam(value = "keyword",required = false) String keyword,
+            @RequestParam(value = "pricemin", required = false) String pricemin,
+            @RequestParam(value = "pricemax", required = false) String pricemax,
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "color", required = false) String color,
+            @RequestParam(value = "size", required = false) String size,
+            @RequestParam(value = "shoe_material", required = false) String shoe_material,
+            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize
-    ){
-        return ResponseEntity.ok(service.filter(pricemin,pricemax,brand,origin,color,size,shoe_material,shoe_sole_material,keyword,isSortAsc, page,pageSize));
+            @RequestParam(value = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
+    ) {
+        if (!page.matches(p_chu) || pageSize.matches(p_chu)) {
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
+        return ResponseEntity.ok(
+                service.filter(
+                        pricemin,
+                        pricemax,
+                        brand,
+                        origin,
+                        color,
+                        size,
+                        shoe_material,
+                        shoe_sole_material,
+                        keyword,
+                        isSortAsc,
+                        Integer.valueOf(page),
+                        Integer.valueOf(pageSize))
+        );
     }
 
     @GetMapping("/{id}")//localhost:8080/api/product/1
-    public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(service.findById(Integer.valueOf(id)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product
@@ -83,17 +108,23 @@ public class SanPhamRestController {
     }
 
 
-    @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product/1
+    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product/1
     public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") String id,
             @RequestBody SanPhamRequest sanPhamRequest
     ) {
-        return ResponseEntity.ok(service.update(id, sanPhamRequest));
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(service.update(Integer.valueOf(id), sanPhamRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product/1
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        service.delete(id);
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id sản phẩm phải là số");
+        }
+        service.delete(Integer.valueOf(id));
         return ResponseEntity.ok().build();
     }
 
@@ -104,20 +135,20 @@ public class SanPhamRestController {
 
 
     @GetMapping("/excel/download")
-    public  ResponseEntity<Resource> ExportExcel(){
+    public ResponseEntity<Resource> ExportExcel() {
         String filename = "SanPham.xlsx";
         ByteArrayInputStream data = excelProductsService.loadProducts();
         InputStreamResource file = new InputStreamResource(data);
 
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+filename)
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
     }
 
     @PostMapping("/excel/upload")
-    public  ResponseEntity<?> ImportExcel(@RequestParam("fileProduct")MultipartFile file){
+    public ResponseEntity<?> ImportExcel(@RequestParam("fileProduct") MultipartFile file) {
         excelProductsService.saveProductsToDatabase(file);
-        return ResponseEntity.ok(Map.of("message","success"));
+        return ResponseEntity.ok(Map.of("message", "success"));
     }
 
 }
