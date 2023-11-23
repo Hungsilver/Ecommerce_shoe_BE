@@ -42,7 +42,7 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     );
 
     @Query(value = "select c from ChiTietSanPham c where c.ma = :ma")
-    List<ChiTietSanPham> findByMa(@Param("ma")String ma);
+    ChiTietSanPham findByMa(@Param("ma")String ma);
 
 //    @Query("SELECT ctsp FROM ChiTietSanPham ctsp LEFT JOIN FETCH ctsp.listGioHangChiTiet WHERE ctsp.id = :id")
 //    ChiTietSanPham fetchWithGioHangChiTiet(@Param("id") Integer id);

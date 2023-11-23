@@ -21,17 +21,21 @@ public class NhanVienRestController {
     @Autowired
     private INhanVienService nhanVienService;
 
+    private String p_chu = "\\d+";
 
-    @GetMapping
+    @GetMapping//localhost:8080/api/staff
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        Pageable pageable = PageRequest.of(Integer.valueOf(page) > 0 ? Integer.valueOf(page) - 1 : Integer.valueOf(page), Integer.valueOf(pageSize), sort);
         Page<NhanVien> nhanViens;
         if (keyword != null && !keyword.isEmpty()) {
             nhanViens = nhanVienService.findAllByName(keyword, pageable);
@@ -41,26 +45,37 @@ public class NhanVienRestController {
         return ResponseEntity.ok(nhanViens);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(nhanVienService.findById(id));
+    @GetMapping("{id}")//localhost:8080/api/staff/1
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id nhân viên phải là số");
+        }
+        return ResponseEntity.ok(nhanVienService.findById(Integer.valueOf(id)));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/staff
     public ResponseEntity<?> create(@RequestBody NhanVienRequest request) {
         NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
         return ResponseEntity.ok(nhanVienService.create(xx));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> update(@RequestBody NhanVienRequest request, @PathVariable("id") Integer id) {
+    @PutMapping("{id}")//localhost:8080/api/staff/1
+    public ResponseEntity<?> update(@RequestBody NhanVienRequest request,
+                                    @PathVariable("id") String id)
+    {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id nhân viên phải là số");
+        }
         NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
-        return ResponseEntity.ok(nhanVienService.update(xx, id));
+        return ResponseEntity.ok(nhanVienService.update(xx, Integer.valueOf(id)));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(nhanVienService.delete(id));
+    @DeleteMapping("{id}")//localhost:8080/api/staff/1
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id nhân viên phải là số");
+        }
+        return ResponseEntity.ok(nhanVienService.delete(Integer.valueOf(id)));
     }
 
 

@@ -19,25 +19,26 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @CrossOrigin
-@RequestMapping("/api/colors")
+@RequestMapping("/api/color")
 public class MauSacRestController {
     @Autowired
     private IMauSacService mauSacService;
 
-    @Autowired
-    private HttpServletRequest request;
+    private String p_chu = "\\d+";
 
-
-    @GetMapping
+    @GetMapping//localhost:8080/api/color
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        Pageable pageable = PageRequest.of(Integer.valueOf(page) > 0 ? Integer.valueOf(page) - 1 : Integer.valueOf(page), Integer.valueOf(pageSize), sort);
         Page<MauSac> mauSacs;
         if (keyword != null && !keyword.isEmpty()) {
             mauSacs = mauSacService.findAllByName(keyword, pageable);
@@ -47,26 +48,37 @@ public class MauSacRestController {
         return ResponseEntity.ok(mauSacs);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(mauSacService.findById(id));
+    @GetMapping("{id}")//localhost:8080/api/color/1
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id màu sắc phải là số");
+        }
+        return ResponseEntity.ok(mauSacService.findById(Integer.valueOf(id)));
     }
 
-    @PostMapping
+    @PostMapping//localhost:8080/api/color
     public ResponseEntity<?> create(@RequestBody MauSacRequest request) {
         MauSac xx = ObjectMapperUtils.map(request, MauSac.class);
         return ResponseEntity.ok(mauSacService.create(xx));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> update(@RequestBody MauSacRequest request, @PathVariable("id") Integer id) {
+    @PutMapping("{id}")//localhost:8080/api/color/1
+    public ResponseEntity<?> update(@RequestBody MauSacRequest request,
+                                    @PathVariable("id") String id)
+    {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id màu sắc phải là số");
+        }
         MauSac xx = ObjectMapperUtils.map(request, MauSac.class);
-        return ResponseEntity.ok(mauSacService.update(xx, id));
+        return ResponseEntity.ok(mauSacService.update(xx, Integer.valueOf(id)));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(mauSacService.delete(id));
+    @DeleteMapping("{id}")//localhost:8080/api/color/1
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id màu sắc phải là số");
+        }
+        return ResponseEntity.ok(mauSacService.delete(Integer.valueOf(id)));
     }
 
 
