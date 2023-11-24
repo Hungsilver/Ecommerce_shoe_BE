@@ -58,7 +58,7 @@ public class OnlineShopRest {
     KhachHang kh;
 
     // them san pham vao gio hang online
-    @GetMapping ("/addToCart/{id}")
+    @GetMapping ("/addToCart/{id}") //http://localhost:8080/api/cart-detail/addToCart/id?quality=soluongthem
     public ResponseEntity<?> addSPVaoGio(HttpServletRequest request,
                                          @PathVariable("id") Integer idctsp,
                                          @RequestParam("quality") int soluongthem) {
@@ -86,12 +86,12 @@ public class OnlineShopRest {
     }
 
     // xoa theo id cua chi tiet san pham
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/remove/{id}") //http://localhost:8080/api/cart-detail/remove/idctsp
     public ResponseEntity<?> remove(HttpServletRequest request, @PathVariable("id") Integer idctsp) {
         System.out.println("khach hang " + kh);
         HttpSession session = request.getSession();
         kh = (KhachHang) session.getAttribute("khachHang");
-        if (kh != null) {
+        if (kh != null && idctsp !=null) {
             iGioHangCTService.remove(kh, idctsp);
 
         }
@@ -104,8 +104,9 @@ public class OnlineShopRest {
 
     // load gio hang chi tiet  cua khach hang trong session
     // anh em dang nhap truoc moi load gio hang nhe
-    // dang nhap ở trong khachhangRestController
-    @GetMapping("/ofcart")
+    // dang nhap ở hàm loginkhachhang trong khachhangRestController
+    // dang nhap xong thì chạy đoạn code này trước để có thể giảm hoặc tăng số lượng được
+    @GetMapping("/ofcart")  //http://localhost:8080/api/cart-detail/ofcart
     public ResponseEntity<?> getGHCTByGiohangID(HttpServletRequest request) {
         HttpSession session = request.getSession();
 
@@ -124,7 +125,7 @@ public class OnlineShopRest {
     // luu y khi su dung
     // phai load giở hàng trước mới cộng trừ được
     // tăng số lượng lên +1 sản phẩm trong giỏ
-    @PutMapping("/increase/{id}")
+    @PutMapping("/increase/{id}") //http://localhost:8080/api/cart-detail/increase/id
     public ResponseEntity<?> increase(HttpServletRequest request,
                                       @PathVariable("id") Integer id) {
         try {
@@ -143,7 +144,7 @@ public class OnlineShopRest {
     }
 
     // tru so luong -1 san pham trong gio
-    @PutMapping("/reduce/{id}")
+    @PutMapping("/reduce/{id}") //http://localhost:8080/api/cart-detail/reduce/id
     public ResponseEntity<?> reduce(HttpServletRequest request,
                                     @PathVariable("id") Integer id) {
 //        HttpSession session = request.getSession();
