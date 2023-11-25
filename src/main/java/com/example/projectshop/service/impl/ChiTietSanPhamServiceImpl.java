@@ -208,4 +208,9 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         return null;
     }
 
+    @Override
+    public ChiTietSanPham searchMa(String ma) {
+        return chiTietSanPhamRepo.searchMa(ma);
+    }
+
 }

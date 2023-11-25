@@ -1,5 +1,6 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import jakarta.validation.Valid;
@@ -88,6 +89,13 @@ public class ChiTietSanPhamRestController {
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(chiTietSanPhamService.delete(id));
+    }
+
+    @GetMapping("/findByMa")
+    public ResponseEntity<?> findByMa(@RequestParam String ma) {
+        ChiTietSanPham result = chiTietSanPhamService.searchMa(ma);
+        System.out.println("ma"+ ma);
+        return ResponseEntity.ok(result);
     }
 
 

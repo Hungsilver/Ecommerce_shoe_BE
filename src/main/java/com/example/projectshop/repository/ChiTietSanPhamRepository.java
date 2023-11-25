@@ -43,6 +43,9 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     @Query(value = "select c from ChiTietSanPham c where c.ma = :ma")
     List<ChiTietSanPham> findByMa(@Param("ma")String ma);
 
+    @Query(value = "select c from ChiTietSanPham c where c.ma = :ma")
+    ChiTietSanPham searchMa(@Param("ma")String ma);
+
 
 
 

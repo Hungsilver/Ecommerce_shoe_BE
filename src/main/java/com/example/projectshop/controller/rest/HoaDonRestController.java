@@ -65,6 +65,11 @@ public class HoaDonRestController {
         return ResponseEntity.ok(hoaDonService.shopCreateInvoice(idNhanVien));
     }
 
+    @PostMapping("/shop/create")
+    public ResponseEntity<?> shopCreateInvoice() {
+        return ResponseEntity.ok(hoaDonService.CreateInvoice());
+    }
+
     @PostMapping("/shop/add-product")
     public ResponseEntity<?> shopCreateInvoiceDetail(@RequestBody HoaDonChiTietRequest hoaDonChiTietRequest) {
         return ResponseEntity.ok(hoaDonService.shopCreateInvoiceDetail(hoaDonChiTietRequest));

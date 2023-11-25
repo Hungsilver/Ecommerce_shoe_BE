@@ -467,4 +467,29 @@ public class HoaDonServiceImpl implements IHoaDonService {
         document.close();
     }
 
+    @Override
+    public HoaDon CreateInvoice() {
+        if (hoaDonRepo.getTop1ByIdMax() == null) {
+            String maHoaDonMoi = utils.renderCodeHoaDon("000000000000");
+            // tạo hóa đơn chờ
+            HoaDon hoaDon = new HoaDon();
+            hoaDon.setNgayTao(Date.valueOf(curruntDate));
+            hoaDon.setId(null);
+            hoaDon.setMaHoaDon(maHoaDonMoi);
+            hoaDon.setTrangThai(0);
+            hoaDon.setNhanVien(null);
+            return hoaDonRepo.save(hoaDon);
+        }
+        String maHoaDon = hoaDonRepo.getTop1ByIdMax().getMaHoaDon();
+        String maHoaDonMoi = utils.renderCodeHoaDon(maHoaDon);
+        // tạo hóa đơn chờ
+        HoaDon hoaDon = new HoaDon();
+        hoaDon.setNgayTao(Date.valueOf(curruntDate));
+        hoaDon.setId(null);
+        hoaDon.setMaHoaDon(maHoaDonMoi);
+        hoaDon.setTrangThai(0);
+        hoaDon.setNhanVien(null);
+        return hoaDonRepo.save(hoaDon);
+    }
+
 }
