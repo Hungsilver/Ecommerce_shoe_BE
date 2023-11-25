@@ -3,12 +3,14 @@ package com.example.projectshop.service.impl;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
+import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.GioHangChiTietRepository;
 import com.example.projectshop.repository.GioHangRepository;
 import com.example.projectshop.service.IGioHangCTService;
 import com.example.projectshop.service.ObjectMapperUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,23 +38,43 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
     }
 
     @Override
-    public GioHangChiTiet addSP(ChiTietSanPhamRequest chiTietSanPhamRequest, int soluong, Integer idgiohang) {
+    public GioHangChiTiet addSP(ChiTietSanPham chiTietSanPham, int soluong, Integer idgiohang) {
 
-        // add SP mới khi mà sản phẩm này chưa có trong giỏ(đã có giỏ hàng) chưa có GHCT
-        // san pham moi
+        return null;
+    }
 
-        GioHang gh = gioHangRepository.findById(idgiohang).orElse(null);
-        ChiTietSanPham ctspDB;
-        ctspDB = ObjectMapperUtils.map(chiTietSanPhamRequest, ChiTietSanPham.class);
+
+    GioHang gh;
+
+    @Override
+    public GioHangChiTiet onlineCart(KhachHang kh, Integer idctsp, int soluong) {
+        gh = kh.getGiohang();
+        ChiTietSanPham ctsp = chiTietSanPhamRepository.findById(idctsp).orElse(null);
+        List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
+        for (GioHangChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(ctsp.getId())) {
+                System.out.println("chay vao if");
+                x.setSoLuong(x.getSoLuong() + soluong);
+                BigDecimal giamoi = x.getGiaBan().multiply(new BigDecimal(soluong));
+                x.setGiaBan(giamoi);
+                gioHangChiTietRepository.save(x);
+
+                return x;
+            }
+        }
+        // Truong Hop chua co SP trong ghct(Da co GioHang)
+
+        System.out.println(" truong hop tao ghct");
         GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
-        gioHangChiTiet.setSoLuong(soluong);
-        BigDecimal dongia = ctspDB.getGiaBan().multiply(new BigDecimal(soluong));
-        gioHangChiTiet.setGiaBan(dongia);
-        gioHangChiTiet.setChiTietSanPham(ctspDB);
+        gioHangChiTiet.setChiTietSanPham(ctsp);
         gioHangChiTiet.setGioHang(gh);
-        GioHangChiTiet ghct = gioHangChiTietRepository.save(gioHangChiTiet);
+        gioHangChiTiet.setSoLuong(soluong);
+        BigDecimal dongia = ctsp.getGiaBan().multiply(new BigDecimal(soluong));
+        gioHangChiTiet.setGiaBan(dongia);
+        GioHangChiTiet sanphammoi = gioHangChiTietRepository.save(gioHangChiTiet);
 
-        return ghct;
+
+        return sanphammoi;
     }
 
     @Override
@@ -69,7 +91,66 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
 
 
     @Override
-    public void delete(Integer id) {
+    public void remove(KhachHang kh, Integer id) {
+        GioHang gh = kh.getGiohang();
+        System.out.println("gio hang sevice" + gh);
+        List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
+        for (GioHangChiTiet x : list) {
+            if (x.getChiTietSanPham().getId().equals(id)) {
+                gioHangChiTietRepository.deleteById(x.getId());
+                break;
+            }
+        }
 
+
+    }
+
+    @Override
+    public boolean increase(KhachHang kh, Integer idctsp) {
+        GioHang gh = kh.getGiohang();
+        List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
+
+        if (kh != null && idctsp != null) {
+            list.stream().forEach(x -> {
+                if (x.getChiTietSanPham().getId().equals(idctsp)) {
+                    x.setSoLuong(x.getSoLuong() + 1);
+                    System.out.println("gia ban" + x.getChiTietSanPham().getGiaBan());
+                    BigDecimal giacong = x.getChiTietSanPham().getGiaBan();
+                    BigDecimal sum = x.getGiaBan().add(giacong);
+                    x.setGiaBan(sum);
+                    gioHangChiTietRepository.save(x);
+                }
+
+
+            });
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean reduce(KhachHang kh, Integer idctsp) {
+        GioHang gh = kh.getGiohang();
+        List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
+        if (kh != null && idctsp != null) {
+            list.stream().forEach(x -> {
+                if (x.getChiTietSanPham().getId().equals(idctsp)) {
+                    if (x.getSoLuong() == 1) {
+                        gioHangChiTietRepository.delete(x);
+//                        gioHangRepository.save(gh);
+                    } else {
+                        x.setSoLuong(x.getSoLuong() - 1);
+                        BigDecimal giatru = x.getChiTietSanPham().getGiaBan();
+                        // lay gia hien tai trong gio tru di gia của sản phẩm
+                        BigDecimal difference = x.getGiaBan().subtract(giatru);
+                        x.setGiaBan(difference);
+                        gioHangChiTietRepository.save(x);
+                    }
+                }
+            });
+
+        }
+        return true;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.projectshop.service.impl;
 
+import com.example.projectshop.dto.thongke.ThongKeDanhMuc;
 import com.example.projectshop.dto.thongke.ThongKeDoanhThu;
 import com.example.projectshop.dto.thongke.ThongKeHoaDon;
+import com.example.projectshop.dto.thongke.ThongKeSanPham;
 import com.example.projectshop.repository.ThongKeRepository;
 import com.example.projectshop.service.IThongKeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +21,8 @@ import java.util.List;
 public class ThongKeImpl implements IThongKeService {
     @Autowired
     private ThongKeRepository thongKeRepo;
+
+    private LocalDate currentDate = LocalDate.now();
 
     @Override
     public ThongKeHoaDon thongKeHoaDon() {
@@ -194,8 +199,6 @@ public class ThongKeImpl implements IThongKeService {
     @Override
     public List<ThongKeDoanhThu> thongKeDoanhThuTheoKhoang(java.sql.Date startDate, java.sql.Date endDate) {
         List<ThongKeDoanhThu> thongKeDoanhThus = new ArrayList<>();
-        System.out.println(startDate);
-        System.out.println(endDate);
         // nếu 1 trong 2 tham số hoặc cả 2 tham số = null thì trả về doanh thu ngày hiện tại của hệ thông máy tính
         if (startDate == null || endDate == null || startDate == null && endDate == null){
             for (Object[] x : thongKeRepo.thongKeDoanhThuNgayHienTai()) {
@@ -243,5 +246,185 @@ public class ThongKeImpl implements IThongKeService {
             thongKeDoanhThus.add(thongKeDoanhThu);
         }//
         return thongKeDoanhThus;
+    }
+
+    @Override
+    public List<ThongKeSanPham> thongKeSanPham7NgayTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeSanPham> thongKeSanPhams = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeSanPham7NgayTruoc()) {
+            ThongKeSanPham thongKeSanPham = ThongKeSanPham.builder()
+                    .tenSanPham(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeSanPhams.add(thongKeSanPham);
+        }//
+        return thongKeSanPhams;
+    }
+
+    @Override
+    public List<ThongKeSanPham> thongKeSanPham28NgayTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeSanPham> thongKeSanPhams = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeSanPham28NgayTruoc()) {
+            ThongKeSanPham thongKeSanPham = ThongKeSanPham.builder()
+                    .tenSanPham(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeSanPhams.add(thongKeSanPham);
+        }//
+        return thongKeSanPhams;
+    }
+
+    @Override
+    public List<ThongKeSanPham> thongKeSanPham1NamTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeSanPham> thongKeSanPhams = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeSanPham1NamTruoc()) {
+            ThongKeSanPham thongKeSanPham = ThongKeSanPham.builder()
+                    .tenSanPham(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeSanPhams.add(thongKeSanPham);
+        }//
+        return thongKeSanPhams;
+    }
+
+    @Override
+    public List<ThongKeSanPham> thongKeSanPham6ThangTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeSanPham> thongKeSanPhams = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeSanPham6ThangTruoc()) {
+            ThongKeSanPham thongKeSanPham = ThongKeSanPham.builder()
+                    .tenSanPham(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeSanPhams.add(thongKeSanPham);
+        }//
+        return thongKeSanPhams;
+    }
+
+    @Override
+    public List<ThongKeSanPham> thongKeSanPhamTheoKhoang(java.sql.Date startDate, java.sql.Date endDate) {
+        List<ThongKeSanPham> thongKeSanPhams = new ArrayList<>();
+        // nếu 1 trong 2 tham số hoặc cả 2 tham số = null thì trả về doanh thu ngày hiện tại của hệ thông máy tính
+        if (startDate == null || endDate == null || startDate == null && endDate == null){
+            for (Object[] x : thongKeRepo.tongThongKeSanPham()) {
+                ThongKeSanPham thongKeSanPham = ThongKeSanPham.builder()
+                        .tenSanPham(x[0].toString())
+                        .soLuong(Integer.valueOf(x[1].toString()))
+                        .doanhThu(new BigDecimal(x[2].toString()))
+                        .build();
+                thongKeSanPhams.add(thongKeSanPham);
+            }
+            return thongKeSanPhams;
+        }//
+
+        // nếu cả 2 tham số không null thì trả về doanh thu theo tham số truyền vào
+        List<Object[]> productData = thongKeRepo.thongKeSanPhamTheoKhoang(startDate, endDate);// khai báo 1 list dữ liệu trả ra từ db
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        for (Object[] x : productData) {
+            ThongKeSanPham thongKeSanPham = ThongKeSanPham.builder()
+                    .tenSanPham(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeSanPhams.add(thongKeSanPham);
+        }//
+        return thongKeSanPhams;
+    }
+
+    @Override
+    public List<ThongKeDanhMuc> thongKeDanhMuc7NgayTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeDanhMuc> thongKeDanhMucs = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeDanhMuc7NgayTruoc()) {
+            ThongKeDanhMuc thongKeDanhMuc = ThongKeDanhMuc.builder()
+                    .tenDanhMuc(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeDanhMucs.add(thongKeDanhMuc);
+        }//
+        return thongKeDanhMucs;
+    }
+
+    @Override
+    public List<ThongKeDanhMuc> thongKeDanhMuc28NgayTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeDanhMuc> thongKeDanhMucs = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeDanhMuc28NgayTruoc()) {
+            ThongKeDanhMuc thongKeDanhMuc = ThongKeDanhMuc.builder()
+                    .tenDanhMuc(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeDanhMucs.add(thongKeDanhMuc);
+        }//
+        return thongKeDanhMucs;
+    }
+
+    @Override
+    public List<ThongKeDanhMuc> thongKeDanhMuc1NamTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeDanhMuc> thongKeDanhMucs = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeDanhMuc12ThangTruoc()) {
+            ThongKeDanhMuc thongKeDanhMuc = ThongKeDanhMuc.builder()
+                    .tenDanhMuc(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeDanhMucs.add(thongKeDanhMuc);
+        }//
+        return thongKeDanhMucs;
+    }
+
+    @Override
+    public List<ThongKeDanhMuc> thongKeDanhMuc6ThangTruoc() {
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        List<ThongKeDanhMuc> thongKeDanhMucs = new ArrayList<>();
+        for (Object[] x : thongKeRepo.thongKeDanhMuc6ThangTruoc()) {
+            ThongKeDanhMuc thongKeDanhMuc = ThongKeDanhMuc.builder()
+                    .tenDanhMuc(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeDanhMucs.add(thongKeDanhMuc);
+        }//
+        return thongKeDanhMucs;
+    }
+
+    @Override
+    public List<ThongKeDanhMuc> thongKeDanhMucTheoKhoang(java.sql.Date startDate, java.sql.Date endDate) {
+        List<ThongKeDanhMuc> thongKeDanhMucs = new ArrayList<>();
+        // nếu 1 trong 2 tham số hoặc cả 2 tham số = null thì trả về doanh thu ngày hiện tại của hệ thông máy tính
+        if (startDate == null || endDate == null || startDate == null && endDate == null){
+            for (Object[] x : thongKeRepo.tongThongKeDanhMuc()) {
+                ThongKeDanhMuc thongKeDanhMuc = ThongKeDanhMuc.builder()
+                        .tenDanhMuc(x[0].toString())
+                        .soLuong(Integer.valueOf(x[1].toString()))
+                        .doanhThu(new BigDecimal(x[2].toString()))
+                        .build();
+                thongKeDanhMucs.add(thongKeDanhMuc);
+            }
+            return thongKeDanhMucs;
+        }//
+
+        // nếu cả 2 tham số không null thì trả về doanh thu theo tham số truyền vào
+        List<Object[]> categoryData = thongKeRepo.thongKeDanhMucTheoKhoang(startDate, endDate);// khai báo 1 list dữ liệu trả ra từ db
+        // convert từ list<Object[] sang list<ThongKeDoanhTHu>
+        for (Object[] x : categoryData) {
+            ThongKeDanhMuc thongKeDanhMuc = ThongKeDanhMuc.builder()
+                    .tenDanhMuc(x[0].toString())
+                    .soLuong(Integer.valueOf(x[1].toString()))
+                    .doanhThu(new BigDecimal(x[2].toString()))
+                    .build();
+            thongKeDanhMucs.add(thongKeDanhMuc);
+        }//
+        return thongKeDanhMucs;
     }
 }

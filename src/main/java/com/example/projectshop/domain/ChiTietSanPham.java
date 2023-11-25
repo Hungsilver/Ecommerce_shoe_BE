@@ -14,6 +14,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -63,18 +64,18 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
 
-
-    //        @JsonBackReference
+//    @JsonBackReference
 //    @JsonIgnoreProperties
     @JsonIgnoreProperties("sanPham")
     @ManyToOne()
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
 
-    @JsonIgnore
+//    @JsonIgnore
 //    @JsonManagedReference
+    @JsonIgnoreProperties("chiTietSanPham")
     @OneToMany(mappedBy = "chiTietSanPham")
-    private List<AnhSanPham> listAnhSanPham;
+    private List<AnhSanPham> anhSanPhams = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "chiTietSanPham")

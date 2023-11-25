@@ -3,8 +3,10 @@ package com.example.projectshop.service;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
+import com.google.zxing.WriterException;
 import org.springframework.data.domain.Page;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface IChiTietSanPhamService {
@@ -31,12 +33,13 @@ public interface IChiTietSanPhamService {
 
     Optional<ChiTietSanPham> findById(Integer id);
 
-    ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest);
+    ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) throws IOException, WriterException;
 
     ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest);
 
     ChiTietSanPham delete(Integer id);
 
-    ChiTietSanPham searchMa(String ma);
+    ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
 
+    ChiTietSanPham findByMa(String ma);
 }

@@ -3,8 +3,14 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
+import com.example.projectshop.service.impl.ExcelProductDetailsService;
+import com.google.zxing.WriterException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -18,51 +24,69 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.util.Map;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/api/product-detail")
+
 public class ChiTietSanPhamRestController {
+    @Autowired
+    private ExcelProductDetailsService execlService;
+
     @Autowired
     private IChiTietSanPhamService chiTietSanPhamService;
 
-    @GetMapping()
+    private String p_chu = "\\d+";
+
+
+    @GetMapping()//localhost:8080/api/product-detail
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.findAll(page, pageSize, sortField, isSortDesc));
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
+        return ResponseEntity.ok(chiTietSanPhamService.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc));
     }
 
-    @GetMapping("filter")
+    @GetMapping("filter")//localhost:8080/api/product-detail/filter
     public ResponseEntity<?> filter(
             @RequestParam(value = "pricemin", required = false) String pricemin,
             @RequestParam(value = "pricemax", required = false) String pricemax,
             @RequestParam(value = "color", required = false) String color,
-            @RequestParam(value = "shoe_material", required = false) String shoe_material,
-            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "shoe-material", required = false) String shoe_material,
+            @RequestParam(value = "shoe-sole-material", required = false) String shoe_sole_material,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "sortField", required = false) String sortField,
+            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortAsc, sortField, page, pageSize));
+        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortDesc, sortField, page, pageSize));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(chiTietSanPhamService.findById(id));
+    @GetMapping("{id}")//localhost:8080/api/product-detail/1
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id chi tiết sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(chiTietSanPhamService.findById(Integer.valueOf(id)));
     }
 
-    @PostMapping("")
+    @PostMapping("")//localhost:8080/api/product-detail
     public ResponseEntity<?> create(@RequestBody @Valid ChiTietSanPhamRequest chiTietSanPhamRequest,
-                                    BindingResult result) {
+                                    BindingResult result) throws IOException, WriterException {
         if (result.hasErrors()) {
             Map<String, String> mapError = new HashMap<>();
             result.getAllErrors().stream().forEach(
@@ -70,32 +94,56 @@ public class ChiTietSanPhamRestController {
             );
             return ResponseEntity.ok(mapError);
         }
-        if (chiTietSanPhamService.create(chiTietSanPhamRequest) == null) {
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.create(chiTietSanPhamRequest);
+        if (chiTietSanPham == null) {
             return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+        } else {
+            return ResponseEntity.ok(chiTietSanPham);
         }
-
-        System.out.println(chiTietSanPhamService.create(chiTietSanPhamRequest));
-        return ResponseEntity.ok(chiTietSanPhamService.create(chiTietSanPhamRequest));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") String id,
             @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.update(id, chiTietSanPhamRequest));
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id chi tiết sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(chiTietSanPhamService.delete(id));
+    @DeleteMapping("{id}")//localhost:8080/api/product-detail/1
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id chi tiết sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(chiTietSanPhamService.delete(Integer.valueOf(id)));
     }
+
+
+
+//    @GetMapping("/excel/download")//localhost:8080/api/product-detail/excel/download
+//    public ResponseEntity<Resource> ExportExcel() {
+//        String fileName = "ChiTietSanPham.xlsx";
+//        ByteArrayInputStream data = execlService.load();
+//        InputStreamResource file = new InputStreamResource(data);
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
+//                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+//                .body(file);
+//
+//    }
+//    @PostMapping("/excel/upload")//localhost:8080/api/product-detail/excel/upload
+//    public  ResponseEntity<?> ImportExcel(@RequestParam("file") MultipartFile  file){
+//        execlService.saveChiTietSanPhamsToDatabase(file);
+//        return ResponseEntity.ok(Map.of("message"," Customers data uploaded and saved to database successfully"));
+//    }
 
     @GetMapping("/findByMa")
-    public ResponseEntity<?> findByMa(@RequestParam String ma) {
-        ChiTietSanPham result = chiTietSanPhamService.searchMa(ma);
-        System.out.println("ma"+ ma);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<?> findByMa(@RequestParam String ma){
+      return ResponseEntity.ok(chiTietSanPhamService.findByMa(ma))  ;
     }
 
 

@@ -69,29 +69,14 @@ public class NhanVienServiceImpl implements INhanVienService {
     @Override
     public NhanVien delete(Integer id) {
         Optional<NhanVien> ms = nhanVienRepository.findById(id);
-        if(ms.isPresent()){
+        if (ms.isPresent()) {
             ms.get().setTrangThai(0);
             return nhanVienRepository.save(ms.get());
         }
         return null;
     }
 
-    @Override
-    public BaseResponse registerAccount(NhanVienRequest nhanVienRequest) {
-        BaseResponse response =new BaseResponse();
-        validateAccount(nhanVienRequest);
-        NhanVien nhanVien =insertNhanVien(nhanVienRequest);
-        try {
-            nhanVienRepository.save(nhanVien);
-            response.setCode(String.valueOf(HttpStatus.CREATED.value()));
-            response.setMessage("Register account successfully!!!");
-        }catch (Exception e){
-            response.setCode(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()));
-            response.setMessage("Service Unavailable");
-        }
-        return response;
-    }
-
+    //dang ky cho nhan vien
     @Override
     public NhanVien insertNhanVien(NhanVienRequest nhanVienRequest) {
         NhanVien nhanVien =new NhanVien();
@@ -106,12 +91,13 @@ public class NhanVienServiceImpl implements INhanVienService {
         nhanVien.setDiaChi(nhanVienRequest.getDiaChi());
         nhanVien.setTrangThai(1);
         Set<ChucVu> roles =new HashSet<>();
-        roles.add(chucVuRepository.findByTenChucVu(nhanVienRequest.getRole()));
+        roles.add(chucVuRepository.findByTenChucVu(nhanVienRequest.getRole()));// TODO role ADMIN, STAFF
         nhanVien.setChucVus(roles);
-        return nhanVien;
+        validateAccount(nhanVienRequest); // kiem tra role có tồn tại và mail có tồn tại không
+        return nhanVienRepository.save(nhanVien);
     }
 
-    // xác thực người dùng khi đâng nhập
+    //trả về thông tin người dùng
     @Override
     public NhanVienResponse authenticateUser(NhanVienRequest nhanVienRequest) {
         NhanVien nhanVien = nhanVienRepository.findByEmail(nhanVienRequest.getEmail()); // truy vấn dữ liệu để lấy thông tin người dùng dựa trên email
@@ -123,24 +109,12 @@ public class NhanVienServiceImpl implements INhanVienService {
 
     // check dữ liệu khi đăng ký
     private void validateAccount(NhanVienRequest nhanVienRequest){
-//        if(ObjectUtils.isEmpty(nhanVienRequest)){
-//            throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
-//        }
-//
-//        try {
-//            if(!ObjectUtils.isEmpty(nhanVienRequest.checkProperties())){
-//                throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
-//            }
-//        }catch (IllegalAccessException e){
-//            throw new BaseException(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Service Unavailable");
-//        }
 
         // check role có tồn tồn tại trong cơ sở dữ liệu hay không
         List<String> roles = chucVuRepository.findAll()
                 .stream()
                 .map(ChucVu::getTenChucVu)
                 .collect(Collectors.toList());
-//                .toList();
 
         if(!roles.contains(nhanVienRequest.getRole())){
             throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid role");
@@ -152,5 +126,33 @@ public class NhanVienServiceImpl implements INhanVienService {
         if(!ObjectUtils.isEmpty(user)){
             throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Email had existed!!!");
         }
+        // check các trường trong nhanvien request
+//        if(!ObjectUtils.isEmpty(nhanVienRequest)){
+//            throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
+//        }
+//
+//        try {
+//            if(!ObjectUtils.isEmpty(nhanVienRequest.checkProperties())){
+//                throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Request data not found!");
+//            }
+//        }catch (IllegalAccessException e){
+//            throw new BaseException(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "Service Unavailable");
+//        }
+    }
+
+    @Override
+    public BaseResponse registerAccount(NhanVienRequest nhanVienRequest) {
+//        BaseResponse response =new BaseResponse();
+//        validateAccount(nhanVienRequest);
+//        NhanVien nhanVien = this.insertNhanVien(nhanVienRequest);
+//        try {
+//            nhanVienRepository.save(nhanVien);
+//            response.setCode(String.valueOf(HttpStatus.CREATED.value()));
+//            response.setMessage("Register account successfully!!!");
+//        }catch (Exception e){
+//            response.setCode(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()));
+//            response.setMessage("Service Unavailable");
+//        }
+        return null;
     }
 }
