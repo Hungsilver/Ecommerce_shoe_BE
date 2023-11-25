@@ -46,28 +46,6 @@ import java.lang.reflect.Field;
 
         private String role;
 
-    public String checkProperties() throws IllegalAccessException {
-        for (Field f : getClass().getDeclaredFields()) {
-            if (f.get(this) == null) {
-                String[] arr = f.toString().split("\\.");
-                String t = arr[arr.length - 1];
-                if (t.equalsIgnoreCase("hoTen")
-                        || t.equalsIgnoreCase("anhDaiDien")
-                        || t.equalsIgnoreCase("email")
-                        || t.equalsIgnoreCase("matKhau")
-                        || t.equalsIgnoreCase("soDienThoai")
-                        || t.equalsIgnoreCase("gioiTinh")
-                        || t.equalsIgnoreCase("ngaySinh")
-                        || t.equalsIgnoreCase("diaChi")
-                        || t.equalsIgnoreCase("trangThai")
-                        || t.equalsIgnoreCase("role")
-                ) {
-                    return t;
-                }
-            }
-        }
-        return null;
-    }
 }
 
 

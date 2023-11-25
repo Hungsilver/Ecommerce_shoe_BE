@@ -22,6 +22,8 @@ import java.util.List;
 public class ChiTietSanPhamRequest {
     private Integer id;
 
+    private String ma;
+
     private Integer soLuong;
 
     private BigDecimal giaBan;

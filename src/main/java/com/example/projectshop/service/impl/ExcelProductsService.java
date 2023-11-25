@@ -32,26 +32,26 @@ public class ExcelProductsService {
     @Autowired
     private DanhMucRepository danhMucRepository;
 
-    public ByteArrayInputStream loadProducts() {
+//    public ByteArrayInputStream loadProducts() {
+//
+//        List<SanPham> sanPhams = sanPhamRepository.findAll();
+//        ByteArrayInputStream exportProduct = ExcelExportProductsHelper.SanPhamToEcexl(sanPhams);
+//        return exportProduct;
+//    }
 
-        List<SanPham> sanPhams = sanPhamRepository.findAll();
-        ByteArrayInputStream exportProduct = ExcelExportProductsHelper.SanPhamToEcexl(sanPhams);
-        return exportProduct;
-    }
-
-    public void saveProductsToDatabase(MultipartFile file) {
-        if (ExcelImportProductHelper.isValidExcelFile(file)) {
-            try {
-
-                List<SanPham> sanPhams = ExcelImportProductHelper.getProductsDataFromExcel(file.getInputStream(),
-                        thuongHieuRepository,xuatXuRepository,danhMucRepository);
-                this.sanPhamRepository.saveAll(sanPhams);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("The file is not a valid excel file");
-            }
-
-        }
-    }
+//    public void saveProductsToDatabase(MultipartFile file) {
+//        if (ExcelImportProductHelper.isValidExcelFile(file)) {
+//            try {
+//
+//                List<SanPham> sanPhams = ExcelImportProductHelper.getProductsDataFromExcel(file.getInputStream(),
+//                        thuongHieuRepository,xuatXuRepository,danhMucRepository);
+//                this.sanPhamRepository.saveAll(sanPhams);
+//            } catch (IOException e) {
+//                throw new IllegalArgumentException("The file is not a valid excel file");
+//            }
+//
+//        }
+//    }
 
 
 }

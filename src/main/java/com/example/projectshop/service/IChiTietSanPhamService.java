@@ -40,4 +40,6 @@ public interface IChiTietSanPhamService {
     ChiTietSanPham delete(Integer id);
 
     ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
+
+    ChiTietSanPham findByMa(String ma);
 }

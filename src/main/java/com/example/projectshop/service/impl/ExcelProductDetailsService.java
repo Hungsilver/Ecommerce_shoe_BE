@@ -33,29 +33,29 @@ public class ExcelProductDetailsService {
     private  SanPhamRepository sanPhamRepository;
 
     // xuat tu db ra  file excel
-    public ByteArrayInputStream load() {
-
-        List<ChiTietSanPham> chiTietSanPhams = chiTietSanPhamRepository.findAll();
-
-        ByteArrayInputStream in = ExcelExportProductsDetailHelper.ChiTietSanPhamToEcexl(chiTietSanPhams);
-        return in;
-    }
+//    public ByteArrayInputStream load() {
+//
+//        List<ChiTietSanPham> chiTietSanPhams = chiTietSanPhamRepository.findAll();
+//
+//        ByteArrayInputStream in = ExcelExportProductsDetailHelper.ChiTietSanPhamToEcexl(chiTietSanPhams);
+//        return in;
+//    }
 
 
     // nhap excel vao db
-    public void saveChiTietSanPhamsToDatabase(MultipartFile file) {
-        if (ExcelImportProductDetailHelper.isValidExcelFile(file)) {
-            try {
-
-                List<ChiTietSanPham> chiTietSanPhams = ExcelImportProductDetailHelper.getProductDetailDataFromExcel(file.getInputStream(), mauSacRepository,
-                        kichCoRepository, chatLieuGiayRepository, chatLieuDeGiayRepository,sanPhamRepository);
-                this.chiTietSanPhamRepository.saveAll(chiTietSanPhams);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("The file is not a valid excel file");
-            }
-
-        }
-
-    }
+//    public void saveChiTietSanPhamsToDatabase(MultipartFile file) {
+//        if (ExcelImportProductDetailHelper.isValidExcelFile(file)) {
+//            try {
+//
+//                List<ChiTietSanPham> chiTietSanPhams = ExcelImportProductDetailHelper.getProductDetailDataFromExcel(file.getInputStream(), mauSacRepository,
+//                        kichCoRepository, chatLieuGiayRepository, chatLieuDeGiayRepository,sanPhamRepository);
+//                this.chiTietSanPhamRepository.saveAll(chiTietSanPhams);
+//            } catch (IOException e) {
+//                throw new IllegalArgumentException("The file is not a valid excel file");
+//            }
+//
+//        }
+//
+//    }
 
 }

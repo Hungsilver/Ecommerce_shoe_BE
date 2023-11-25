@@ -3,8 +3,8 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.service.IChiTietSanPhamService;
-import com.google.zxing.WriterException;
 import com.example.projectshop.service.impl.ExcelProductDetailsService;
+import com.google.zxing.WriterException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -123,22 +123,27 @@ public class ChiTietSanPhamRestController {
 
 
 
-    @GetMapping("/excel/download")//localhost:8080/api/product-detail/excel/download
-    public ResponseEntity<Resource> ExportExcel() {
-        String fileName = "ChiTietSanPham.xlsx";
-        ByteArrayInputStream data = execlService.load();
-        InputStreamResource file = new InputStreamResource(data);
+//    @GetMapping("/excel/download")//localhost:8080/api/product-detail/excel/download
+//    public ResponseEntity<Resource> ExportExcel() {
+//        String fileName = "ChiTietSanPham.xlsx";
+//        ByteArrayInputStream data = execlService.load();
+//        InputStreamResource file = new InputStreamResource(data);
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
+//                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+//                .body(file);
+//
+//    }
+//    @PostMapping("/excel/upload")//localhost:8080/api/product-detail/excel/upload
+//    public  ResponseEntity<?> ImportExcel(@RequestParam("file") MultipartFile  file){
+//        execlService.saveChiTietSanPhamsToDatabase(file);
+//        return ResponseEntity.ok(Map.of("message"," Customers data uploaded and saved to database successfully"));
+//    }
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
-                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-                .body(file);
-
-    }
-    @PostMapping("/excel/upload")//localhost:8080/api/product-detail/excel/upload
-    public  ResponseEntity<?> ImportExcel(@RequestParam("file") MultipartFile  file){
-        execlService.saveChiTietSanPhamsToDatabase(file);
-        return ResponseEntity.ok(Map.of("message"," Customers data uploaded and saved to database successfully"));
+    @GetMapping("/findByMa")
+    public ResponseEntity<?> findByMa(@RequestParam String ma){
+      return ResponseEntity.ok(chiTietSanPhamService.findByMa(ma))  ;
     }
 
 

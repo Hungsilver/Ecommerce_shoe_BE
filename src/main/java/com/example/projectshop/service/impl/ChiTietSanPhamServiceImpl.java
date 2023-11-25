@@ -215,12 +215,15 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         return null;
     }
 
-    @Override
     @Transactional
     public ChiTietSanPham fetchctspWithgiohangchitiet(Integer id) {
 
         return null;
     }
 
+    @Override
+    public ChiTietSanPham findByMa(String ma) {
+        return chiTietSanPhamRepo.findByMa(ma);
+    }
 
 }

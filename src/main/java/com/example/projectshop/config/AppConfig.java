@@ -4,7 +4,6 @@ import com.example.projectshop.security.UserDetailServiceCustom;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,14 +37,10 @@ public class AppConfig {
                 .httpBasic()
                 .and()
                 .authorizeHttpRequests()
-//                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
-//                .requestMatchers("/user/**").hasRole("USER")
-
-                .requestMatchers("/api/customer/login").permitAll()
-                .requestMatchers("/api/customer/register").permitAll()
-                .requestMatchers("/auth/admin/register-account").permitAll()
-                .requestMatchers("/auth/admin/login").permitAll()
-                .requestMatchers("/auth/admin/**").hasAnyAuthority("ADMIN", "STAFF")
+                .requestMatchers("/**").permitAll()
+//                .requestMatchers("/api/auth/admin/register-account").permitAll()
+//                .requestMatchers("/api/auth/admin/login").permitAll()
+//                .requestMatchers("/api/auth/admin/**").hasAnyAuthority("ADMIN", "STAFF")
                 .anyRequest().permitAll()
 //                .anyRequest().authenticated()
                 .and()
