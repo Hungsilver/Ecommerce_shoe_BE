@@ -48,5 +48,5 @@ public interface IHoaDonService {
 
     void exportPDF(HttpServletResponse response, Integer id) throws IOException;
 
-
+    public HoaDon CreateInvoice();
 }

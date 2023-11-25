@@ -4,7 +4,6 @@ import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuResponse;
 import com.example.projectshop.service.IThuongHieuService;
 import com.example.projectshop.utils.QRCodeGenerator;
-import com.google.zxing.WriterException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class ThuongHieuRestController {
     @PostMapping()//localhost:8080/api/brand
     public ResponseEntity<?> create(
             @RequestBody ThuongHieuRequest thuongHieuRequest
-    ) throws IOException, WriterException {
+    ) throws IOException {
         return ResponseEntity.ok(service.create(thuongHieuRequest));
     }
 
@@ -65,7 +64,7 @@ public class ThuongHieuRestController {
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/brand/1
-    public ResponseEntity<?> delete(@PathVariable("id") String id) throws IOException, WriterException {
+    public ResponseEntity<?> delete(@PathVariable("id") String id) throws IOException {
         if (!id.matches(p_chu)){
             return ResponseEntity.ok("*id thương hiệu phải là số");
         }

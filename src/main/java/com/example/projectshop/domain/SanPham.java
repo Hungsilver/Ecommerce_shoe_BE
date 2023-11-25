@@ -76,4 +76,5 @@ public class SanPham {
     @OneToMany(mappedBy = "sanPham")
     private List<ChiTietSanPham> listChiTietSanPham = new ArrayList<>();
 
+
 }
