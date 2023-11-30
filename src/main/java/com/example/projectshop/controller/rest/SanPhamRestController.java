@@ -145,21 +145,7 @@ public class SanPhamRestController {
         return ResponseEntity.ok(service.exportExcel());
     }
 
-//    @GetMapping("/excel/download")
-//    public ResponseEntity<Resource> ExportExcel() {
-//        String filename = "SanPham.xlsx";
-//        ByteArrayInputStream data = excelProductsService.loadProducts();
-//        InputStreamResource file = new InputStreamResource(data);
-//
-//        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-//                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-//                .body(file);
-//    }
-//
-//    @PostMapping("/excel/upload")
-//    public ResponseEntity<?> ImportExcel(@RequestParam("fileProduct") MultipartFile file) {
-//        excelProductsService.saveProductsToDatabase(file);
-//        return ResponseEntity.ok(Map.of("message", "success"));
-//    }
+
+
 
 }

@@ -51,4 +51,5 @@ public interface IChiTietSanPhamService {
     ChiTietSanPham delete(Integer id);
 
     ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
+
 }

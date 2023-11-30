@@ -342,12 +342,10 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         return null;
     }
 
-    @Override
     @Transactional
     public ChiTietSanPham fetchctspWithgiohangchitiet(Integer id) {
 
         return null;
     }
-
 
 }

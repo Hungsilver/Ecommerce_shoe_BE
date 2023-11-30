@@ -3,7 +3,6 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.dto.thuonghieu.ExcelThuongHieu;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import com.example.projectshop.service.IThuongHieuService;
-import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -47,7 +46,7 @@ public class ThuongHieuRestController {
     @PostMapping()//localhost:8080/api/brand
     public ResponseEntity<?> create(
             @RequestBody ThuongHieuRequest thuongHieuRequest
-    ) throws IOException, WriterException {
+    ) throws IOException {
         return ResponseEntity.ok(service.create(thuongHieuRequest));
     }
 
@@ -73,7 +72,7 @@ public class ThuongHieuRestController {
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/brand/1
-    public ResponseEntity<?> delete(@PathVariable("id") String id) throws IOException, WriterException {
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id thương hiệu phải là số");
         }
