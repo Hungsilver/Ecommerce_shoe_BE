@@ -9,8 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface GioiThieuRepository extends JpaRepository<GioiThieu,Integer> {
     @Query("select p from PhieuGiamGia p where p.ma like %:ma%")
     Page<GioiThieu> findAllByName(@Param("ma")String ma, Pageable pageable);
+
+    @Query(value = "select g from GioiThieu g where g.tenGioiThieu = :name")
+    Optional<GioiThieu> findByName(@Param("name")String name);
 }

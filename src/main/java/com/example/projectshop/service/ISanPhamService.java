@@ -1,15 +1,13 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.SanPham;
-import com.example.projectshop.domain.ThuongHieu;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamResponse;
+import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
+import com.example.projectshop.dto.sanpham.ExportExcelSanPham;
+import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
-import com.example.projectshop.dto.sanpham.SanPhamResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ISanPhamService {
 
@@ -37,6 +35,12 @@ public interface ISanPhamService {
     );
 
     SanPham findById(Integer id);
+
+    SanPham findByName(String name);
+
+    List<ImportExcelSanPham> importExcel(List<ImportExcelSanPham> importExcelSanPhams);
+
+    List<ExportExcelSanPham> exportExcel();
 
     SanPham create(SanPhamRequest sanPhamRequest);
 

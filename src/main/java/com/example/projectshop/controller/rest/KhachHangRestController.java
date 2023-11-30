@@ -85,6 +85,12 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.delete(Integer.valueOf(id)));
     }
 
+    @GetMapping("/excel/export")//localhost:8080/api/customer/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(khachHangService.exportExcel());
+    }
+
+
 
 //    @PostMapping("/register")//localhost:8080/api/customer/register
 //    // trả về chuỗi string đăng ký thành công hay thất bại
