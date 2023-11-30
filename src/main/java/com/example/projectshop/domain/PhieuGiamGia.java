@@ -44,7 +44,7 @@ public class PhieuGiamGia {
     private BigDecimal chietKhau;
 
     @Column(name = "hinhthucgiamgia")
-    private Byte hinhThucGiamGia;
+    private Boolean hinhThucGiamGia;
 
     @Column(name = "thoigianbatdau")
     private Date thoiGianBatDau;

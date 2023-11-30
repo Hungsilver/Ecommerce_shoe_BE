@@ -2,6 +2,7 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
+import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.google.zxing.WriterException;
 import com.example.projectshop.service.impl.ExcelProductDetailsService;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Map;
 
 import java.io.IOException;
@@ -84,6 +86,19 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.findById(Integer.valueOf(id)));
     }
 
+    @GetMapping("/code/{ma}")//localhost:8080/api/product-detail/code/abc
+    public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
+        return ResponseEntity.ok(chiTietSanPhamService.findByMa(ma));
+    }
+
+    @GetMapping("/id-product/{idSanPham}")//localhost:8080/api/product-detail/id-product/1
+    public ResponseEntity<?> findByIdSanPham(@PathVariable("idSanPham") String idSanPham) {
+        if (!idSanPham.matches(p_chu)){
+            return ResponseEntity.ok("*idSanPham chi tiết sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(chiTietSanPhamService.findById(Integer.valueOf(idSanPham)));
+    }
+
     @PostMapping("")//localhost:8080/api/product-detail
     public ResponseEntity<?> create(@RequestBody @Valid ChiTietSanPhamRequest chiTietSanPhamRequest,
                                     BindingResult result) throws IOException, WriterException {
@@ -121,8 +136,17 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.delete(Integer.valueOf(id)));
     }
 
+    @GetMapping("/excel/export")//localhost:8080/api/product-detail/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(chiTietSanPhamService.exportExcel());
+    }
 
+    @PostMapping("/excel/import")//localhost:8080/api/product-detail/excel/import
+    public  ResponseEntity<?> exportExcel(@RequestBody List<ImportExcelCTSP> importExcelCTSPS) throws IOException, WriterException {
+        return ResponseEntity.ok(chiTietSanPhamService.importExcel(importExcelCTSPS));
+    }
 
+    // excel của chien
     @GetMapping("/excel/download")//localhost:8080/api/product-detail/excel/download
     public ResponseEntity<Resource> ExportExcel() {
         String fileName = "ChiTietSanPham.xlsx";

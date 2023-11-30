@@ -1,7 +1,9 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.DanhMuc;
+import com.example.projectshop.dto.chatlieudegiay.ExcelCLDG;
 import com.example.projectshop.dto.danhmuc.DanhMucRequest;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.service.IDanhMucSevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -73,5 +77,15 @@ public class DanhMucRestController {
             return ResponseEntity.ok("*id danh mục phải là số");
         }
         return ResponseEntity.ok(danhMucSevice.delete(Integer.valueOf(id)));
+    }
+
+    @GetMapping("/excel/export")//localhost:8080/api/category/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(danhMucSevice.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/category/excel/import
+    public  ResponseEntity<?> importExcel(@RequestBody List<ExcelDanhMuc> excelDanhMucs){
+        return ResponseEntity.ok(danhMucSevice.importExcel(excelDanhMucs));
     }
 }

@@ -22,6 +22,8 @@ public interface IHoaDonService {
 
     Optional<HoaDon> findById(Integer id);
 
+    Optional<HoaDon> findByMa(String ma);
+
     HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
 
     HoaDon shopCreateInvoice(Integer idNhanVien);

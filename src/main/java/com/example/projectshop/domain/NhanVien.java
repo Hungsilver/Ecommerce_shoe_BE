@@ -43,7 +43,7 @@ public class NhanVien {
     private String soDienThoai;
 
     @Column(name = "gioitinh")
-    private Byte gioiTinh;
+    private Boolean gioiTinh;
 
     @Column(name = "ngaysinh")
     private String ngaySinh;
