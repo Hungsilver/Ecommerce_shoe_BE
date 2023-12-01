@@ -198,5 +198,8 @@ public class HoaDonRestController {
         return ResponseEntity.ok().build();
     }
 
-
+    @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create/1
+    public ResponseEntity<?> CreateInvoice() {
+        return ResponseEntity.ok(hoaDonService.CreateInvoice());
+    }
 }
