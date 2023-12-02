@@ -5,15 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,10 +64,10 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
 
-
 //    @JsonBackReference
 //    @JsonIgnoreProperties
-    @ManyToOne
+    @JsonIgnoreProperties("sanPham")
+    @ManyToOne()
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
 
@@ -92,6 +84,4 @@ public class ChiTietSanPham {
     @JsonIgnore
     @OneToMany(mappedBy = "chiTietSanPham")
     private List<HoaDonChiTiet> listHoaDonChiTiet;
-
-
 }

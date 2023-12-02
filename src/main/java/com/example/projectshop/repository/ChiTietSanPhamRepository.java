@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, Integer> {
@@ -42,7 +43,26 @@ public interface ChiTietSanPhamRepository extends JpaRepository<ChiTietSanPham, 
     );
 
     @Query(value = "select c from ChiTietSanPham c where c.ma = :ma")
-    ChiTietSanPham findByMa(@Param("ma")String ma);
+    Optional<ChiTietSanPham> findByMa(@Param("ma")String ma);
+
+    @Query(value = "select c from ChiTietSanPham c where c.sanPham.id = :idSanPham")
+    List<ChiTietSanPham> findByIdSanPham(@Param("idSanPham")Integer idSanPham);
+
+    @Query(value = "select c.ma," +
+            "c.sanPham.ten," +
+            "c.soLuong," +
+            "c.giaBan," +
+            "c.ngayTao," +
+            "c.ngayCapNhat," +
+            "c.trangThai," +
+            "c.mauSac.ten," +
+            "c.kichCo.size," +
+            "c.chatLieuGiay.ten," +
+            "c.chatLieuDeGiay.ten," +
+            "c.sanPham.xuatXu.ten," +
+            "c.sanPham.thuongHieu.ten" +
+            " from ChiTietSanPham c")
+    List<Object[]> exportExcel();
 
 //    @Query("SELECT ctsp FROM ChiTietSanPham ctsp LEFT JOIN FETCH ctsp.listGioHangChiTiet WHERE ctsp.id = :id")
 //    ChiTietSanPham fetchWithGioHangChiTiet(@Param("id") Integer id);

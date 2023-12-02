@@ -1,19 +1,18 @@
 package com.example.projectshop.service.impl;
 
+import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.MauSac;
-import com.example.projectshop.dto.mausac.MauSacRequest;
-import com.example.projectshop.dto.mausac.MauSacResponse;
-import com.example.projectshop.repository.ChiTietSanPhamRepository;
-import com.example.projectshop.repository.HoaDonChiTietRepository;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.mausac.ExcelMauSac;
 import com.example.projectshop.repository.MauSacRepository;
 import com.example.projectshop.service.IMauSacService;
-import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,55 +22,6 @@ public class MauSacSeviceImpl implements IMauSacService {
     @Autowired
     private MauSacRepository mauSacRepository;
 
-    //    @Autowired
-//    private ChiTietSanPhamRepository chiTietSanPhamRepo;
-//
-//    @Override
-//    public List<MauSacResponse> getAll() {
-//        List<MauSacResponse> list= ObjectMapperUtils.mapAll(mauSacRepository.findAll(),MauSacResponse.class);
-//        return list;
-//    }
-//
-//    @Override
-//    public MauSacResponse findById(Integer id) {
-//        return ObjectMapperUtils.map(mauSacRepository.findById(id).get(), MauSacResponse.class);
-//    }
-//
-//    @Override
-//    public MauSacResponse create(MauSacRequest mauSacRequest) {
-//        MauSac entity = ObjectMapperUtils.map(mauSacRequest, MauSac.class);
-//        entity.setTen(mauSacRequest.getTen());
-//        entity = mauSacRepository.save(entity);
-//        MauSacResponse response = ObjectMapperUtils.map(entity, MauSacResponse.class);
-//        return response;    }
-//
-//    @Override
-//    public MauSacResponse update(MauSacRequest mauSacRequest, Integer id) {
-//        MauSac eDb = mauSacRepository.findById(id).get();
-//        MauSac entity = ObjectMapperUtils.map(mauSacRequest, MauSac.class);
-//        entity.setId(eDb.getId());
-//        entity.setTen(mauSacRequest.getTen());
-//        entity = mauSacRepository.save(entity);
-//        return ObjectMapperUtils.map(mauSacRepository.save(entity), MauSacResponse.class);
-//    }
-//
-//  @Override
-//    public void delete(Integer id) {
-//        MauSacRequest mauSacRequest = new MauSacRequest();
-//      mauSacRequest.setId(id);
-//      mauSacRequest.setTen(this.findById(id).getTen());
-//      mauSacRequest.setTrangThai(2);
-//        this.update(mauSacRequest,id);
-//    }
-//
-//    @Override
-//    public Page<MauSacResponse> findAllMauSac(String pageParam, String limitParam) {
-//        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-//        Integer limit = limitParam == null ? 3 : Integer.valueOf(limitParam);
-//        Pageable pageable = PageRequest.of(page, limit);
-//        Page<MauSacResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(mauSacRepository.findAll(pageable), MauSacResponse.class);
-//        return list;
-//    }
 
     @Override
     public Page<MauSac> getAll(Pageable pageable) {
@@ -87,9 +37,78 @@ public class MauSacSeviceImpl implements IMauSacService {
     }
 
     @Override
+    public MauSac findByName(String name) {
+        Optional<MauSac> mauSac = mauSacRepository.findByName(name);
+        if (mauSac.isPresent()) {
+            return mauSac.get();
+        }
+        return null;
+    }
+
+    @Override
     public Page<MauSac> findAllByName(String name, Pageable pageable) {
 
         return mauSacRepository.findAllByTen("%" + name + "%", pageable);
+    }
+
+    @Override
+    public List<ExcelMauSac> importExcel(List<ExcelMauSac> excelMauSacs) {
+        // tạo list để chứa các đối tượng bị lỗi
+        List<ExcelMauSac> errorImports = new ArrayList<>();
+        // sử dụng for để lặp các đối tượng được truyền vào từ file excel
+        for (ExcelMauSac x : excelMauSacs) {
+            // lấy ra đối tượng theo tên được truyền vào từ file excel
+            MauSac mauSac = this.findByName(x.getTenMauSac());
+
+            // kiểm nếu tên truyền vào null || space add vào errorImports
+            if (x.getTenMauSac() == null || x.getTenMauSac().isBlank()) {
+                errorImports.add(x);
+                System.out.println("case 1");
+                continue;
+            }
+
+            // kiểm nếu trạng thái là null add vào errorImports
+            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+                errorImports.add(x);
+                System.out.println("case 2");
+                continue;
+            }
+
+            // kiểm tra nếu chưa có trong db thì thêm mới
+            if (mauSac == null) {
+                MauSac mauSac1 = MauSac.builder()
+                        .id(null)
+                        .ten(x.getTenMauSac())
+                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .build();
+                System.out.println("case3");
+                mauSacRepository.save(mauSac1);
+            } else {// nếu đã có thì cập nhật lại thông tin
+                MauSac mauSac2 = MauSac.builder()
+                        .id(mauSac.getId())
+                        .ten(x.getTenMauSac())
+                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .build();
+                System.out.println("case3");
+                mauSacRepository.save(mauSac2);
+            }
+        }
+        return errorImports;
+    }
+
+    @Override
+    public List<ExcelMauSac> exportExcel() {
+        List<ExcelMauSac> excelMauSacs = new ArrayList<>();
+        Integer index = 1;
+        for (MauSac x : mauSacRepository.findAll()) {// convert từ MauSac sang ExcelMauSac
+            ExcelMauSac excelMauSac = ExcelMauSac.builder()
+                    .stt(index++)
+                    .tenMauSac(x.getTen())
+                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .build();
+            excelMauSacs.add(excelMauSac);
+        }
+        return excelMauSacs;
     }
 
     @Override

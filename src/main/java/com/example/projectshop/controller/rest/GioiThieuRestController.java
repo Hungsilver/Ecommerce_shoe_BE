@@ -1,6 +1,8 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
+import com.example.projectshop.dto.gioithieu.ImportExcelGioiThieu;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import com.example.projectshop.service.IGioiThieuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -73,5 +77,15 @@ public class GioiThieuRestController {
             return ResponseEntity.ok("*id giới thiệu phải là số");
         }
         return ResponseEntity.ok(gioiThieuService.delete(Integer.valueOf(id)));
+    }
+
+    @GetMapping("/excel/export")//localhost:8080/api/blog/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(gioiThieuService.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/blog/excel/import
+    public  ResponseEntity<?> importExcel(@RequestBody List<ImportExcelGioiThieu> importExcelGioiThieus){
+        return ResponseEntity.ok(gioiThieuService.importExcel(importExcelGioiThieus));
     }
 }

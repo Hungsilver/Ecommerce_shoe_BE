@@ -3,11 +3,14 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.domain.ChatLieuGiay;
 import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.chatlieudegiay.ExcelCLDG;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
+import com.example.projectshop.dto.chatlieugiay.ExcelCLG;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.repository.ChatLieuGiayRepository;
 import com.example.projectshop.service.IChatLieuGiayService;
 import com.example.projectshop.service.ObjectMapperUtils;
+import com.google.zxing.WriterException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,6 +78,16 @@ public class ChatLieuGiayRestController {
             return ResponseEntity.ok("*id chất liệu giày phải là số");
         }
         return ResponseEntity.ok(chatLieuGiayService.findById(Integer.valueOf(id)));
+    }
+
+    @GetMapping("/excel/export")//localhost:8080/api/shoe-material/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(chatLieuGiayService.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/shoe-material/excel/import
+    public  ResponseEntity<?> exportExcel(@RequestBody List<ExcelCLG> excelCLGS) {
+        return ResponseEntity.ok(chatLieuGiayService.importExcel(excelCLGS));
     }
 
     @PostMapping//localhost:8080/api/shoe-materiall

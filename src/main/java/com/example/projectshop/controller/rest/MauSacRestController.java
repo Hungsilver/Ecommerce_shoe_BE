@@ -2,6 +2,8 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.mausac.ExcelMauSac;
 import com.example.projectshop.dto.mausac.MauSacRequest;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.service.IMauSacService;
@@ -17,8 +19,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 @RequestMapping("/api/color")
 public class MauSacRestController {
     @Autowired
@@ -81,6 +85,14 @@ public class MauSacRestController {
         return ResponseEntity.ok(mauSacService.delete(Integer.valueOf(id)));
     }
 
+    @GetMapping("/excel/export")//localhost:8080/api/color/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(mauSacService.exportExcel());
+    }
 
+    @PostMapping("/excel/import")//localhost:8080/api/color/excel/import
+    public  ResponseEntity<?> exportExcel(@RequestBody List<ExcelMauSac> excelMauSacs){
+        return ResponseEntity.ok(mauSacService.importExcel(excelMauSacs));
+    }
 
 }

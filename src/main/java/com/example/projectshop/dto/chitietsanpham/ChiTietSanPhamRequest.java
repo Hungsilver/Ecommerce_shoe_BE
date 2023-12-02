@@ -9,7 +9,10 @@ import com.example.projectshop.domain.SanPham;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +20,15 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class ChiTietSanPhamRequest {
     private Integer id;
+
+    private String ma;
 
     private Integer soLuong;
 

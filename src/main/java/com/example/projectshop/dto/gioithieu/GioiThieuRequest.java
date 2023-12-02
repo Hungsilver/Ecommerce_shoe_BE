@@ -10,15 +10,22 @@ import java.sql.Date;
 @Setter
 public class GioiThieuRequest {
     private Integer id;
+
     private String tenGioiThieu;
+
     private String noiDung;
+
     private String logo;
+
     private String banner;
+
     private String moTa;
+
     private Date ngayTao;
+
     private Date ngayXoa;
+
     private Integer trangThai;
-    private NhanVien nhanVien;
 
-
+    private Integer nhanVien;
 }

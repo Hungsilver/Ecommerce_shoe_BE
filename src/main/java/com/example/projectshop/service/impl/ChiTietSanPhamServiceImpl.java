@@ -8,6 +8,8 @@ import com.example.projectshop.domain.KichCo;
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
+import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
+import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
 import com.example.projectshop.repository.AnhSanPhamRepository;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.service.IChatLieuDeGiayService;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -126,6 +129,132 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     }
 
     @Override
+    public ChiTietSanPham findByMa(String ma) {
+        Optional<ChiTietSanPham> chiTietSanPham = chiTietSanPhamRepo.findByMa(ma);
+        if (chiTietSanPham.isPresent()) {
+            return chiTietSanPham.get();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ChiTietSanPham> findByIdSanPham(Integer idSanPham) {
+        if (idSanPham == null) {
+            return null;
+        }
+        return chiTietSanPhamRepo.findByIdSanPham(idSanPham);
+    }
+
+    @Override
+    public List<ExportExcelCTSP> exportExcel() {
+        Integer index = 1;
+        List<ExportExcelCTSP> exportExcelCTSPS = new ArrayList<>();// convert từ Object[] sang ExportExcelCTSP
+        for (Object[] x : chiTietSanPhamRepo.exportExcel()) {
+            ExportExcelCTSP exportExcelCTSP = ExportExcelCTSP.builder()
+                    .stt(index++)
+                    .maSanPham(x[0].toString())
+                    .tenSanPham(x[1].toString())
+                    .soLuong(x[2].toString())
+                    .giaBan(x[3].toString())
+                    .ngayTao(x[4].toString())
+                    .ngayCapNhat(String.valueOf(x[5]))
+                    .trangThai(utils.trangThaiSanPham(Integer.valueOf(x[6].toString())))
+                    .mauSac(x[7].toString())
+                    .kichCo(x[8].toString())
+                    .chatLieuGiay(x[9].toString())
+                    .chatLieuDeGiay(x[10].toString())
+                    .xuatXu(x[11].toString())
+                    .thuongHieu(x[12].toString())
+                    .build();
+            exportExcelCTSPS.add(exportExcelCTSP);
+        }
+        return exportExcelCTSPS;
+    }
+
+    @Override
+    public List<ImportExcelCTSP> importExcel(List<ImportExcelCTSP> importExcelCTSPS) throws IOException, WriterException {
+        // tạo 1 list để chứa các sản phẩm lỗi không add được
+        List<ImportExcelCTSP> errorImports = new ArrayList<>();
+
+        // sử dụng for để lặp các đối tượng được truyền vào từ file excel
+        for (ImportExcelCTSP x : importExcelCTSPS) {
+            // start: lấy ra các đối tượng theo tên được truyền vào từ file excel
+            MauSac mauSac = mauSacService.findByName(x.getMauSac());
+            KichCo kichCo = kichCoService.findByName(x.getKichCo());
+            ChatLieuGiay chatLieuGiay = chatLieuGiayService.findByName(x.getChatLieuGiay());
+            ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findByName(x.getChatLieuDeGiay());
+            SanPham sanPham = sanPhamService.findByName(x.getTenSanPham());
+            // end:
+
+            // start: kiểm tra nếu 1 trong các đối tượng là null thì add vào list sản phẩm lỗi
+            if (mauSac == null || kichCo == null || chatLieuGiay == null || chatLieuDeGiay == null || sanPham == null) {
+                errorImports.add(x);
+                System.out.println("case1");
+                continue;
+            }
+            // end:
+
+            // start: kiểm tra nếu trangthai là null thì add vào list sản phẩm lỗi
+            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+                errorImports.add(x);
+                System.out.println("case4");
+                continue;
+            }
+            // end:
+
+            // start: Tạo mã cho chitietsanpham
+            String maMauSac = utils.tiengVietKhongDau(mauSac.getTen());
+            String maChatLieuGiay = utils.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
+            String maChatLieuDeGiay = utils.tiengVietKhongDau(chatLieuDeGiay.getTen());
+            String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
+            // end:
+
+            // kiểm tra nếu mã của chitietsanpham không tồn tại thì thêm mới
+            ChiTietSanPham chiTietSanPham = this.findByMa(maChiTietSanPham);
+            if ( chiTietSanPham == null) {
+                ChiTietSanPham chiTietSanPham1 = ChiTietSanPham.builder()
+                        .id(null)
+                        .ma(maChiTietSanPham)
+                        .soLuong(Integer.valueOf(x.getSoLuong()))
+                        .giaBan(new BigDecimal(x.getGiaBan()))
+                        .ngayTao(Date.valueOf(curruntDate))
+                        .ngayCapNhat(null)
+                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .mauSac(mauSac)
+                        .kichCo(kichCo)
+                        .chatLieuGiay(chatLieuGiay)
+                        .chatLieuDeGiay(chatLieuDeGiay)
+                        .sanPham(sanPham)
+                        .build();
+                ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham1);
+                QRCodeGenerator.generateQRCodeCTSP(saveChiTietSanPham);// tạo mã qrcode
+                System.out.println("case2");
+                continue;
+            }else{
+                // nếu chitietsanpham đã tồn tại thì cập nhật lại số lượng, giá bán và ngày cập nhật
+                ChiTietSanPham chiTietSanPham2 = ChiTietSanPham.builder()
+                        .id(chiTietSanPham.getId())
+                        .ma(chiTietSanPham.getMa())
+                        .soLuong(Integer.valueOf(x.getSoLuong())+chiTietSanPham.getSoLuong())
+                        .giaBan(new BigDecimal(x.getGiaBan()))
+                        .ngayTao(chiTietSanPham.getNgayTao())
+                        .ngayCapNhat(Date.valueOf(curruntDate))
+                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .mauSac(chiTietSanPham.getMauSac())
+                        .kichCo(chiTietSanPham.getKichCo())
+                        .chatLieuGiay(chiTietSanPham.getChatLieuGiay())
+                        .chatLieuDeGiay(chiTietSanPham.getChatLieuDeGiay())
+                        .sanPham(chiTietSanPham.getSanPham())
+                        .build();
+                chiTietSanPhamRepo.save(chiTietSanPham2);
+                System.out.println("case3");
+                continue;
+            }
+        }
+        return errorImports;
+    }
+
+    @Override
     public ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) throws IOException, WriterException {
         MauSac mauSac = mauSacService.findById(chiTietSanPhamRequest.getMauSac());
         KichCo kichCo = kichCoService.findById(chiTietSanPhamRequest.getKichCo());
@@ -164,10 +293,8 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                     anhSanPhamRepo.save(anhSanPham);
                 }
             }
-            System.out.println(1);
             return saveChiTietSanPham;
         } else {
-            System.out.println(2);
             return null;
         }
     }
@@ -215,12 +342,10 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         return null;
     }
 
-    @Override
     @Transactional
     public ChiTietSanPham fetchctspWithgiohangchitiet(Integer id) {
 
         return null;
     }
-
 
 }
