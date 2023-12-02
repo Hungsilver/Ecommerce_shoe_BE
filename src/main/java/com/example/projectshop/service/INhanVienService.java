@@ -3,6 +3,8 @@ package com.example.projectshop.service;
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.NhanVien;
 import com.example.projectshop.dto.BaseResponse;
+import com.example.projectshop.dto.auth.LoginRequest;
+import com.example.projectshop.dto.auth.RegisterRequest;
 import com.example.projectshop.dto.nhanvien.NhanVienRequest;
 import com.example.projectshop.dto.nhanvien.NhanVienResponse;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,7 @@ public interface INhanVienService {
     NhanVien update(NhanVien nhanVien,Integer id);
     NhanVien delete(Integer id);
 
-    BaseResponse registerAccount(NhanVienRequest nhanVienRequest);
+    NhanVien registerAccount(RegisterRequest registerRequest);
     NhanVien insertNhanVien(NhanVienRequest nhanVienRequest);
-    public NhanVienResponse authenticateUser(NhanVienRequest nhanVienRequest);
+    public NhanVien authenticateUser(LoginRequest loginRequest);
 }

@@ -38,9 +38,7 @@ import java.lang.reflect.Field;
 
         private String ngaySinh;
 
-
         private String diaChi;
-
 
         private Integer trangThai;
 
