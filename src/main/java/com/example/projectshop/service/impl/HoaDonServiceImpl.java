@@ -221,7 +221,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
                     .build();
             // start update chitietsanpham
             ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTietRequest.getIdChiTietSanPham()).get();
-            chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() - hoaDonChiTiet.getSoLuong());
+            chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() - hoaDonChiTietRequest.getSoLuong());
             chiTietSanPhamRepo.save(chiTietSanPham);
             return hoaDonChiTietRepo.save(hoaDonChiTiet);
         }
