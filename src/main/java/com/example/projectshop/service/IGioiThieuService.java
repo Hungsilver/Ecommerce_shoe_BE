@@ -1,11 +1,13 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.GioiThieu;
-import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.dto.gioithieu.ExportExcelGioiThieu;
+import com.example.projectshop.dto.gioithieu.ImportExcelGioiThieu;
 import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
-import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IGioiThieuService {
@@ -18,6 +20,12 @@ public interface IGioiThieuService {
     );
 
     Optional<GioiThieu> findById(Integer id);
+
+    GioiThieu findByName(String name);
+
+    List<ImportExcelGioiThieu> importExcel(List<ImportExcelGioiThieu> importExcelGioiThieuses);
+
+    List<ExportExcelGioiThieu> exportExcel();
 
     GioiThieu create(GioiThieuRequest gioiThieuRequest);
 

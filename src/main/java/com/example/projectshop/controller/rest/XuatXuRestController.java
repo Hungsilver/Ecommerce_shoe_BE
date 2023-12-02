@@ -1,6 +1,8 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.xuatxu.ExcelXuatXu;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.service.IXuatXuService;
 import com.example.projectshop.service.ObjectMapperUtils;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/origin")
@@ -87,6 +91,16 @@ public class XuatXuRestController {
             return ResponseEntity.ok("*id xuất xứ phải là số");
         }
         return ResponseEntity.ok(xuatXuService.delete(Integer.valueOf(id)));
+    }
+
+    @GetMapping("/excel/export")//localhost:8080/api/origin/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(xuatXuService.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/origin/excel/import
+    public  ResponseEntity<?> exportExcel(@RequestBody List<ExcelXuatXu> excelXuatXus){
+        return ResponseEntity.ok(xuatXuService.importExcel(excelXuatXus));
     }
 
 }

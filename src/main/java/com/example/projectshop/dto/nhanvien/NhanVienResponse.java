@@ -21,7 +21,7 @@ public class NhanVienResponse {
 
     private String soDienThoai;
 
-    private Byte gioiTinh;
+    private Boolean gioiTinh;
 
     private String ngaySinh;
 

@@ -10,11 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface KichCoRepository extends JpaRepository<KichCo, Integer> {
-    @Query(value = "select * from kichco  limit 1",nativeQuery = true)
-    ChatLieuDeGiay getTop1();
-
-    @Query("select x from KichCo x where x.size like :size")
+    @Query(value = "select k from KichCo k where k.size = :size")
     Page<KichCo> findAllBySize(@Param("size") String size, Pageable pageable);
+
+    @Query(value = "select k from KichCo k where k.size = :name")
+    Optional<KichCo> findByName(@Param("name")String name);
 }

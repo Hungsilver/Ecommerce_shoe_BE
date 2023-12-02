@@ -9,5 +9,4 @@ import org.springframework.web.multipart.MultipartFile;
 public class AnhSanPhamRequest {
     private Integer id;
     private String ten;
-
 }

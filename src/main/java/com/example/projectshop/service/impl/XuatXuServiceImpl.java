@@ -1,63 +1,22 @@
 package com.example.projectshop.service.impl;
 
+import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.Xuatxu;
-import com.example.projectshop.dto.mausac.MauSacResponse;
-import com.example.projectshop.dto.xuatxu.XuatXuRequest;
-import com.example.projectshop.dto.xuatxu.XuatXuResponse;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.xuatxu.ExcelXuatXu;
 import com.example.projectshop.repository.XuatXuRepository;
-import com.example.projectshop.service.IXuatXuService;
-import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utils.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class XuatXuServiceImpl {
-//
-//    @Autowired
-//    private XuatXuRepository xuatXuRepository;
-//
-//    @Override
-//    public List<XuatXuResponse> getAll() {
-//        return null;
-//    }
-//
-//    @Override
-//    public XuatXuResponse findById(Integer id) {
-//
-//        return null;
-//    }
-//
-//    @Override
-//    public XuatXuResponse create(XuatXuRequest xuatXuRequest) {
-//        return null;
-//    }
-//
-//    @Override
-//    public XuatXuResponse update(XuatXuRequest xuatXuRequest, Integer id) {
-//        return null;
-//    }
-//
-//    @Override
-//    public void delete(Integer id) {
-//
-//    }
-
-//    @Override
-//    public Page<XuatXuResponse> findAllXuatXu(String pageParam, String limitParam) {
-//        Integer page = pageParam == null ? 0 : Integer.valueOf(pageParam);
-//        Integer limit = limitParam == null ? 3 : Integer.valueOf(limitParam);
-//        Pageable pageable = PageRequest.of(page, limit);
-//        Page<XuatXuResponse> list = ObjectMapperUtils.mapEntityPageIntoDtoPage(xuatXuRepository.findAll(pageable), XuatXuResponse.class);
-//        return list;
-//    }
-
-
     @Autowired
     private XuatXuRepository xuatXuRepository;
 
@@ -72,8 +31,74 @@ public class XuatXuServiceImpl {
         return null;
     }
 
+    public Xuatxu findByName(String name) {
+        Optional<Xuatxu> xuatxu = xuatXuRepository.findByName(name);
+        if (xuatxu.isPresent()) {
+            return xuatxu.get();
+        }
+        return null;
+    }
+
     public Page<Xuatxu> findAllByName(String name, Pageable pageable) {
         return xuatXuRepository.findAllByTen("%"+name+"%", pageable);
+    }
+
+    public List<ExcelXuatXu> importExcel(List<ExcelXuatXu> excelXuatXus) {
+        // tạo list để chứa các đối tượng bị lỗi
+        List<ExcelXuatXu> errorImports = new ArrayList<>();
+        // sử dụng for để lặp các đối tượng được truyền vào từ file excel
+        for (ExcelXuatXu x : excelXuatXus) {
+            // lấy ra đối tượng theo tên được truyền vào từ file excel
+            Xuatxu xuatxu = this.findByName(x.getTenXuatXu());
+
+            // kiểm nếu tên truyền vào null || space add vào errorImports
+            if (x.getTenXuatXu() == null || x.getTenXuatXu().isBlank()) {
+                errorImports.add(x);
+                System.out.println("case 1");
+                continue;
+            }
+
+            // kiểm nếu trạng thái là null add vào errorImports
+            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+                errorImports.add(x);
+                System.out.println("case 2");
+                continue;
+            }
+
+            // kiểm tra nếu chưa có trong db thì thêm mới
+            if (xuatxu == null) {
+                Xuatxu xuatxu1 = Xuatxu.builder()
+                        .id(null)
+                        .ten(x.getTenXuatXu())
+                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .build();
+                System.out.println("case3");
+                xuatXuRepository.save(xuatxu1);
+            } else {// nếu đã có thì cập nhật lại thông tin
+                Xuatxu xuatxu2 = Xuatxu.builder()
+                        .id(xuatxu.getId())
+                        .ten(x.getTenXuatXu())
+                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .build();
+                System.out.println("case3");
+                xuatXuRepository.save(xuatxu2);
+            }
+        }
+        return errorImports;
+    }
+
+    public List<ExcelXuatXu> exportExcel() {
+        List<ExcelXuatXu> excelXuatXus = new ArrayList<>();
+        Integer index = 1;
+        for (Xuatxu x : xuatXuRepository.findAll()) {// convert từ XuatXu sang ExcelXuaXu
+            ExcelXuatXu excelXuatXu = ExcelXuatXu.builder()
+                    .stt(index++)
+                    .tenXuatXu(x.getTen())
+                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .build();
+            excelXuatXus.add(excelXuatXu);
+        }
+        return excelXuatXus;
     }
 
     public Xuatxu create(Xuatxu xuatxu) {

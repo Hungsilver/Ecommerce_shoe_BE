@@ -33,17 +33,17 @@ public class HoaDonRestController {
 
     @GetMapping()//localhost:8080/api/invoice
     public ResponseEntity<?> findAll(
-            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "page", required = false, defaultValue = "1") String page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
     ) {
-        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)|| !status.matches(p_chu)){
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
             return ResponseEntity.ok("*page || pageSize || status phải là số");
         }
-        return ResponseEntity.ok(hoaDonService.findAll(Integer.valueOf(status), keyword, sortField, isSortDesc, Integer.valueOf(page), Integer.valueOf(pageSize)));
+        return ResponseEntity.ok(hoaDonService.findAll(status, keyword, sortField, isSortDesc, Integer.valueOf(page), Integer.valueOf(pageSize)));
     }
 
     @GetMapping("{id}")//localhost:8080/api/invoice/1
@@ -52,6 +52,11 @@ public class HoaDonRestController {
             return ResponseEntity.ok("*id hóa đơn phải là số");
         }
         return ResponseEntity.ok(hoaDonService.findById(Integer.valueOf(id)));
+    }
+
+    @GetMapping("/code/{ma}")//localhost:8080/api/invoice/code/abc
+    public ResponseEntity<?> findByMa(@PathVariable("ma")String ma) {
+        return ResponseEntity.ok(hoaDonService.findByMa(ma));
     }
 
     @PutMapping("{id}")//localhost:8080/api/invoice/1

@@ -2,6 +2,8 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.KichCo;
 import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.kichco.ExcelKichCo;
 import com.example.projectshop.dto.kichco.KichCoRequest;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.service.IKichCoService;
@@ -15,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -81,6 +85,15 @@ public class KichCoRestController {
         return ResponseEntity.ok(kichCoService.delete(Integer.valueOf(id)));
     }
 
+    @GetMapping("/excel/export")//localhost:8080/api/size/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(kichCoService.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/size/excel/import
+    public  ResponseEntity<?> exportExcel(@RequestBody List<ExcelKichCo> excelKichCos){
+        return ResponseEntity.ok(kichCoService.importExcel(excelKichCos));
+    }
 
 
 }
