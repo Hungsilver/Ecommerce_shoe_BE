@@ -1,13 +1,9 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.DiaChi;
-import com.example.projectshop.domain.GioiThieu;
 import com.example.projectshop.dto.diachi.DiaChiRequest;
-import com.example.projectshop.dto.diachi.DiaChiResponse;
-import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IDiaChiService {

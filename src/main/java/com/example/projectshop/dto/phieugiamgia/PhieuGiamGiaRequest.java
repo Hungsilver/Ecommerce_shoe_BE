@@ -15,13 +15,11 @@ public class PhieuGiamGiaRequest {
 
     private Integer id;
 
-    private String ma;
-
     private String ten;
 
     private BigDecimal chietKhau;
 
-    private Byte hinhThucGiamGia;
+    private Boolean hinhThucGiamGia;
 
     private Date thoiGianBatDau;
 

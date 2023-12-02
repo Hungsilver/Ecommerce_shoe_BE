@@ -1,14 +1,12 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.KhachHang;
-import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.khachhang.ExportExcelKhachHang;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
-import com.example.projectshop.dto.khachhang.KhachHangRespone;
-import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IKhachHangService {
 
@@ -21,6 +19,8 @@ public interface IKhachHangService {
     );
 
     KhachHang findById(Integer id);
+
+    List<ExportExcelKhachHang> exportExcel();
 
     KhachHang create(KhachHangRequest khachHangRequest);
 

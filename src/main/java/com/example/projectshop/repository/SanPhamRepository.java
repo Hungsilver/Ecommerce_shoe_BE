@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
@@ -46,6 +47,9 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
     @Query(value = "select * from sanpham order by id desc limit 1", nativeQuery = true)
     SanPham getTop1ByIdMax();
+
+    @Query(value = "select s from SanPham s where s.ten = :name")
+    Optional<SanPham> findByName(@Param("name")String name);
 
 
 }

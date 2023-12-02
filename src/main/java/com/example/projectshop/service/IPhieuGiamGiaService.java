@@ -1,14 +1,13 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.PhieuGiamGia;
-import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.dto.phieugiamgia.ExportExcelPGG;
+import com.example.projectshop.dto.phieugiamgia.ImportExcelPGG;
 import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaRequest;
-import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaResponse;
-import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
+import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 
 public interface IPhieuGiamGiaService {
 
@@ -21,6 +20,12 @@ public interface IPhieuGiamGiaService {
     );
 
     PhieuGiamGia findById(Integer id);
+
+    PhieuGiamGia findByName(String name);
+
+    List<ImportExcelPGG> importExcel(List<ImportExcelPGG> importExcelPGGS);
+
+    List<ExportExcelPGG> exportExcel();
 
     PhieuGiamGia create(PhieuGiamGiaRequest PhieuGiamGiaRequest);
 

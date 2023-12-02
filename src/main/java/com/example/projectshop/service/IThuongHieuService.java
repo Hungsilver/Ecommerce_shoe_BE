@@ -1,9 +1,13 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.thuonghieu.ExcelThuongHieu;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IThuongHieuService {
@@ -16,6 +20,12 @@ public interface IThuongHieuService {
     );
 
     ThuongHieu findById(Integer id);
+
+    ThuongHieu findByName(String name);
+
+    List<ExcelThuongHieu> importExcel(List<ExcelThuongHieu> excelThuongHieus);
+
+    List<ExcelThuongHieu> exportExcel();
 
     ThuongHieu create(ThuongHieuRequest thuongHieuRequest);
 

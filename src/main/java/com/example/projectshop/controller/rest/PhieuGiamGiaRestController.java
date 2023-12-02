@@ -1,5 +1,7 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.phieugiamgia.ImportExcelPGG;
 import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaRequest;
 import com.example.projectshop.service.IPhieuGiamGiaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -72,5 +76,15 @@ public class PhieuGiamGiaRestController {
             return ResponseEntity.ok("*id phiếu giảm giá phải là số");
         }
         return ResponseEntity.ok(phieuGiamGiaService.delete(Integer.valueOf(id)));
+    }
+
+    @GetMapping("/excel/export")//localhost:8080/api/voucher/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(phieuGiamGiaService.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/voucher/excel/import
+    public  ResponseEntity<?> importExcel(@RequestBody List<ImportExcelPGG> importExcelPGGS){
+        return ResponseEntity.ok(phieuGiamGiaService.importExcel(importExcelPGGS));
     }
 }
