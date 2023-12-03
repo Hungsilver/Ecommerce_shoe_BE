@@ -35,7 +35,6 @@ public class NhanVienRequest {
     private Integer trangThai;
 
     private String role;
-
 }
 
 
