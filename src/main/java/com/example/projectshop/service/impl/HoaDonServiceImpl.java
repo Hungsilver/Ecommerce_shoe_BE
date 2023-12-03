@@ -216,7 +216,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
                     .hoaDon(hoaDonChiTiet1.getHoaDon())
                     .chiTietSanPham(hoaDonChiTiet1.getChiTietSanPham())
                     .soLuong(hoaDonChiTiet1.getSoLuong() + hoaDonChiTietRequest.getSoLuong())
-                                .donGia(hoaDonChiTietRequest.getDonGia())
+                                .donGia(donGia)
 
                     .build();
             // start update chitietsanpham
@@ -246,6 +246,21 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     }
 
+    @Override // xóa hóa đơn chi tiết
+    public void shopDeleteInvoiceDetail(Integer id) {
+        // xóa hóa đơn chi tiết
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
+
+        // start update chitietsanpham
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.getChiTietSanPham().getId()).get();
+        System.out.println(hoaDonChiTiet.getSoLuong());
+        chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
+//        chiTietSanPhamService.update(chiTietSanPham.getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
+        chiTietSanPhamRepo.save(chiTietSanPham);
+        // end update chitietsanpham
+        hoaDonChiTietRepo.delete(hoaDonChiTiet);
+    }
+
     @Override // cập nhật hóa đơn chi tiết
     public HoaDonChiTiet shopUpdateInvoiceDetail(Integer id, Integer soLuong) {
         // cập nhật lại số lượng sản phẩm trong hóa đơn chi tiết
@@ -256,46 +271,22 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return hoaDonChiTietRepo.save(hoaDonChiTiet);
     }
 
-    @Override // xóa hóa đơn chi tiết
-    public void shopDeleteInvoiceDetail(Integer id) {
-        // xóa hóa đơn chi tiết
-        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
-
-        // start update chitietsanpham
-        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.getChiTietSanPham().getId()).get();
-        System.out.println(hoaDonChiTiet.getSoLuong());
-        chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
-//        ChiTietSanPhamRequest chiTietSanPhamRequest = new ChiTietSanPhamRequest();
-//        chiTietSanPhamRequest.setId(chiTietSanPham.getId());
-//        chiTietSanPhamRequest.setSoLuong(chiTietSanPham.getSoLuong());
-//        chiTietSanPhamRequest.setAnhSanPhams(null);
-//        chiTietSanPhamService.update(chiTietSanPham.getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
-        chiTietSanPhamRepo.save(chiTietSanPham);
-        // end update chitietsanpham
-        hoaDonChiTietRepo.delete(hoaDonChiTiet);
-    }
 
 
-//
+//    @Override // xóa hóa đơn chi tiết
 //    public void shopDeleteInvoiceDetail(Integer id) {
-//        // Xóa hóa đơn chi tiết
-//        Optional<HoaDonChiTiet> hoaDonChiTietOptional = hoaDonChiTietRepo.findById(id);
+//        // xóa hóa đơn chi tiết
+//        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
 //
-//            HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietOptional.get();
-//            // Cập nhật số lượng trong chi tiết sản phẩm
-//            ChiTietSanPham chiTietSanPham = hoaDonChiTiet.getChiTietSanPham();
-//            chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
-//            // Tạo đối tượng ChiTietSanPhamRequest từ thông tin ChiTietSanPham
-//            ChiTietSanPhamRequest chiTietSanPhamRequest = new ChiTietSanPhamRequest();
-//            chiTietSanPhamRequest.setId(chiTietSanPham.getId());
-//            chiTietSanPhamRequest.setSoLuong(chiTietSanPham.getSoLuong());
-//            // Thêm các trường khác của ChiTietSanPhamRequest nếu cần
-//            // Gọi hàm cập nhật số lượng trong chi tiết sản phẩm
-//            chiTietSanPhamService.update(chiTietSanPham.getId(), chiTietSanPhamRequest);
-//            // Xóa hóa đơn chi tiết
-//            hoaDonChiTietRepo.delete(hoaDonChiTiet);
+//        // start update chitietsanpham
+//        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.getChiTietSanPham().getId()).get();
+//        System.out.println(hoaDonChiTiet.getSoLuong());
+//        chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
+//        chiTietSanPhamService.update(chiTietSanPham.getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
+//        // end update chitietsanpham
+//
+//        hoaDonChiTietRepo.delete(hoaDonChiTiet);
 //    }
-
 
     @Override // thanh toán online
     public HoaDon onlinePayments(HoaDonRequest hoaDonRequest) {

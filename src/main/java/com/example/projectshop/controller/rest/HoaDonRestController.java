@@ -114,9 +114,9 @@ public class HoaDonRestController {
             @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "soLuong", required = false) String soLuong
     ) {
-        if (!id.matches(p_chu)||soLuong.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn chi tiết || số lượng phải là số");
-        }
+//        if (!id.matches(p_chu)||soLuong.matches(p_chu)){
+//            return ResponseEntity.ok("*id hóa đơn chi tiết || số lượng phải là số");
+//        }
         return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(Integer.valueOf(id), Integer.valueOf(soLuong)));
     }
     // end bán hàng tại quầy
