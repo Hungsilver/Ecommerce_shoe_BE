@@ -4,15 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-// class dùng để ném các ngoại lệ tùy chỉnh
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class BaseResponse <T>{
-    private String code;
+
+    private Integer code;
 
     private T data;
+
+    private Boolean isOK;
 
     private String message;
 }
