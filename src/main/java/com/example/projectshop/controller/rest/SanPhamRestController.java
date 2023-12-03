@@ -1,6 +1,7 @@
 package com.example.projectshop.controller.rest;
 
 
+import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChatLieuDeGiayRepository;
 import com.example.projectshop.repository.SanPhamRepository;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(value = "*")
@@ -74,7 +76,7 @@ public class SanPhamRestController {
             @RequestParam(value = "page", required = false, defaultValue = "1") String page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
     ) {
-        if (!page.matches(p_chu) || pageSize.matches(p_chu)) {
+        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
             return ResponseEntity.ok("*page || pageSize phải là số");
         }
         return ResponseEntity.ok(
@@ -96,7 +98,7 @@ public class SanPhamRestController {
 
     @GetMapping("/{id}")//localhost:8080/api/product/1
     public ResponseEntity<?> findById(@PathVariable("id") String id) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
         return ResponseEntity.ok(service.findById(Integer.valueOf(id)));
@@ -113,7 +115,7 @@ public class SanPhamRestController {
             @PathVariable("id") String id,
             @RequestBody SanPhamRequest sanPhamRequest
     ) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
         return ResponseEntity.ok(service.update(Integer.valueOf(id), sanPhamRequest));
@@ -121,7 +123,7 @@ public class SanPhamRestController {
 
     @DeleteMapping("{id}")//localhost:8080/api/product/1
     public ResponseEntity<?> delete(@PathVariable("id") String id) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
         service.delete(Integer.valueOf(id));
@@ -133,22 +135,17 @@ public class SanPhamRestController {
         return ResponseEntity.ok(attributeSevice.findAll());
     }
 
+    @PostMapping("/excel/import")//localhost:8080/api/product/excel/import
+    public ResponseEntity<?> ImportExcel(@RequestBody List<ImportExcelSanPham> importExcelSanPhams) {
+        return ResponseEntity.ok(service.importExcel(importExcelSanPhams));
+    }
 
-//    @GetMapping("/excel/download")
-//    public ResponseEntity<Resource> ExportExcel() {
-//        String filename = "SanPham.xlsx";
-//        ByteArrayInputStream data = excelProductsService.loadProducts();
-//        InputStreamResource file = new InputStreamResource(data);
-//
-//        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-//                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-//                .body(file);
-//    }
+    @GetMapping("/excel/export")//localhost:8080/api/product/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(service.exportExcel());
+    }
 
-//    @PostMapping("/excel/upload")
-//    public ResponseEntity<?> ImportExcel(@RequestParam("fileProduct") MultipartFile file) {
-//        excelProductsService.saveProductsToDatabase(file);
-//        return ResponseEntity.ok(Map.of("message", "success"));
-//    }
+
+
 
 }

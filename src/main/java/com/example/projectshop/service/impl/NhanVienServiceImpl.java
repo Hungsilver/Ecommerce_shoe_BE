@@ -2,6 +2,7 @@ package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChucVu;
 import com.example.projectshop.domain.NhanVien;
+import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.auth.LoginRequest;
 import com.example.projectshop.dto.auth.RegisterRequest;
@@ -47,13 +48,26 @@ public class NhanVienServiceImpl implements INhanVienService {
     }
 
     @Override
-    public Optional<NhanVien> findById(Integer id) {
-        return nhanVienRepository.findById(id);
+    public NhanVien findById(Integer id) {
+        Optional<NhanVien> nhanVien = nhanVienRepository.findById(id);
+        if (nhanVien.isPresent()){
+            return nhanVien.get();
+        }
+        return null;
     }
 
     @Override
     public Page<NhanVien> findAllByName(String name, Pageable pageable) {
         return nhanVienRepository.findAllByTen("%" + name + "%", pageable);
+    }
+
+    @Override
+    public NhanVien findByName(String name) {
+        Optional<NhanVien> nhanVien = nhanVienRepository.findByName(name);
+        if (nhanVien.isPresent()){
+            return nhanVien.get();
+        }
+        return null;
     }
 
     @Override

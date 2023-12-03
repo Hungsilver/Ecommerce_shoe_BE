@@ -88,4 +88,33 @@ public class utils {
         return trangThai;
     }
 
+    public static String trangThaiSanPham(Integer input) {
+        String trangThai;
+        if(input == null){
+            trangThai = null;
+        }
+        else if (input == 0) {
+            trangThai = "Hoạt Động";
+        } else if (input == 1) {
+            trangThai = "Không Hoạt Động";
+        } else {
+            trangThai = null;
+        }
+        return trangThai;
+    }
+
+    public static Integer getNumberByNameStatus(String input) {
+        Integer trangThai;
+        if (input == null) {
+            trangThai = null;
+        } else if (input.equalsIgnoreCase("Hoạt Động")) {
+            trangThai = 0;
+        } else if (input.equalsIgnoreCase("Không Hoạt Động")) {
+            trangThai = 1;
+        } else {
+            trangThai = null;
+        }
+        return trangThai;
+    }
+
 }

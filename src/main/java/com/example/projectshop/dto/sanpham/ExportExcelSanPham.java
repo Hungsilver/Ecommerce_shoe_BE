@@ -4,17 +4,25 @@ import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.domain.Xuatxu;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class SanPhamResponse {
+@Builder
+public class ExportExcelSanPham {
 
-    private Integer id;
+    private Integer stt;
+
+    private String maSanPham;
 
     private String ten;
 
@@ -22,13 +30,11 @@ public class SanPhamResponse {
 
     private String moTa;
 
-    private Integer trangThai;
+    private String trangThai;
 
-    private ThuongHieu thuongHieu;
+    private String thuongHieu;
 
-    private Xuatxu xuatXu;
+    private String xuatXu;
 
-    private DanhMuc danhMuc;
-
-    private List<ChiTietSanPham> listChiTietSanPham;
+    private String danhMuc;
 }

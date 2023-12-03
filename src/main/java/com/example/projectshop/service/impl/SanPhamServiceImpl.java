@@ -2,7 +2,13 @@ package com.example.projectshop.service.impl;
 
 
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.SanPham;
+import com.example.projectshop.domain.ThuongHieu;
+import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
+import com.example.projectshop.dto.sanpham.ExportExcelSanPham;
+import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.DanhMucRepository;
@@ -24,9 +30,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -144,24 +152,121 @@ public class SanPhamServiceImpl implements ISanPhamService {
     @Override
     public SanPham findById(Integer id) {
         if (id != null) {
-        return sanPhamrepo.findById(id).get();
+            return sanPhamrepo.findById(id).get();
         }
         return null;
     }
 
     @Override
-    public SanPham create(SanPhamRequest sanPhamRequest) {
-        String maSanPham = sanPhamrepo.getTop1ByIdMax().getMa();
-        String maMoi;
-        if (maSanPham == null){
-             maMoi = "SP00001";
-        }else{
-            maMoi = "SP"+utils.getNumberFromCode(maSanPham);
+    public SanPham findByName(String name) {
+        Optional<SanPham> sanPham = sanPhamrepo.findByName(name);
+        if (sanPham.isPresent()) {
+            return sanPham.get();
         }
+        return null;
+    }
 
+    @Override
+    public List<ImportExcelSanPham> importExcel(List<ImportExcelSanPham> importExcelSanPhams) {
+        // tạo 1 list để chứa các sản phẩm lỗi không add được
+        List<ImportExcelSanPham> errorImports = new ArrayList<>();
+        // sử dụng for để lặp các đối tượng được truyền vào từ file excel
+        for (ImportExcelSanPham x : importExcelSanPhams) {
+            // start: lấy ra các đối tượng theo tên được truyền vào từ file excel
+            DanhMuc danhMuc = danhMucSevice.findByName(x.getDanhMuc());
+            ThuongHieu thuongHieu = thuongHieuService.findByName(x.getThuongHieu());
+            Xuatxu xuatxu = xuatXuService.findByName(x.getXuatXu());
+            // end:
+
+            // start: kiểm tra nếu 1 trong các đối tượng là null thì add vào list sản phẩm lỗi
+            if (danhMuc == null || thuongHieu == null || xuatxu == null) {
+                errorImports.add(x);
+                System.out.println("case1");
+                continue;
+            }
+            // end:
+
+            // start: kiểm tra nếu trangthai là null thì add vào list sản phẩm lỗi
+            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+                errorImports.add(x);
+                System.out.println("case4");
+                continue;
+            }
+            // end:
+
+            // start: Tạo mã cho sanpham
+            String maSanPham = "SP" + (sanPhamrepo.findAll().size()+1);
+            // end:
+
+            // kiểm tra nếu tên sản phẩm không tồn tại thì thêm mới
+            SanPham sanPham = this.findByName(x.getTenSanPham());
+            if (sanPham == null) {
+                SanPham sanPham1 = SanPham.builder()
+                        .id(null)
+                        .ma(maSanPham)
+                        .ten(x.getTenSanPham())
+                        .anhChinh(x.getAnhChinh())
+                        .moTa(x.getMoTa())
+                        .ngayTao(Date.valueOf(curruntDate))
+                        .ngayCapNhat(null)
+                        .trangThai(0)
+                        .danhMuc(danhMuc)
+                        .xuatXu(xuatxu)
+                        .thuongHieu(thuongHieu)
+                        .build();
+                sanPhamrepo.save(sanPham1);
+                System.out.println("case2");
+                continue;
+            }else{
+                // nếu sanpham đã tồn tại thì cập nhật lại mota,danhmuc,xuatxu,thuonghieu
+                SanPham sanPham2 = SanPham.builder()
+                        .id(sanPham.getId())
+                        .ma(sanPham.getMa())
+                        .ten(x.getTenSanPham())
+                        .anhChinh(sanPham.getAnhChinh())
+                        .moTa(x.getMoTa())
+                        .ngayTao(sanPham.getNgayTao())
+                        .ngayCapNhat(Date.valueOf(curruntDate))
+                        .trangThai(0)
+                        .danhMuc(danhMuc)
+                        .xuatXu(xuatxu)
+                        .thuongHieu(thuongHieu)
+                        .build();
+                sanPhamrepo.save(sanPham2);
+                System.out.println("case3");
+                continue;
+            }
+        }
+        return errorImports;
+    }
+
+    @Override
+    public List<ExportExcelSanPham> exportExcel() {
+        Integer index = 1;
+        List<ExportExcelSanPham> exportExcelSanPhams = new ArrayList<>();// convert từ sanpham sang ExportExcelSanPham
+        for (SanPham x: sanPhamrepo.findAll()){
+            ExportExcelSanPham exportExcelSanPham = ExportExcelSanPham.builder()
+                    .stt(index++)
+                    .maSanPham(x.getMa())
+                    .ten(x.getTen())
+                    .anhChinh(x.getAnhChinh())
+                    .moTa(x.getMoTa())
+                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .thuongHieu(x.getThuongHieu().getTen())
+                    .xuatXu(x.getXuatXu().getTen())
+                    .danhMuc(x.getDanhMuc().getTen())
+                    .build();
+            exportExcelSanPhams.add(exportExcelSanPham);
+        }
+        return exportExcelSanPhams;
+    }
+
+    @Override
+    public SanPham create(SanPhamRequest sanPhamRequest) {
+        String maSanPham = "SP" + sanPhamrepo.findAll().size()+1;
         SanPham sanPham = SanPham.builder()
                 .id(null)
-                .ma(maMoi)
+                .ma(maSanPham)
                 .ten(sanPhamRequest.getTen())
                 .anhChinh(sanPhamRequest.getAnhChinh())
                 .moTa(sanPhamRequest.getMoTa())
@@ -198,8 +303,8 @@ public class SanPhamServiceImpl implements ISanPhamService {
     @Override
     public SanPham delete(Integer id) {
         SanPham sanPham = this.findById(id);
-            sanPham.setTrangThai(0);
-            return sanPhamrepo.save(sanPham);
+        sanPham.setTrangThai(0);
+        return sanPhamrepo.save(sanPham);
     }
 
 }
