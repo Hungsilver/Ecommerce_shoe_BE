@@ -232,13 +232,24 @@ public class HoaDonServiceImpl implements IHoaDonService {
     }
 
     @Override // cập nhật hóa đơn chi tiết
-    public HoaDonChiTiet shopUpdateInvoiceDetail(Integer id, Integer soLuong) {
+    public HoaDonChiTiet shopUpdateInvoiceDetail(Integer idHDCT, HoaDonChiTietRequest hoaDonChiTietRequest) {
         // cập nhật lại số lượng sản phẩm trong hóa đơn chi tiết
-        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
-        BigDecimal giamoi = hoaDonChiTiet.getChiTietSanPham().getGiaBan().multiply(new BigDecimal(soLuong));
-        hoaDonChiTiet.setSoLuong(soLuong);
-        hoaDonChiTiet.setDonGia(giamoi);
-        return hoaDonChiTietRepo.save(hoaDonChiTiet);
+        Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepo.findById(idHDCT);
+        if (hoaDonChiTiet.isPresent()){
+            HoaDonChiTiet hoaDonChiTiet1 = HoaDonChiTiet.builder()
+                    .id(hoaDonChiTietRequest.getId())
+                    .hoaDon(hoaDonChiTiet.get().getHoaDon())
+                    .soLuong(hoaDonChiTietRequest.getSoLuong())
+                    .donGia(hoaDonChiTietRequest.getDonGia())
+                    .chiTietSanPham(hoaDonChiTiet.get().getChiTietSanPham())
+                    .build();
+            // start update chitietsanpham
+            ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.get().getChiTietSanPham().getId()).get();
+            chiTietSanPham.setSoLuong((chiTietSanPham.getSoLuong()+hoaDonChiTiet.get().getSoLuong()) - hoaDonChiTietRequest.getSoLuong());
+            chiTietSanPhamRepo.save(chiTietSanPham);
+            return hoaDonChiTietRepo.save(hoaDonChiTiet1);
+        }
+        return null;// lỗi không cập nhật được
     }
 
     @Override // xóa hóa đơn chi tiết
@@ -248,9 +259,21 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
         // start update chitietsanpham
         ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.getChiTietSanPham().getId()).get();
-        System.out.println(hoaDonChiTiet.getSoLuong());
-        chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
-        chiTietSanPhamService.update(chiTietSanPham.getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
+        ChiTietSanPham chiTietSanPham1 = ChiTietSanPham.builder()
+                .id(chiTietSanPham.getId())
+                .ma(chiTietSanPham.getMa())
+                .giaBan(chiTietSanPham.getGiaBan())
+                .soLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong())
+                .ngayTao(chiTietSanPham.getNgayTao())
+                .ngayCapNhat(chiTietSanPham.getNgayCapNhat())
+                .trangThai(chiTietSanPham.getTrangThai())
+                .mauSac(chiTietSanPham.getMauSac())
+                .kichCo(chiTietSanPham.getKichCo())
+                .chatLieuGiay(chiTietSanPham.getChatLieuGiay())
+                .chatLieuDeGiay(chiTietSanPham.getChatLieuDeGiay())
+                .sanPham(chiTietSanPham.getSanPham())
+                .build();
+        chiTietSanPhamRepo.save(chiTietSanPham1);
         // end update chitietsanpham
 
         hoaDonChiTietRepo.delete(hoaDonChiTiet);
