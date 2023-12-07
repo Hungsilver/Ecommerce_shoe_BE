@@ -1,14 +1,12 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.domain.DanhMuc;
-import com.example.projectshop.dto.chatlieudegiay.ExcelCLDG;
 import com.example.projectshop.dto.danhmuc.DanhMucRequest;
 import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.repository.DanhMucRepository;
 import com.example.projectshop.service.IDanhMucSevice;
 import com.example.projectshop.service.ObjectMapperUtils;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,7 +72,7 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
             }
 
             // kiểm nếu trạng thái là null add vào errorImports
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case 2");
                 continue;
@@ -85,7 +83,7 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
                 DanhMuc danhMuc1 = DanhMuc.builder()
                         .id(null)
                         .ten(x.getTenDanhMuc())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 danhMucRepo.save(danhMuc1);
@@ -93,7 +91,7 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
                 DanhMuc danhMuc2 = DanhMuc.builder()
                         .id(danhMuc.getId())
                         .ten(x.getTenDanhMuc())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 danhMucRepo.save(danhMuc2);
@@ -110,7 +108,7 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
             ExcelDanhMuc excelDanhMuc = ExcelDanhMuc.builder()
                     .stt(index++)
                     .tenDanhMuc(x.getTen())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .build();
             excelDanhMucs.add(excelDanhMuc);
         }

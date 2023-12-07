@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.io.UnsupportedEncodingException;
 
 public interface IHoaDonService {
 
@@ -19,9 +19,9 @@ public interface IHoaDonService {
                          Integer page,
                          Integer pageSize);
 
-    Optional<HoaDon> findById(Integer id);
+    HoaDon findById(Integer id);
 
-    Optional<HoaDon> findByMa(String ma);
+    HoaDon findByMa(String ma);
 
     HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
 
@@ -33,19 +33,17 @@ public interface IHoaDonService {
 
     void shopDeleteInvoiceDetail(Integer id);
 
-    HoaDon onlinePayments(HoaDonRequest hoaDonRequest);
+    HoaDon onlinePayment(HoaDonRequest hoaDonRequest);
+
+    void vnPayment(String maHoaDon);
+
+    String vnPayService(HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
 
     HoaDon update(Integer id, HoaDonRequest hoaDonRequest);
 
-    HoaDon choVanChuyen(Integer id);
+    void delete(String maHoaDon);
 
-    HoaDon dangGiao(Integer id);
-
-    HoaDon daGiao(Integer id);
-
-    HoaDon daHuy(Integer id);
-
-    HoaDon traHang(Integer id);
+    HoaDon updateStatus(Integer id, Integer status);
 
     void exportPDF(HttpServletResponse response, Integer id) throws IOException;
 

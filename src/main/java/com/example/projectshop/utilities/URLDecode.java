@@ -1,4 +1,4 @@
-package com.example.projectshop.utils;
+package com.example.projectshop.utilities;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
