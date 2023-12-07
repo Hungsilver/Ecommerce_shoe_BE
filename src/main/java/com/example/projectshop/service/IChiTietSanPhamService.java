@@ -1,7 +1,6 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.ChiTietSanPham;
-import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
 import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public interface IChiTietSanPhamService {
 
@@ -34,7 +32,7 @@ public interface IChiTietSanPhamService {
             Integer pageSize
     );
 
-    Optional<ChiTietSanPham> findById(Integer id);
+    ChiTietSanPham findById(Integer id);
 
     ChiTietSanPham findByMa(String ma);
 

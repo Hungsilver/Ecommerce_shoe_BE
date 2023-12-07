@@ -1,15 +1,13 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.GioiThieu;
-import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.gioithieu.ExportExcelGioiThieu;
 import com.example.projectshop.dto.gioithieu.ImportExcelGioiThieu;
 import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
 import com.example.projectshop.repository.GioiThieuRepository;
 import com.example.projectshop.service.IGioiThieuService;
 import com.example.projectshop.service.INhanVienService;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -134,7 +132,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                     .moTa(x.getMoTa())
                     .ngayTao(x.getNgayTao())
                     .ngayXoa(x.getNgayXoa())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .nhanVien(x.getNhanVien().getHoTen())
                     .build();
             exportExcelGioiThieus.add(exportExcelGioiThieu);

@@ -1,14 +1,12 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.ThuongHieu;
-import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.thuonghieu.ExcelThuongHieu;
 import com.example.projectshop.dto.thuonghieu.ThuongHieuRequest;
 import com.example.projectshop.repository.ThuongHieuRepository;
 import com.example.projectshop.service.IThuongHieuService;
 import com.example.projectshop.service.ObjectMapperUtils;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +73,7 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
             }
 
             // kiểm nếu trạng thái là null add vào errorImports
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case 2");
                 continue;
@@ -87,7 +84,7 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
                 ThuongHieu thuongHieu1 = ThuongHieu.builder()
                         .id(null)
                         .ten(x.getTenThuongHieu())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 thuongHieuRepository.save(thuongHieu1);
@@ -95,7 +92,7 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
                 ThuongHieu thuongHieu2 = ThuongHieu.builder()
                         .id(thuongHieu.getId())
                         .ten(x.getTenThuongHieu())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 thuongHieuRepository.save(thuongHieu2);
@@ -112,7 +109,7 @@ public class ThuongHieuServiceImpl implements IThuongHieuService {
             ExcelThuongHieu excelThuongHieu = ExcelThuongHieu.builder()
                     .stt(index++)
                     .tenThuongHieu(x.getTen())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .build();
             excelThuongHieus.add(excelThuongHieu);
         }

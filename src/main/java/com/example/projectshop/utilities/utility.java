@@ -1,4 +1,4 @@
-package com.example.projectshop.utils;
+package com.example.projectshop.utilities;
 
 import com.ibm.icu.text.Transliterator;
 
@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-public class utils {
+public class utility {
 
     public static String getNumberFromCode(String input) {
         // lấy ra các số từ mã

@@ -1,11 +1,9 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.Xuatxu;
-import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.xuatxu.ExcelXuatXu;
 import com.example.projectshop.repository.XuatXuRepository;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +57,7 @@ public class XuatXuServiceImpl {
             }
 
             // kiểm nếu trạng thái là null add vào errorImports
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case 2");
                 continue;
@@ -70,7 +68,7 @@ public class XuatXuServiceImpl {
                 Xuatxu xuatxu1 = Xuatxu.builder()
                         .id(null)
                         .ten(x.getTenXuatXu())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 xuatXuRepository.save(xuatxu1);
@@ -78,7 +76,7 @@ public class XuatXuServiceImpl {
                 Xuatxu xuatxu2 = Xuatxu.builder()
                         .id(xuatxu.getId())
                         .ten(x.getTenXuatXu())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 xuatXuRepository.save(xuatxu2);
@@ -94,7 +92,7 @@ public class XuatXuServiceImpl {
             ExcelXuatXu excelXuatXu = ExcelXuatXu.builder()
                     .stt(index++)
                     .tenXuatXu(x.getTen())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .build();
             excelXuatXus.add(excelXuatXu);
         }

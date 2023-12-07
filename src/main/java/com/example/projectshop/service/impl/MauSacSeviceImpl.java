@@ -1,12 +1,10 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.MauSac;
-import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.mausac.ExcelMauSac;
 import com.example.projectshop.repository.MauSacRepository;
 import com.example.projectshop.service.IMauSacService;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,7 +66,7 @@ public class MauSacSeviceImpl implements IMauSacService {
             }
 
             // kiểm nếu trạng thái là null add vào errorImports
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case 2");
                 continue;
@@ -79,7 +77,7 @@ public class MauSacSeviceImpl implements IMauSacService {
                 MauSac mauSac1 = MauSac.builder()
                         .id(null)
                         .ten(x.getTenMauSac())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 mauSacRepository.save(mauSac1);
@@ -87,7 +85,7 @@ public class MauSacSeviceImpl implements IMauSacService {
                 MauSac mauSac2 = MauSac.builder()
                         .id(mauSac.getId())
                         .ten(x.getTenMauSac())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 mauSacRepository.save(mauSac2);
@@ -104,7 +102,7 @@ public class MauSacSeviceImpl implements IMauSacService {
             ExcelMauSac excelMauSac = ExcelMauSac.builder()
                     .stt(index++)
                     .tenMauSac(x.getTen())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .build();
             excelMauSacs.add(excelMauSac);
         }
