@@ -275,7 +275,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                     .giaBan(chiTietSanPhamRequest.getGiaBan())
                     .ngayTao(Date.valueOf(curruntDate))
                     .ngayCapNhat(null)
-                    .trangThai(0)
+                    .trangThai(1)
                     .mauSac(mauSac)
                     .kichCo(kichCo)
                     .chatLieuGiay(chatLieuGiay)
@@ -337,7 +337,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     public ChiTietSanPham delete(Integer id) {
         Optional<ChiTietSanPham> chiTietSanPham = chiTietSanPhamRepo.findById(id);
         if (chiTietSanPham.isPresent()) {
-            chiTietSanPham.get().setTrangThai(1);
+            chiTietSanPham.get().setTrangThai(0);
             return chiTietSanPhamRepo.save(chiTietSanPham.get());
         }
         return null;

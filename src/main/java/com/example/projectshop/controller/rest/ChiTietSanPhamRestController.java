@@ -4,14 +4,9 @@ import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
 import com.example.projectshop.service.IChiTietSanPhamService;
-import com.example.projectshop.service.impl.ExcelProductDetailsService;
 import com.google.zxing.WriterException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -25,23 +20,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Map;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/api/product-detail")
 
 public class ChiTietSanPhamRestController {
-    @Autowired
-    private ExcelProductDetailsService execlService;
 
     @Autowired
     private IChiTietSanPhamService chiTietSanPhamService;

@@ -61,7 +61,7 @@ public class OnlineShopRest {
     @GetMapping ("/addToCart/{id}") //http://localhost:8080/api/cart-detail/addToCart/id?quality=soluongthem
     public ResponseEntity<?> addSPVaoGio(HttpServletRequest request,
                                          @PathVariable("id") Integer idctsp,
-                                         @RequestParam("quality") int soluongthem) {
+                                         @RequestParam("quanlity") int soluongthem) {
         try {
             System.out.println("them san pham ");
             HttpSession session = request.getSession(false);
