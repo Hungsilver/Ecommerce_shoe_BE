@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class HoaDonChiTietRequest {
-    private Integer id;
     private Integer idHoaDon;
     private BigDecimal donGia;
     private Integer soLuong;

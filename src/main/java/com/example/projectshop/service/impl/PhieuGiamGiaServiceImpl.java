@@ -130,7 +130,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .thoiGianBatDau(Date.valueOf(x.getThoiGianBatDau()))
                         .thoiGianKetThuc(Date.valueOf(x.getThoiGianKetThuc()))
                         .moTa(x.getMoTa())
-                        .trangThai(0)
+                        .trangThai(1)
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia1);
             } else {// nếu đã có thì cập nhật lại thông tin
@@ -143,7 +143,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .thoiGianBatDau(Date.valueOf(x.getThoiGianBatDau()))
                         .thoiGianKetThuc(Date.valueOf(x.getThoiGianKetThuc()))
                         .moTa(x.getMoTa())
-                        .trangThai(0)
+                        .trangThai(1)
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia2);
             }
@@ -199,7 +199,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                 .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
                 .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
                 .moTa(phieuGiamGiaRequest.getMoTa())
-                .trangThai(phieuGiamGiaRequest.getTrangThai())
+                .trangThai(1)
                 .build();
         return phieuGiamGiaRepository.save(phieuGiamGia);
     }

@@ -1,33 +1,32 @@
 package com.example.projectshop.controller.rest;
 
 
-import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.dto.BaseResponse;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
-import com.example.projectshop.repository.ChiTietSanPhamRepository;
-import com.example.projectshop.repository.GioHangChiTietRepository;
-import com.example.projectshop.service.*;
+import com.example.projectshop.service.IChiTietSanPhamService;
+import com.example.projectshop.service.IGioHangCTService;
+import com.example.projectshop.service.IGioHangService;
+import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.impl.ChiTietSanPhamServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(value = "*")
 @RestController
@@ -73,11 +72,11 @@ public class OnlineShopRest {
                 if (kh != null && idctsp != null) {
                     GioHangChiTiet gh = iGioHangCTService.onlineCart(kh, idctsp, sl);
                     return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
-                                                     .code(200)
-                                                     .isOK(true)
-                                                     .data(gh)
-                                                     .message("Thêm thành công")
-                                                     .build()
+                            .code(200)
+                            .isOK(true)
+                            .data(gh)
+                            .message("Thêm thành công")
+                            .build()
                     );
                 } else {
                     return ResponseEntity.ok("khach hang chua dang nhap");
@@ -85,11 +84,11 @@ public class OnlineShopRest {
 
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
-                                                 .code(400)
-                                                 .isOK(false)
-                                                 .data(null)
-                                                 .message("Không tìm thấy khách hàng")
-                                                 .build()
+                        .code(400)
+                        .isOK(false)
+                        .data(null)
+                        .message("Không tìm thấy khách hàng")
+                        .build()
                 );
             }
         } catch (Exception e) {

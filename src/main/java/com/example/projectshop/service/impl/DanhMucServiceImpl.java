@@ -133,7 +133,7 @@ public class DanhMucServiceImpl implements IDanhMucSevice {
     public DanhMuc delete(Integer id) {
         Optional<DanhMuc> danhMuc = danhMucRepo.findById(id);
         if (danhMuc.isPresent()) {
-            danhMuc.get().setTrangThai(1);
+            danhMuc.get().setTrangThai(0);
             return danhMucRepo.save(danhMuc.get());
         }
         return null;
