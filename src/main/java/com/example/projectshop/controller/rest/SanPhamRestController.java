@@ -73,6 +73,7 @@ public class SanPhamRestController {
             @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
+            @RequestParam(value = "trangThai", required = false, defaultValue = "1") Integer trangThai,
             @RequestParam(value = "page", required = false, defaultValue = "1") String page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
     ) {
@@ -91,6 +92,7 @@ public class SanPhamRestController {
                         shoe_sole_material,
                         keyword,
                         isSortAsc,
+                        trangThai,
                         Integer.valueOf(page),
                         Integer.valueOf(pageSize))
         );
@@ -144,8 +146,5 @@ public class SanPhamRestController {
     public  ResponseEntity<?> exportExcel() {
         return ResponseEntity.ok(service.exportExcel());
     }
-
-
-
 
 }

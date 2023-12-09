@@ -30,6 +30,7 @@ public interface ISanPhamService {
             String shoe_sole_materal,
             String keyword,
             Boolean isSortAsc,
+            Integer trangThai,
             Integer page,
             Integer pageSize
     );

@@ -7,10 +7,7 @@ import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
-import com.example.projectshop.repository.ChiTietSanPhamRepository;
-import com.example.projectshop.repository.HoaDonChiTietRepository;
-import com.example.projectshop.repository.HoaDonRepository;
-import com.example.projectshop.repository.KhachHangRepository;
+import com.example.projectshop.repository.*;
 import com.example.projectshop.service.IHoaDonService;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IKhachHangService;
@@ -68,6 +65,8 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
+    @Autowired
+    NhanVienRepository nhanVienRepository;
 
     // lấy ra ngày hiện tại
     private LocalDate curruntDate = LocalDate.now();
@@ -246,47 +245,53 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     }
 
-    @Override // xóa hóa đơn chi tiết
+    @Override // cập nhật hóa đơn chi tiết
+    public HoaDonChiTiet shopUpdateInvoiceDetail(Integer idHDCT, HoaDonChiTietRequest hoaDonChiTietRequest) {
+        // cập nhật lại số lượng sản phẩm trong hóa đơn chi tiết
+        Optional<HoaDonChiTiet> hoaDonChiTiet = hoaDonChiTietRepo.findById(idHDCT);
+        if (hoaDonChiTiet.isPresent()){
+            HoaDonChiTiet hoaDonChiTiet1 = HoaDonChiTiet.builder()
+                    .id(idHDCT)
+                    .hoaDon(hoaDonChiTiet.get().getHoaDon())
+                    .soLuong(hoaDonChiTietRequest.getSoLuong())
+                    .donGia(hoaDonChiTietRequest.getDonGia())
+                    .chiTietSanPham(hoaDonChiTiet.get().getChiTietSanPham())
+                    .build();
+            // start update chitietsanpham
+            ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.get().getChiTietSanPham().getId()).get();
+            chiTietSanPham.setSoLuong((chiTietSanPham.getSoLuong()+hoaDonChiTiet.get().getSoLuong()) - hoaDonChiTietRequest.getSoLuong());
+            chiTietSanPhamRepo.save(chiTietSanPham);
+            return hoaDonChiTietRepo.save(hoaDonChiTiet1);
+        }
+        return null;// lỗi không cập nhật được
+    }
+
+    @Override
     public void shopDeleteInvoiceDetail(Integer id) {
         // xóa hóa đơn chi tiết
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
 
         // start update chitietsanpham
         ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.getChiTietSanPham().getId()).get();
-        System.out.println(hoaDonChiTiet.getSoLuong());
-        chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
-//        chiTietSanPhamService.update(chiTietSanPham.getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
-        chiTietSanPhamRepo.save(chiTietSanPham);
+        ChiTietSanPham chiTietSanPham1 = ChiTietSanPham.builder()
+                .id(chiTietSanPham.getId())
+                .ma(chiTietSanPham.getMa())
+                .giaBan(chiTietSanPham.getGiaBan())
+                .soLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong())
+                .ngayTao(chiTietSanPham.getNgayTao())
+                .ngayCapNhat(chiTietSanPham.getNgayCapNhat())
+                .trangThai(chiTietSanPham.getTrangThai())
+                .mauSac(chiTietSanPham.getMauSac())
+                .kichCo(chiTietSanPham.getKichCo())
+                .chatLieuGiay(chiTietSanPham.getChatLieuGiay())
+                .chatLieuDeGiay(chiTietSanPham.getChatLieuDeGiay())
+                .sanPham(chiTietSanPham.getSanPham())
+                .build();
+        chiTietSanPhamRepo.save(chiTietSanPham1);
         // end update chitietsanpham
+
         hoaDonChiTietRepo.delete(hoaDonChiTiet);
     }
-
-    @Override // cập nhật hóa đơn chi tiết
-    public HoaDonChiTiet shopUpdateInvoiceDetail(Integer id, Integer soLuong) {
-        // cập nhật lại số lượng sản phẩm trong hóa đơn chi tiết
-        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
-        BigDecimal giamoi = hoaDonChiTiet.getChiTietSanPham().getGiaBan().multiply(new BigDecimal(soLuong));
-        hoaDonChiTiet.setSoLuong(soLuong);
-        hoaDonChiTiet.setDonGia(giamoi);
-        return hoaDonChiTietRepo.save(hoaDonChiTiet);
-    }
-
-
-
-//    @Override // xóa hóa đơn chi tiết
-//    public void shopDeleteInvoiceDetail(Integer id) {
-//        // xóa hóa đơn chi tiết
-//        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepo.findById(id).get();
-//
-//        // start update chitietsanpham
-//        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(hoaDonChiTiet.getChiTietSanPham().getId()).get();
-//        System.out.println(hoaDonChiTiet.getSoLuong());
-//        chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + hoaDonChiTiet.getSoLuong());
-//        chiTietSanPhamService.update(chiTietSanPham.getId(), ObjectMapperUtils.map(chiTietSanPham, ChiTietSanPhamRequest.class));
-//        // end update chitietsanpham
-//
-//        hoaDonChiTietRepo.delete(hoaDonChiTiet);
-//    }
 
     @Override // thanh toán online
     public HoaDon onlinePayments(HoaDonRequest hoaDonRequest) {
@@ -594,7 +599,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         hoaDon.setTrangThai(0);
         hoaDon.setKhachHang(null);
 //        hoaDon.setKhachHang(khachHangRepository.findById(6).get());
-        hoaDon.setNhanVien(null);
+        hoaDon.setNhanVien(nhanVienRepository.findById(4).get());
         return hoaDonRepo.save(hoaDon);
     }
 

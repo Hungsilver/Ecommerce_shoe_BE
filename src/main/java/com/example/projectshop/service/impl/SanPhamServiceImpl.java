@@ -90,6 +90,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                                 String shoe_sole_material,
                                 String keyword,
                                 Boolean isSortAsc,
+                                Integer trangThai,
                                 Integer page,
                                 Integer pageSize) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
@@ -133,6 +134,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 listChatLieuGiay,
                 listChatLieuDeGiay,
                 keyword,
+                trangThai,
                 pageable);
         for (SanPham sanPham : listSanPham.getContent()) {
             List<ChiTietSanPham> chiTietSanPhamList = sanPham.getListChiTietSanPham();
@@ -278,7 +280,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))
                 .build();
         return sanPhamrepo.save(sanPham);
-
     }
 
     @Override

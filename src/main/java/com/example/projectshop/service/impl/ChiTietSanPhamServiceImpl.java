@@ -266,7 +266,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         String maChatLieuDeGiay = utils.tiengVietKhongDau(chatLieuDeGiay.getTen());
         String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
 
-        if (chiTietSanPhamRepo.findByMa(maChiTietSanPham) == null) {
+        if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isEmpty()) {
             ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
                     .id(null)
                     .ma(maChiTietSanPham)

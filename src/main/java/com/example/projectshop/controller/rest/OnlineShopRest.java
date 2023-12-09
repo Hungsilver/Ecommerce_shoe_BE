@@ -5,6 +5,7 @@ import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
+import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.GioHangChiTietRepository;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(value = "*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/cart-detail")
 public class OnlineShopRest {
@@ -58,25 +60,38 @@ public class OnlineShopRest {
     KhachHang kh;
 
     // them san pham vao gio hang online
-    @GetMapping ("/addToCart/{id}") //http://localhost:8080/api/cart-detail/addToCart/id?quality=soluongthem
+    @GetMapping("/addToCart") //http://localhost:8080/api/cart-detail/addToCart/id?quality=soluongthem
     public ResponseEntity<?> addSPVaoGio(HttpServletRequest request,
-                                         @PathVariable("id") Integer idctsp,
-                                         @RequestParam("quality") int soluongthem) {
+                                         @RequestParam("id") Integer idctsp,
+                                         @RequestParam("quantity") Integer sl) {
+        HttpSession session = request.getSession(false);
         try {
             System.out.println("them san pham ");
-            HttpSession session = request.getSession(false);
             if (session != null) {
-                kh = (KhachHang) session.getAttribute("khachHang");
+              kh = (KhachHang) session.getAttribute("khachHang");
+                System.out.println("khach hang: " + kh.getEmail());
 
                 if (kh != null && idctsp != null) {
-                    iGioHangCTService.onlineCart(kh, idctsp, soluongthem);
-
+                    GioHangChiTiet gh = iGioHangCTService.onlineCart(kh, idctsp, sl);
+                    return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
+                                                     .code(200)
+                                                     .isOK(true)
+                                                     .data(gh)
+                                                     .message("Thêm thành công")
+                                                     .build()
+                    );
                 } else {
                     return ResponseEntity.ok("khach hang chua dang nhap");
                 }
 
             } else {
-                return ResponseEntity.ok("session ko có tt kh");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+                                                 .code(400)
+                                                 .isOK(false)
+                                                 .data(null)
+                                                 .message("Không tìm thấy khách hàng")
+                                                 .build()
+                );
             }
         } catch (Exception e) {
             System.out.println("day la loi:" + e.getMessage());
@@ -91,7 +106,7 @@ public class OnlineShopRest {
         System.out.println("khach hang " + kh);
         HttpSession session = request.getSession();
         kh = (KhachHang) session.getAttribute("khachHang");
-        if (kh != null && idctsp !=null) {
+        if (kh != null && idctsp != null) {
             iGioHangCTService.remove(kh, idctsp);
 
         }

@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface IHoaDonService {
@@ -30,7 +29,7 @@ public interface IHoaDonService {
 
     HoaDonChiTiet shopCreateInvoiceDetail(HoaDonChiTietRequest hoaDonChiTietRequest);
 
-    HoaDonChiTiet shopUpdateInvoiceDetail(Integer id, Integer soLuong);
+    HoaDonChiTiet shopUpdateInvoiceDetail(Integer idHDCT,HoaDonChiTietRequest hoaDonChiTietRequest);
 
     void shopDeleteInvoiceDetail(Integer id);
 

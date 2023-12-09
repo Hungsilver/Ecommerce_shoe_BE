@@ -101,7 +101,7 @@ public class HoaDonRestController {
     @DeleteMapping("/shop/delete-invoice-detail/{id}")
     public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") String id) {
         if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id nhân viên phải là số");
+            return ResponseEntity.ok("*id phải là số");
         }
         hoaDonService.shopDeleteInvoiceDetail(Integer.valueOf(id));
         return ResponseEntity.ok().build();
@@ -109,17 +109,14 @@ public class HoaDonRestController {
 
     // cập nhật số lượng sản phẩm trong hóa đơn chi tiết
     //localhost:8080/api/invoice/shop/update-invoie-detail
-    @GetMapping("/shop/update-invoice-detail")
-    public ResponseEntity<?> shopUpdateInvoiceDetail(
-            @RequestParam(value = "id", required = false) String id,
-            @RequestParam(value = "soLuong", required = false) String soLuong
-    ) {
-//        if (!id.matches(p_chu)||soLuong.matches(p_chu)){
-//            return ResponseEntity.ok("*id hóa đơn chi tiết || số lượng phải là số");
-//        }
-        return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(Integer.valueOf(id), Integer.valueOf(soLuong)));
+
+    @PutMapping("/shop/update-invoice-detail/{idHDCT}")
+    public ResponseEntity<?> shopUpdateInvoiceDetail(@PathVariable Integer idHDCT,
+                                                     @RequestBody HoaDonChiTietRequest hoaDonChiTietRequest) {
+        return ResponseEntity.ok(hoaDonService.shopUpdateInvoiceDetail(idHDCT, hoaDonChiTietRequest));
     }
     // end bán hàng tại quầy
+
 
     // start bán hàng online
 
