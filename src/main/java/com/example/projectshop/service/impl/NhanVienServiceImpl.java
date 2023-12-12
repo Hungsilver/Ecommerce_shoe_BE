@@ -2,27 +2,21 @@ package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChucVu;
 import com.example.projectshop.domain.NhanVien;
-import com.example.projectshop.domain.ThuongHieu;
-import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.auth.LoginRequest;
 import com.example.projectshop.dto.auth.RegisterRequest;
 import com.example.projectshop.dto.nhanvien.NhanVienRequest;
-import com.example.projectshop.dto.nhanvien.NhanVienResponse;
 import com.example.projectshop.exception.BaseException;
 import com.example.projectshop.repository.ChucVuRepository;
 import com.example.projectshop.repository.NhanVienRepository;
 import com.example.projectshop.service.INhanVienService;
-import com.example.projectshop.service.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
 
 import java.util.HashSet;
 import java.util.List;
@@ -68,6 +62,11 @@ public class NhanVienServiceImpl implements INhanVienService {
             return nhanVien.get();
         }
         return null;
+    }
+
+    @Override
+    public NhanVien findByEmail(String email) {
+        return nhanVienRepository.findByEmail(email);
     }
 
     @Override

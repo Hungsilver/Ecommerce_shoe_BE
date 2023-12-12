@@ -30,7 +30,8 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             "and (k.id in :kichCo or :kichCo is null)\n" +
             "and (clg.id in :chatLieuGiay or :chatLieuGiay is null)\n " +
             "and (cldg.id in :chatLieuDeGiay or :chatLieuDeGiay is null)\n" +
-            "and (s.ten like %:tensanpham% or :tensanpham is null)"
+            "and (s.ten like %:tensanpham% or :tensanpham is null)" +
+            "and (s.trangThai = :trangThai or :trangThai is null)"
             )
     Page<SanPham> getAllByParam(
             @Param("priceMin") BigDecimal priceMin,
@@ -42,6 +43,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             @Param("chatLieuGiay") List<Integer>  chatLieuGiay,
             @Param("chatLieuDeGiay") List<Integer>  chatLieuDeGiay,
             @Param("tensanpham")String tensanpham,
+            @Param("trangThai") Integer trangThai,
             Pageable pageable
     );
 
