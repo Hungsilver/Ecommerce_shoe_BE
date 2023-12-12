@@ -1,15 +1,13 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.GioiThieu;
-import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.gioithieu.ExportExcelGioiThieu;
 import com.example.projectshop.dto.gioithieu.ImportExcelGioiThieu;
 import com.example.projectshop.dto.gioithieu.GioiThieuRequest;
 import com.example.projectshop.repository.GioiThieuRepository;
 import com.example.projectshop.service.IGioiThieuService;
 import com.example.projectshop.service.INhanVienService;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -97,7 +95,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                         .moTa(x.getMoTa())
                         .ngayTao(Date.valueOf(curruntDate))
                         .ngayXoa(null)
-                        .trangThai(0)
+                        .trangThai(1)
                         .nhanVien(nhanVienService.findByName(x.getNhanVien()))
                         .build();
                 gioiThieuRepo.save(gioiThieu1);
@@ -111,7 +109,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                         .moTa(x.getMoTa())
                         .ngayTao(gioiThieu.getNgayTao())
                         .ngayXoa(null)
-                        .trangThai(0)
+                        .trangThai(gioiThieu.getTrangThai())
                         .nhanVien(nhanVienService.findByName(x.getNhanVien()))
                         .build();
                 gioiThieuRepo.save(gioiThieu2);
@@ -134,7 +132,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                     .moTa(x.getMoTa())
                     .ngayTao(x.getNgayTao())
                     .ngayXoa(x.getNgayXoa())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .nhanVien(x.getNhanVien().getHoTen())
                     .build();
             exportExcelGioiThieus.add(exportExcelGioiThieu);
@@ -153,7 +151,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                 .moTa(gioiThieuRequest.getMoTa())
                 .ngayTao(Date.valueOf(curruntDate))
                 .ngayXoa(null)
-                .trangThai(gioiThieuRequest.getTrangThai())
+                .trangThai(1)
                 .nhanVien(nhanVienService.findById(gioiThieuRequest.getNhanVien()))
                 .build();
         return gioiThieuRepo.save(gioiThieu);

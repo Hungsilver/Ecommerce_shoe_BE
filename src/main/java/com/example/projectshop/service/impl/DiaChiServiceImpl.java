@@ -76,7 +76,7 @@ public class DiaChiServiceImpl implements IDiaChiService {
     public DiaChi delete(Integer id) {
         Optional<DiaChi> diaChi = this.findById(id);
         if (diaChi.isPresent()) {
-            diaChi.get().setTrangThai(1);
+            diaChi.get().setTrangThai(0);
             return diaChiRepo.save(diaChi.get());
         }
         return null;

@@ -75,7 +75,7 @@ public class HoaDon {
     private BigDecimal phiVanChuyen;
 
     @Column(name = "phuongthucthanhtoan")
-    private String phuongThucThanhToan;
+    private Integer phuongThucThanhToan;
 
     @Column(name = "trangthai")
     private Integer trangThai;
