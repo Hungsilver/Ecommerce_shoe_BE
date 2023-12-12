@@ -1,10 +1,10 @@
 package com.example.projectshop.controller.rest;
 
 
+import com.example.projectshop.config.SessionManager;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
-import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IGioHangCTService;
 import com.example.projectshop.service.IGioHangService;
@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,19 +34,16 @@ public class OnlineShopRest {
 
     @Autowired
     private IGioHangCTService iGioHangCTService;
-
     @Autowired
     private IKhachHangService khachHangService;
     @Autowired
     private IGioHangService gioHangService;
-
     @Autowired
     private ChiTietSanPhamServiceImpl ctspservice;
-
     @Autowired
     private IChiTietSanPhamService ctspService;
-
-    //test
+    @Autowired
+    private SessionManager sessionManager;
 
     @GetMapping
     public ResponseEntity<?> loadGioHangChiTiet(@PageableDefault(size = 1) Pageable pageable) {
@@ -55,47 +51,59 @@ public class OnlineShopRest {
         return ResponseEntity.ok(iGioHangCTService.getall(pageable));
     }
 
-
     KhachHang kh;
 
     // them san pham vao gio hang online
     @GetMapping("/addToCart") //http://localhost:8080/api/cart-detail/addToCart/id?quality=soluongthem
-    public ResponseEntity<?> addSPVaoGio(HttpServletRequest request,
-                                         @RequestParam("id") Integer idctsp,
-                                         @RequestParam("quantity") Integer sl) {
-        try {
-            System.out.println("them san pham ");
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                kh = (KhachHang) session.getAttribute("khachHang");
+    public ResponseEntity<?> addSPVaoGio(
+            @RequestParam("id") Integer idctsp,
+            @RequestParam("quantity") Integer sl
+    ) {
+        System.out.println("session kh" + sessionManager.getUserLogin());
+//        HttpSession session = request.getSession(false);
+//        System.out.println(session);
+//        KhachHang kh = (KhachHang) session.getAttribute("khachHang");
+//        System.out.println("kh cart" + kh.getEmail());
+        return null;
+//        try {
+//        KhachHang kh1 = khachHangService.findById(1);
+//        if(kh1 ==null){
+//            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
+//                                                                     .code(200)
+//                                                                     .isOK(true)
+//                                                                     .data(null)
+//                                                                     .message("Khach hang trong")
+//                                                                     .build()
+//            );
+//        }
+//            if (kh != null) {
+//                if (kh != null && idctsp != null) {
+//                    GioHangChiTiet gh = iGioHangCTService.onlineCart(kh, idctsp, sl);
+//                    return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
+//                                                                             .code(200)
+//                                                                             .isOK(true)
+//                                                                             .data(gh)
+//                                                                             .message("Thêm thành công")
+//                                                                             .build()
+//                    );
+//                } else {
+//                    return ResponseEntity.ok("thah cong");
+//                }
+//
+//            } else {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+//                                                                                  .code(400)
+//                                                                                  .isOK(false)
+//                                                                                  .data(null)
+//                                                                                  .message("Không tìm thấy khách hàng")
+//                                                                                  .build()
+//                );
+//            }
+//        } catch (Exception e) {
+//            System.out.println("chua login");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("khach hang chua login");
+//        }
 
-                if (kh != null && idctsp != null) {
-                    GioHangChiTiet gh = iGioHangCTService.onlineCart(kh, idctsp, sl);
-                    return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
-                            .code(200)
-                            .isOK(true)
-                            .data(gh)
-                            .message("Thêm thành công")
-                            .build()
-                    );
-                } else {
-                    return ResponseEntity.ok("khach hang chua dang nhap");
-                }
-
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
-                        .code(400)
-                        .isOK(false)
-                        .data(null)
-                        .message("Không tìm thấy khách hàng")
-                        .build()
-                );
-            }
-        } catch (Exception e) {
-            System.out.println("day la loi:" + e.getMessage());
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().build();
     }
 
     // xoa theo id cua chi tiet san pham

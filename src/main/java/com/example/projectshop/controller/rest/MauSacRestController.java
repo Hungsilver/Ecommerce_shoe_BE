@@ -2,6 +2,7 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.MauSac;
 import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.auth.LoginRequest;
 import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.mausac.ExcelMauSac;
 import com.example.projectshop.dto.mausac.MauSacRequest;
@@ -9,6 +10,8 @@ import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.service.IMauSacService;
 import com.example.projectshop.service.ObjectMapperUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/color")
 public class MauSacRestController {
     @Autowired
