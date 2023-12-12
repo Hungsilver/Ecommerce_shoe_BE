@@ -30,7 +30,7 @@ import java.util.List;
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/api/cart-detail")
-public class OnlineShopRest {
+public class GioHangRestController {
 
     @Autowired
     private IGioHangCTService iGioHangCTService;

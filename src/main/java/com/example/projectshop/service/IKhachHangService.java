@@ -31,4 +31,6 @@ public interface IKhachHangService {
     KhachHang registerKhachHang(KhachHangRequest khachHangRequest);
 
     KhachHang loginKhachHang(String email, String matKhau);
+
+    KhachHang findByEmail(String email);
 }

@@ -17,4 +17,16 @@ spring:
       name: anhduc
       password: 123
 
+  mail:
+    host: smtp.gmail.com
+    post: 587
+    username: vuttph25379@fpt.edu.vn
+    password: qhycocmzpzpehddo
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 

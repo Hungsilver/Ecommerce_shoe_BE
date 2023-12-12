@@ -19,6 +19,8 @@ public interface INhanVienService {
 
     NhanVien findByName(String name);
 
+    NhanVien findByEmail(String email);
+
     NhanVien create(NhanVien nhanVien);
 
     NhanVien update(NhanVien nhanVien, Integer id);
@@ -26,7 +28,9 @@ public interface INhanVienService {
     NhanVien delete(Integer id);
 
     NhanVien registerAccount(RegisterRequest registerRequest);
+
     NhanVien insertNhanVien(NhanVienRequest nhanVienRequest);
+
     public NhanVien authenticateUser(LoginRequest loginRequest);
 
 

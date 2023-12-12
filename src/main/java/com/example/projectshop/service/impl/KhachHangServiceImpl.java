@@ -102,7 +102,7 @@ public class KhachHangServiceImpl implements IKhachHangService {
                 .id(id)
                 .hoTen(khachHangRequest.getHoTen())
                 .email(khachHangRequest.getEmail())
-                .matKhau(khachHangRequest.getMatKhau())
+                .matKhau(passwordEncoder.encode(khachHangRequest.getMatKhau()))
                 .soDienThoai(khachHangRequest.getSoDienThoai())
                 .ngaySinh(khachHangRequest.getNgaySinh())
                 .trangThai(khachHangRequest.getTrangThai())
@@ -156,5 +156,10 @@ public class KhachHangServiceImpl implements IKhachHangService {
             return null;
         }
         return khachHang;
+    }
+
+    @Override
+    public KhachHang findByEmail(String email) {
+        return khachHangRepo.findByEmail(email);
     }
 }

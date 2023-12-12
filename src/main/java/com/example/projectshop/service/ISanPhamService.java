@@ -28,6 +28,7 @@ public interface ISanPhamService {
             String size,
             String shoe_material,
             String shoe_sole_materal,
+            Integer status,
             String keyword,
             Boolean isSortAsc,
             Integer page,
