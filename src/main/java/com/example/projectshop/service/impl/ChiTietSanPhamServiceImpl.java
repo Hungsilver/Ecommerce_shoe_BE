@@ -18,9 +18,9 @@ import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IKichCoService;
 import com.example.projectshop.service.IMauSacService;
 import com.example.projectshop.service.ISanPhamService;
-import com.example.projectshop.utils.QRCodeGenerator;
-import com.example.projectshop.utils.URLDecode;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.QRCodeGenerator;
+import com.example.projectshop.utilities.URLDecode;
+import com.example.projectshop.utilities.utility;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -121,11 +121,12 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
 
     @Override
-    public Optional<ChiTietSanPham> findById(Integer id) {
-        if (id == null) {
-            return null;
+    public ChiTietSanPham findById(Integer id) {
+        Optional<ChiTietSanPham> chiTietSanPham = chiTietSanPhamRepo.findById(id);
+        if (chiTietSanPham.isPresent()) {
+            return chiTietSanPham.get();
         }
-        return chiTietSanPhamRepo.findById(id);
+        return null;
     }
 
     @Override
@@ -158,7 +159,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                     .giaBan(x[3].toString())
                     .ngayTao(x[4].toString())
                     .ngayCapNhat(String.valueOf(x[5]))
-                    .trangThai(utils.trangThaiSanPham(Integer.valueOf(x[6].toString())))
+                    .trangThai(utility.trangThaiSanPham(Integer.valueOf(x[6].toString())))
                     .mauSac(x[7].toString())
                     .kichCo(x[8].toString())
                     .chatLieuGiay(x[9].toString())
@@ -195,7 +196,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
             // end:
 
             // start: kiểm tra nếu trangthai là null thì add vào list sản phẩm lỗi
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case4");
                 continue;
@@ -203,9 +204,9 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
             // end:
 
             // start: Tạo mã cho chitietsanpham
-            String maMauSac = utils.tiengVietKhongDau(mauSac.getTen());
-            String maChatLieuGiay = utils.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
-            String maChatLieuDeGiay = utils.tiengVietKhongDau(chatLieuDeGiay.getTen());
+            String maMauSac = utility.tiengVietKhongDau(mauSac.getTen());
+            String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
+            String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
             String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
             // end:
 
@@ -219,7 +220,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                         .giaBan(new BigDecimal(x.getGiaBan()))
                         .ngayTao(Date.valueOf(curruntDate))
                         .ngayCapNhat(null)
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .mauSac(mauSac)
                         .kichCo(kichCo)
                         .chatLieuGiay(chatLieuGiay)
@@ -239,7 +240,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                         .giaBan(new BigDecimal(x.getGiaBan()))
                         .ngayTao(chiTietSanPham.getNgayTao())
                         .ngayCapNhat(Date.valueOf(curruntDate))
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .mauSac(chiTietSanPham.getMauSac())
                         .kichCo(chiTietSanPham.getKichCo())
                         .chatLieuGiay(chiTietSanPham.getChatLieuGiay())
@@ -261,9 +262,9 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         ChatLieuGiay chatLieuGiay = chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay());
         ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay());
         SanPham sanPham = sanPhamService.findById(chiTietSanPhamRequest.getSanPham());
-        String maMauSac = utils.tiengVietKhongDau(mauSac.getTen());
-        String maChatLieuGiay = utils.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
-        String maChatLieuDeGiay = utils.tiengVietKhongDau(chatLieuDeGiay.getTen());
+        String maMauSac = utility.tiengVietKhongDau(mauSac.getTen());
+        String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
+        String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
         String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
 
         if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isEmpty()) {
@@ -303,7 +304,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
         ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
                 .id(id)
-                .ma(this.findById(id).get().getMa())
+                .ma(this.findById(id).getMa())
                 .soLuong(chiTietSanPhamRequest.getSoLuong())
                 .giaBan(chiTietSanPhamRequest.getGiaBan())
                 .ngayTao(chiTietSanPhamRepo.findById(id).get().getNgayTao())
@@ -334,7 +335,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Override
     public ChiTietSanPham delete(Integer id) {
-        Optional<ChiTietSanPham> chiTietSanPham = this.findById(id);
+        Optional<ChiTietSanPham> chiTietSanPham = chiTietSanPhamRepo.findById(id);
         if (chiTietSanPham.isPresent()) {
             chiTietSanPham.get().setTrangThai(1);
             return chiTietSanPhamRepo.save(chiTietSanPham.get());

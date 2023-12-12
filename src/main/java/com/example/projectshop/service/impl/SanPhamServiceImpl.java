@@ -6,7 +6,6 @@ import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.domain.ThuongHieu;
 import com.example.projectshop.domain.Xuatxu;
-import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
 import com.example.projectshop.dto.sanpham.ExportExcelSanPham;
 import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
@@ -18,8 +17,8 @@ import com.example.projectshop.repository.XuatXuRepository;
 import com.example.projectshop.service.IDanhMucSevice;
 import com.example.projectshop.service.ISanPhamService;
 import com.example.projectshop.service.IThuongHieuService;
-import com.example.projectshop.utils.URLDecode;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.URLDecode;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -189,7 +188,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
             // end:
 
             // start: kiểm tra nếu trangthai là null thì add vào list sản phẩm lỗi
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case4");
                 continue;
@@ -253,7 +252,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                     .ten(x.getTen())
                     .anhChinh(x.getAnhChinh())
                     .moTa(x.getMoTa())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .thuongHieu(x.getThuongHieu().getTen())
                     .xuatXu(x.getXuatXu().getTen())
                     .danhMuc(x.getDanhMuc().getTen())

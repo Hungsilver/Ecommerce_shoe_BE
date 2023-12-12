@@ -1,13 +1,11 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.domain.ChatLieuGiay;
-import com.example.projectshop.dto.chatlieudegiay.ExcelCLDG;
 import com.example.projectshop.dto.chatlieugiay.ExcelCLG;
 import com.example.projectshop.repository.ChatLieuGiayRepository;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.service.IChatLieuGiayService;
-import com.example.projectshop.utils.utils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,7 +68,7 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
             }
 
             // kiểm nếu trạng thái là null add vào errorImports
-            if (utils.getNumberByNameStatus(x.getTrangThai()) == null) {
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
                 errorImports.add(x);
                 System.out.println("case 2");
                 continue;
@@ -81,7 +79,7 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
                 ChatLieuGiay chatLieuGiay1 = ChatLieuGiay.builder()
                         .id(null)
                         .ten(x.getTenChatLieuGiay())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 chatLieuGiayRepository.save(chatLieuGiay1);
@@ -89,7 +87,7 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
                 ChatLieuGiay chatLieuGiay2 = ChatLieuGiay.builder()
                         .id(chatLieuGiay.getId())
                         .ten(x.getTenChatLieuGiay())
-                        .trangThai(utils.getNumberByNameStatus(x.getTrangThai()))
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
                         .build();
                 System.out.println("case3");
                 chatLieuGiayRepository.save(chatLieuGiay2);
@@ -106,7 +104,7 @@ public class ChatLieuGiaySeviceImpl implements IChatLieuGiayService {
             ExcelCLG excelCLG = ExcelCLG.builder()
                     .stt(index++)
                     .tenChatLieuGiay(x.getTen())
-                    .trangThai(utils.trangThaiSanPham(x.getTrangThai()))
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
                     .build();
             excelCLGS.add(excelCLG);
         }

@@ -55,7 +55,7 @@ public class ChiTietSanPhamRequest {
     @NotNull(message = "Vui lòng không để trống")
     private Integer sanPham;
 
-    @NotEmpty(message = "Vui lòng không để trống")
+//    @NotEmpty(message = "Vui lòng không để trống")
     private List<String> anhSanPhams;
 
 

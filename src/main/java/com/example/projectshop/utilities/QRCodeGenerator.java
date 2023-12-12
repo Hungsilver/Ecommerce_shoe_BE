@@ -1,4 +1,4 @@
-package com.example.projectshop.utils;
+package com.example.projectshop.utilities;
 
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.HoaDon;

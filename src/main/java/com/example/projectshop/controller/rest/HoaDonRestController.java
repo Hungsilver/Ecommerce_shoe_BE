@@ -1,9 +1,12 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
+import com.example.projectshop.repository.HoaDonRepository;
 import com.example.projectshop.service.IHoaDonService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +32,12 @@ import java.util.Date;
 public class HoaDonRestController {
     @Autowired
     private IHoaDonService hoaDonService;
+
+    @Autowired
+    private HoaDonRepository hoaDonRepo;
+
+    @Autowired
+    private HttpSession session;
 
     private String p_chu = "\\d+";
 
@@ -40,31 +50,30 @@ public class HoaDonRestController {
             @RequestParam(value = "page", required = false, defaultValue = "1") String page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
     ) {
-        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
             return ResponseEntity.ok("*page || pageSize || status phải là số");
         }
         return ResponseEntity.ok(hoaDonService.findAll(status, keyword, sortField, isSortDesc, Integer.valueOf(page), Integer.valueOf(pageSize)));
     }
 
     @GetMapping("{id}")//localhost:8080/api/invoice/1
-    public ResponseEntity<?> findById(@PathVariable("id")String id) {
-        if (!id.matches(p_chu)){
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id hóa đơn phải là số");
         }
         return ResponseEntity.ok(hoaDonService.findById(Integer.valueOf(id)));
     }
 
     @GetMapping("/code/{ma}")//localhost:8080/api/invoice/code/abc
-    public ResponseEntity<?> findByMa(@PathVariable("ma")String ma) {
+    public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
         return ResponseEntity.ok(hoaDonService.findByMa(ma));
     }
 
     @PutMapping("{id}")//localhost:8080/api/invoice/1
     public ResponseEntity<?> update(
             @PathVariable("id") String id,
-            @RequestBody HoaDonRequest hoaDonRequest)
-    {
-        if (!id.matches(p_chu)){
+            @RequestBody HoaDonRequest hoaDonRequest) {
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id hóa đơn phải là số");
         }
         return ResponseEntity.ok(hoaDonService.update(Integer.valueOf(id), hoaDonRequest));
@@ -73,20 +82,24 @@ public class HoaDonRestController {
     // start bán hàng tại quầy
 
     // Thanh toán hóa đơn
-    @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
-    public ResponseEntity<?> shopCheckout(@PathVariable("id")String idHoaDon,
-                                          @RequestBody HoaDonRequest hoaDonRequest)
-    {
-        if (!idHoaDon.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.shopPayments(Integer.valueOf(idHoaDon), hoaDonRequest));
-    }
+//        @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
+//        public ResponseEntity<?> shopCheckout(@PathVariable("id") String idHoaDon,
+//                                              @RequestBody HoaDonRequest hoaDonRequest) {
+//            if (!idHoaDon.matches(p_chu)) {
+//                return ResponseEntity.ok("*id hóa đơn phải là số");
+//            }
+//            return ResponseEntity.ok(hoaDonService.shopPayments(Integer.valueOf(idHoaDon), hoaDonRequest));
+//        }
 
+    @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
+    public ResponseEntity<?> shopCheckout(@PathVariable("id") Integer idHoaDon,
+                                          @RequestBody HoaDonRequest hoaDonRequest) {
+        return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
+    }
 
     // Tạo hóa đơn chờ với id là idNhanVien
     @PostMapping("/shop/create/{id}")//localhost:8080/api/invoice/shop/create/1
-    public ResponseEntity<?> shopCreateInvoice(@PathVariable("id")Integer idNhanVien) {
+    public ResponseEntity<?> shopCreateInvoice(@PathVariable("id") Integer idNhanVien) {
         return ResponseEntity.ok(hoaDonService.shopCreateInvoice(idNhanVien));
     }
 
@@ -100,7 +113,7 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/shop/delete-invoie-detail/1
     @DeleteMapping("/shop/delete-invoice-detail/{id}")
     public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") String id) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id phải là số");
         }
         hoaDonService.shopDeleteInvoiceDetail(Integer.valueOf(id));
@@ -121,70 +134,52 @@ public class HoaDonRestController {
     // start bán hàng online
 
     // thanh toán online
-    //localhost:8080/api/invoice/online/payments
-    @PostMapping("/online/payments")
-    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) {
-        return ResponseEntity.ok(hoaDonService.onlinePayments(hoaDonRequest));
+    //localhost:8080/api/invoice/online/payment
+    @PostMapping("/online/payment")
+    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+        if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
+            return ResponseEntity.ok(hoaDonService.onlinePayment(hoaDonRequest));
+        } else {
+            return ResponseEntity.ok(hoaDonService.vnPayService(hoaDonRequest));
+        }
+    }
+
+
+    //localhost:8080/api/invoice/online/payment-callback
+    @GetMapping("/online/payment-callback")
+    public void paymentCallback(
+            @RequestParam(value = "vnp_ResponseCode") String responseCode,
+            @RequestParam(value = "vnp_TxnRef") String maHoaDon,
+            HttpServletResponse response)
+            throws IOException {
+
+        if (responseCode.equals("00") && maHoaDon != null) {
+            hoaDonService.vnPayment(maHoaDon);
+            response.sendRedirect("http://localhost:4200/"); //đường dẫn trang quản lý đơn hàng của user bên angular
+            //vd: https://localhost:4200/user/...
+        }else{
+            hoaDonService.delete(maHoaDon);
+            response.sendRedirect("http://localhost:4200/");//đường dẫn trang thanh toán đơn hàng của user bên angular
+            //vd: https://localhost:4200/user/...
+        }
     }
 
 
     // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/cho-van-chuyen/1
-    @PutMapping("/cho-van-chuyen/{id}")
-    public ResponseEntity<?> choVanChuyen(@PathVariable("id")String id) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.choVanChuyen(Integer.valueOf(id)));
+    //localhost:8080/api/invoice/update-status?id=1&status=2
+    @GetMapping("/update-status")
+    public ResponseEntity<?> choVanChuyen(@RequestParam(value = "id") Integer id,
+                                          @RequestParam(value = "status") Integer status) {
+        return ResponseEntity.ok(hoaDonService.updateStatus(id, status));
     }
 
-    // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/dang-giao/1
-    @PutMapping("/dang-giao/{id}")
-    public ResponseEntity<?> dangGiao(@PathVariable("id")String id) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.dangGiao(Integer.valueOf(id)));
-    }
-
-    // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/da-giao/1
-    @PutMapping("/da-giao/{id}")
-    public ResponseEntity<?> daGiao(@PathVariable("id")String id) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.daGiao(Integer.valueOf(id)));
-    }
-
-    // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/da-huy/1
-    @PutMapping("/da-huy/{id}")
-    public ResponseEntity<?> daHuy(@PathVariable("id")String id) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.daHuy(Integer.valueOf(id)));
-    }
-
-    // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/tra-hang/1
-    @PutMapping("/tra-hang/{id}")
-    public ResponseEntity<?> traHang(@PathVariable("id")String id) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.traHang(Integer.valueOf(id)));
-    }
 
     // xuất hóa đơn file pdf với id hóa đơn
     //localhost:8080/api/invoice/export/1
     @GetMapping("/export/{id}")
     public ResponseEntity<?> exportPDF(HttpServletResponse response,
-                          @PathVariable("id")String id) throws IOException
-    {
-        if (!id.matches(p_chu)){
+                                       @PathVariable("id") String id) throws IOException {
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id hóa đơn phải là số");
         }
         response.setContentType("application/pdf");
@@ -193,9 +188,9 @@ public class HoaDonRestController {
         String currentDateTime = dateFormat.format(new Date());
 
         String headerKey = "Content-Dispostion";
-        String headerValue = "attachment; filename=pdf_"+currentDateTime+".pdf";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
 
-        response.setHeader(headerKey,headerValue);
+        response.setHeader(headerKey, headerValue);
         hoaDonService.exportPDF(response, Integer.valueOf(id));
         return ResponseEntity.ok().build();
     }
