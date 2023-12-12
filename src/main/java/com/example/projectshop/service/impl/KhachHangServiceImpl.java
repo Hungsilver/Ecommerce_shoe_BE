@@ -1,9 +1,7 @@
 package com.example.projectshop.service.impl;
 
-import com.example.projectshop.domain.DanhMuc;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.KhachHang;
-import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
 import com.example.projectshop.dto.khachhang.ExportExcelKhachHang;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.exception.UnauthorizedException;
@@ -17,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +34,7 @@ public class KhachHangServiceImpl implements IKhachHangService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @Override
     public Page<KhachHang> findAll(Integer page,
@@ -65,9 +65,9 @@ public class KhachHangServiceImpl implements IKhachHangService {
         Integer index = 1;
         String trangThai = null;
         for (KhachHang x : khachHangRepo.findAll()) {// convert từ KhachHang sang ExportExcelKhachHang
-            if (x.getTrangThai() == 0){
+            if (x.getTrangThai() == 0) {
                 trangThai = "Hoạt Động";
-            }else {
+            } else {
                 trangThai = "Vô hiệu hóa";
             }
             ExportExcelKhachHang exportExcelKhachHang = ExportExcelKhachHang.builder()
@@ -126,9 +126,10 @@ public class KhachHangServiceImpl implements IKhachHangService {
     @Override
     public KhachHang registerKhachHang(KhachHangRequest khachHangRequest) {
         if (khachHangRepo.findByEmail(khachHangRequest.getEmail()) != null) {
-            throw new UnauthorizedException("Email đã tồn tại");
+//            throw new UnauthorizedException("Email đã tồn tại");
+            return null;
         }
-            // tao khach hang
+        // tao khach hang
         KhachHang khachHang = ObjectMapperUtils.map(khachHangRequest, KhachHang.class);
         khachHang.setId(null);
         khachHang.setMatKhau(passwordEncoder.encode(khachHangRequest.getMatKhau()));
@@ -136,25 +137,25 @@ public class KhachHangServiceImpl implements IKhachHangService {
 
 
         // khi đăng ký thành công khởi tạo giỏ hàng cho khách hàng
-            GioHang gioHang= GioHang.builder().build();
-            gioHang.setKhachHang(khachHang);
-            khachHang.setGiohang(gioHang);
-            gioHangRepository.save(gioHang);
-            return khachHang;
-
-
+        GioHang gioHang = GioHang.builder().build();
+        gioHang.setKhachHang(khachHang);
+        khachHang.setGiohang(gioHang);
+        gioHangRepository.save(gioHang);
+        return khachHang;
     }
 
     @Override
     public KhachHang loginKhachHang(String email, String matKhau) {
         KhachHang khachHang = khachHangRepo.findByEmail(email);
 
-        System.out.println("khach hang"+khachHang.getEmail() + khachHang.getMatKhau());
-
-        if (khachHang == null || !passwordEncoder.matches(matKhau, khachHang.getMatKhau())) {
-            throw new UnauthorizedException("Email hoặc mật khẩu không đúng");
+        if (khachHang == null) {
+            return null;
+//            throw new UnauthorizedException("Email hoặc mật khẩu không đúng");
         }
 
+        if (!passwordEncoder.matches(matKhau, khachHang.getMatKhau())) {
+            return null;
+        }
         return khachHang;
     }
 }
