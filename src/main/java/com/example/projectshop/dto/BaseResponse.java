@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BaseResponse <T>{
+public class BaseResponse<T> {
 
     private Integer code;
 
@@ -20,4 +20,13 @@ public class BaseResponse <T>{
     private Boolean isOK;
 
     private String message;
+
+    public BaseResponse<T> createBaseResponse(Integer code, T data, Boolean isOK, String message) {
+        return BaseResponse.<T>builder()
+                .code(code)
+                .data(data)
+                .isOK(isOK)
+                .message(message)
+                .build();
+    }
 }
