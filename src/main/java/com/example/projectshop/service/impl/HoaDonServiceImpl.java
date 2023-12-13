@@ -1,12 +1,18 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.GioHang;
+import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.HoaDonChiTiet;
 
+import com.example.projectshop.domain.KhachHang;
+import com.example.projectshop.domain.NhanVien;
+import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
 import com.example.projectshop.repository.*;
+
 import com.example.projectshop.service.IHoaDonService;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IKhachHangService;
@@ -81,6 +87,9 @@ public class HoaDonServiceImpl implements IHoaDonService {
     NhanVienRepository nhanVienRepository;
 
     private GioHangChiTietRepository gioHangChiTietRepo;
+
+    @Autowired
+    private GioHangRepository gioHangRepo;
 
     // lấy ra ngày hiện tại
     private LocalDate curruntDate = LocalDate.now();
@@ -362,6 +371,10 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     @Override // thanh toán online
     public HoaDon onlinePayment(HoaDonRequest hoaDonRequest) {
+        KhachHang khachHang = khachHangService.findById(hoaDonRequest.getKhachHang());
+        PhieuGiamGia phieuGiamGia = phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia());
+        NhanVien nhanVien = null;
+        GioHang gioHang = gioHangRepo.findByIdKhachHang(khachHang.getId());
             // start add hoadon
             HoaDon hoaDon = HoaDon.builder()
                     .id(null)
@@ -380,8 +393,8 @@ public class HoaDonServiceImpl implements IHoaDonService {
                     .phiVanChuyen(new BigDecimal(hoaDonRequest.getPhiVanChuyen()))
                     .phuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan())
                     .trangThai(2)
-                    .phieuGiamGia(phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia()))
-                    .khachHang(khachHangService.findById(hoaDonRequest.getKhachHang()))
+                    .phieuGiamGia(phieuGiamGia)
+                    .khachHang(khachHang)
                     .nhanVien(null)
                     .build();
             hoaDonRepo.save(hoaDon);
@@ -418,7 +431,22 @@ public class HoaDonServiceImpl implements IHoaDonService {
                 chiTietSanPhamRepo.save(chiTietSanPham1);
                 // end update chitietsanpham
 
-                // còn phần cập nhật số lượng trong hàng chưa làm
+                // start update giohangchitiet
+                GioHangChiTiet gioHangChiTiet  = gioHangChiTietRepo.findByIdGioHangAndIdCTSP(gioHang.getId(),chiTietSanPham.getId());
+                GioHangChiTiet gioHangChiTiet1 = GioHangChiTiet.builder()
+                        .id(gioHangChiTiet.getId())
+                        .gioHang(gioHang)
+                        .chiTietSanPham(chiTietSanPham)
+                        .giaBan(gioHangChiTiet.getGiaBan())
+                        .soLuong(gioHangChiTiet.getSoLuong() - x.getSoLuong())
+                        .build();
+                gioHangChiTietRepo.save(gioHangChiTiet1);
+
+                if (gioHangChiTiet1.getSoLuong() <= 0){// kiểm tra nếu số lượng trong ghct <= 0 --> delete ghct
+                    gioHangChiTietRepo.delete(gioHangChiTiet);
+                }
+                // end update giohangchitiet
+
             }
             return hoaDon;
     }
@@ -429,11 +457,36 @@ public class HoaDonServiceImpl implements IHoaDonService {
         HoaDon hoaDon = this.findByMa(maHoaDon);
         hoaDon.setTrangThai(2);
         hoaDonRepo.save(hoaDon);
+        // end update hoadon
+
+        // start update giohangchitiet
+        GioHang gioHang = gioHangRepo.findByIdKhachHang(hoaDon.getKhachHang().getId());
+        for (HoaDonChiTiet x: hoaDon.getListHoaDonChiTiet()){
+            ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
+            GioHangChiTiet gioHangChiTiet  = gioHangChiTietRepo.findByIdGioHangAndIdCTSP(gioHang.getId(),chiTietSanPham.getId());
+            GioHangChiTiet gioHangChiTiet1 = GioHangChiTiet.builder()
+                    .id(gioHangChiTiet.getId())
+                    .gioHang(gioHang)
+                    .chiTietSanPham(chiTietSanPham)
+                    .giaBan(gioHangChiTiet.getGiaBan())
+                    .soLuong(gioHangChiTiet.getSoLuong() - x.getSoLuong())
+                    .build();
+            gioHangChiTietRepo.save(gioHangChiTiet1);
+
+            if (gioHangChiTiet1.getSoLuong() <= 0){// kiểm tra nếu số lượng trong ghct <= 0 --> delete ghct
+                gioHangChiTietRepo.delete(gioHangChiTiet);
+            }
+            // end update giohangchitiet
+        }
     }
 
     @Override
     public String vnPayService(HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
         String maHoaDon = utility.renderCodeHoaDon();
+        KhachHang khachHang = khachHangService.findById(hoaDonRequest.getKhachHang());
+        PhieuGiamGia phieuGiamGia = phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia());
+        NhanVien nhanVien = null;
+        GioHang gioHang = gioHangRepo.findByIdKhachHang(khachHang.getId());
         // start add hoadon
         HoaDon hoaDon = HoaDon.builder()
                 .id(null)
@@ -452,8 +505,8 @@ public class HoaDonServiceImpl implements IHoaDonService {
                 .phiVanChuyen(new BigDecimal(hoaDonRequest.getPhiVanChuyen()))
                 .phuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan())
                 .trangThai(8)
-                .phieuGiamGia(phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia()))
-                .khachHang(khachHangService.findById(hoaDonRequest.getKhachHang()))
+                .phieuGiamGia(phieuGiamGia)
+                .khachHang(khachHang)
                 .nhanVien(null)
                 .build();
         hoaDonRepo.save(hoaDon);

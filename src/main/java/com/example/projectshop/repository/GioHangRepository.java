@@ -15,9 +15,10 @@ import java.util.List;
 
 @Repository
 public interface GioHangRepository extends JpaRepository<GioHang,Integer> {
-    @Query("select p from PhieuGiamGia p where p.ma like %:ma%")
-    Page<GioiThieu> findAllByMa(@Param("ma")String ma, Pageable pageable);
+//    @Query("select p from PhieuGiamGia p where p.ma like %:ma%")
+//    Page<GioiThieu> findAllByMa(@Param("ma")String ma, Pageable pageable);
 
+    @Query("select g from GioHang g where g.khachHang.id = :id")
+    GioHang findByIdKhachHang(@Param("id")Integer id);
 
-//    List<GioHangChiTiet> findGioHangChiTietByGioHangId(Integer id);
 }

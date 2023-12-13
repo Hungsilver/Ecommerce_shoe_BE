@@ -43,7 +43,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
             @Param("chatLieuGiay") List<Integer>  chatLieuGiay,
             @Param("chatLieuDeGiay") List<Integer>  chatLieuDeGiay,
             @Param("tensanpham")String tensanpham,
-            @Param("trangThai") Integer trangThai,
+            @Param("trangThai") Integer trangthai,
             Pageable pageable
     );
 
