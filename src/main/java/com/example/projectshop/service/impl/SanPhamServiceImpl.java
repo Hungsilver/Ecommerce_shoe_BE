@@ -92,6 +92,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                                 Boolean isSortAsc,
                                 Integer page,
                                 Integer pageSize) {
+
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
 
 
@@ -145,7 +146,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 Collections.sort(chiTietSanPhamList, (ctsp1, ctsp2) -> ctsp2.getGiaBan().compareTo(ctsp1.getGiaBan()));
             }
         }
-
         return listSanPham;
     }
 

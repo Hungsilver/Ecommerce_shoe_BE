@@ -55,7 +55,7 @@ public class GioHangRestController {
 
     // them san pham vao gio hang online
     @GetMapping("/addToCart") //http://localhost:8080/api/cart-detail/addToCart/id?quality=soluongthem
-    public ResponseEntity<?> addSPVaoGio(
+    public ResponseEntity<?> addToCart(
             @RequestParam("id") Integer idctsp,
             @RequestParam("quantity") Integer sl
     ) {
