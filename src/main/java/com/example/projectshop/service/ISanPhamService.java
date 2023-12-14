@@ -22,7 +22,7 @@ public interface ISanPhamService {
     Page<SanPham> filter(
             String priceMin,
             String priceMax,
-            String trademark,
+            String brand,
             String origin,
             String color,
             String size,

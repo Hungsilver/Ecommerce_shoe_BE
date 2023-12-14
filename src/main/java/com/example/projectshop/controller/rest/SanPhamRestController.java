@@ -61,12 +61,9 @@ public class SanPhamRestController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-            return ResponseEntity.ok("*page || pageSize phải là số");
-        }
         return ResponseEntity.ok(
                 service.filter(
                         pricemin,
@@ -80,8 +77,8 @@ public class SanPhamRestController {
                         status,
                         keyword,
                         isSortAsc,
-                        Integer.valueOf(page),
-                        Integer.valueOf(pageSize))
+                        page,
+                        pageSize)
         );
     }
 
