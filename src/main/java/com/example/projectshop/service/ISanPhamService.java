@@ -1,7 +1,6 @@
 package com.example.projectshop.service;
 
 import com.example.projectshop.domain.SanPham;
-import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
 import com.example.projectshop.dto.sanpham.ExportExcelSanPham;
 import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
@@ -28,9 +27,9 @@ public interface ISanPhamService {
             String size,
             String shoe_material,
             String shoe_sole_materal,
+            Integer status,
             String keyword,
             Boolean isSortAsc,
-            Integer trangThai,
             Integer page,
             Integer pageSize
     );

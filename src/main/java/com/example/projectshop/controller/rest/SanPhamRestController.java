@@ -59,8 +59,8 @@ public class SanPhamRestController {
             @RequestParam(value = "shoe_material", required = false) String shoe_material,
             @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
             @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "trangThai", required = false, defaultValue = "1") Integer trangThai,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
@@ -77,9 +77,9 @@ public class SanPhamRestController {
                         size,
                         shoe_material,
                         shoe_sole_material,
+                        status,
                         keyword,
                         isSortAsc,
-                        trangThai,
                         page,
                         pageSize)
         );

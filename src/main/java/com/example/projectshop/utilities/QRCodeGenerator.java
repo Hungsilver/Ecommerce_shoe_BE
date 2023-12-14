@@ -27,7 +27,8 @@ public class QRCodeGenerator {
         String qrCodeName = qrCodePath + chiTietSanPham.getMa() + ".png";
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(
-                "MaSanPham: "+chiTietSanPham.getMa(), BarcodeFormat.QR_CODE, 400, 400);
+//                String.valueOf(chiTietSanPham.getId()), BarcodeFormat.QR_CODE, 400, 400);
+                chiTietSanPham.getMa(), BarcodeFormat.QR_CODE, 400, 400);
         Path path = FileSystems.getDefault().getPath(qrCodeName);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
     }
