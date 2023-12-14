@@ -28,7 +28,7 @@ public class SanPhamRestController {
 
 
     @Autowired
-    private ISanPhamService service;
+    private ISanPhamService sanPhamService;
 
     @Autowired
     private IAttributeSevice attributeSevice;
@@ -37,15 +37,27 @@ public class SanPhamRestController {
 
     @GetMapping()//localhost:8080/api/product
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-            return ResponseEntity.ok("*page || pageSize phải là số");
-        }
-        return ResponseEntity.ok(service.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc));
+        return ResponseEntity.ok(sanPhamService.findAll(
+                brand,
+                origin,
+                category,
+                keyword,
+                status,
+                page,
+                pageSize,
+                sortField,
+                isSortDesc
+        ));
     }
 
     @GetMapping("/filter")//localhost:8080/api/product/filter
@@ -65,7 +77,7 @@ public class SanPhamRestController {
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
         return ResponseEntity.ok(
-                service.filter(
+                sanPhamService.filter(
                         pricemin,
                         pricemax,
                         brand,
@@ -87,12 +99,12 @@ public class SanPhamRestController {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
-        return ResponseEntity.ok(service.findById(Integer.valueOf(id)));
+        return ResponseEntity.ok(sanPhamService.findById(Integer.valueOf(id)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
-        return ResponseEntity.ok(service.create(sanPhamRequest));
+        return ResponseEntity.ok(sanPhamService.create(sanPhamRequest));
     }
 
 
@@ -104,7 +116,7 @@ public class SanPhamRestController {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
-        return ResponseEntity.ok(service.update(Integer.valueOf(id), sanPhamRequest));
+        return ResponseEntity.ok(sanPhamService.update(Integer.valueOf(id), sanPhamRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product/1
@@ -112,7 +124,7 @@ public class SanPhamRestController {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
-        service.delete(Integer.valueOf(id));
+        sanPhamService.delete(Integer.valueOf(id));
         return ResponseEntity.ok().build();
     }
 
@@ -123,12 +135,12 @@ public class SanPhamRestController {
 
     @PostMapping("/excel/import")//localhost:8080/api/product/excel/import
     public ResponseEntity<?> ImportExcel(@RequestBody List<ImportExcelSanPham> importExcelSanPhams) {
-        return ResponseEntity.ok(service.importExcel(importExcelSanPhams));
+        return ResponseEntity.ok(sanPhamService.importExcel(importExcelSanPhams));
     }
 
     @GetMapping("/excel/export")//localhost:8080/api/product/excel/export
     public  ResponseEntity<?> exportExcel() {
-        return ResponseEntity.ok(service.exportExcel());
+        return ResponseEntity.ok(sanPhamService.exportExcel());
     }
 
 
