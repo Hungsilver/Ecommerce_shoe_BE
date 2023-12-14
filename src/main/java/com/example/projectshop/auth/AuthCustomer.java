@@ -112,30 +112,31 @@ public class AuthCustomer {
         }
     }
 
-    @PostMapping("/forgot-password")//localhost:8080/api/auth/customer/forgot-password
+    @GetMapping("/forgot-password")//localhost:8080/api/auth/customer/forgot-password
     public ResponseEntity<?> forgotPassword(@RequestParam("email")String email) throws UnsupportedEncodingException, MessagingException {
         httpSession.setAttribute("emailUserForgot",email);
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        helper.setFrom("vuttph25379@fpt.edu.vn", "Shop Gens-z");
-        helper.setTo(email);
-
-        String subject = "Đây là liên kết để đặt lại mật khẩu của bạn";
-
-        String content = "<p>Xin Chào,<p>" +
-                "<p> Bạn đã yêu cầu đặt lại mật khẩu của mình.</p>" +
-                "<p> Nhấp vào liên kết bên dưới để thay đổi mật khẩu của bạn:</p>" +
-                "<p><b><a href=" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate" + ">" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate</a><b></p>" +
-                "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
-        helper.setSubject(subject);
-        helper.setText(content, true);
-
-        mailSender.send(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+        System.out.println();
+//        MimeMessage message = mailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message);
+//
+//        helper.setFrom("vuttph25379@fpt.edu.vn", "Shop Gens-z");
+//        helper.setTo(email);
+//
+//        String subject = "Đây là liên kết để đặt lại mật khẩu của bạn";
+//
+//        String content = "<p>Xin Chào,<p>" +
+//                "<p> Bạn đã yêu cầu đặt lại mật khẩu của mình.</p>" +
+//                "<p> Nhấp vào liên kết bên dưới để thay đổi mật khẩu của bạn:</p>" +
+//                "<p><b><a href=" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate" + ">" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate</a><b></p>" +
+//                "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
+//        helper.setSubject(subject);
+//        helper.setText(content, true);
+//
+//        mailSender.send(message);
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<String>builder()
                 .code(200)
                 .isOK(true)
-                .data(null)
+                .data((String) httpSession.getAttribute("emailUserForgot"))
                 .message("Send email successfully")
                 .build()
         );
@@ -145,16 +146,17 @@ public class AuthCustomer {
     public ResponseEntity<?> resetPassword(@RequestParam("password")String password){
         String email = (String) httpSession.getAttribute("emailUserForgot");
         KhachHang khachHang = khachHangService.findByEmail(email);
-        KhachHangRequest khachHangRequest =  KhachHangRequest.builder()
-                .id(khachHang.getId())
-                .hoTen(khachHang.getHoTen())
-                .email(khachHang.getEmail())
-                .matKhau(password)
-                .soDienThoai(khachHang.getSoDienThoai())
-                .ngaySinh(khachHang.getNgaySinh())
-                .trangThai(khachHang.getTrangThai())
-                .build();
-        khachHangService.update(khachHang.getId(),khachHangRequest);
+        System.out.println(khachHang);
+//        KhachHangRequest khachHangRequest =  KhachHangRequest.builder()
+//                .id(khachHang.getId())
+//                .hoTen(khachHang.getHoTen())
+//                .email(khachHang.getEmail())
+//                .matKhau(password)
+//                .soDienThoai(khachHang.getSoDienThoai())
+//                .ngaySinh(khachHang.getNgaySinh())
+//                .trangThai(khachHang.getTrangThai())
+//                .build();
+//        khachHangService.update(khachHang.getId(),khachHangRequest);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
                 .code(200)
                 .isOK(true)

@@ -64,9 +64,7 @@ public class SanPhamRestController {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-//        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-//            return ResponseEntity.ok("*page || pageSize phải là số");
-//        }
+
         return ResponseEntity.ok(
                 service.filter(
                         pricemin,
