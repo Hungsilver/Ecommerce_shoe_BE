@@ -141,6 +141,4 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.importExcel(importExcelCTSPS));
     }
 
-
-
 }
