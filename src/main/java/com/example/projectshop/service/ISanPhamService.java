@@ -12,6 +12,11 @@ public interface ISanPhamService {
 
 
     Page<SanPham> findAll(
+            String brand,
+            String origin,
+            String category,
+            String keyword,
+            Integer status,
             Integer page,
             Integer pageSize,
             String sortField,

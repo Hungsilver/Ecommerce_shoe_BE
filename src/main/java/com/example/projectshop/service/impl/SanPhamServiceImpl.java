@@ -46,12 +46,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
     ThuongHieuRepository thuongHieuRepository;
 
     @Autowired
-    private DanhMucRepository danhMucRepository;
-
-    @Autowired
-    private XuatXuRepository xuatXuRepository;
-
-    @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
     @Autowired
@@ -68,14 +62,38 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
 
     @Override
-    public Page<SanPham> findAll(Integer page,
-                                 Integer pageSize,
-                                 String sortField,
-                                 Boolean isSortDesc
+    public Page<SanPham> findAll( String brand,
+                                  String origin,
+                                  String category,
+                                  String keyword,
+                                  Integer status,
+                                  Integer page,
+                                  Integer pageSize,
+                                  String sortField,
+                                  Boolean isSortDesc
     ) {
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
-        return sanPhamrepo.findAll(pageable);
+
+        List<Integer> listThuongHieu = brand == null ? null : Arrays.stream(URLDecode.getDecode(brand).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> listXuatXu = origin == null ? null : Arrays.stream(URLDecode.getDecode(origin).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> listDanhMuc = origin == null ? null : Arrays.stream(URLDecode.getDecode(category).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        return sanPhamrepo.getAll(
+                listThuongHieu,
+                listXuatXu,
+                listDanhMuc,
+                keyword,
+                status,
+                pageable
+        );
     }
 
     @Override

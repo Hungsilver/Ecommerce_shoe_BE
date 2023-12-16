@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
@@ -44,6 +45,10 @@ public class GioHangRestController {
     private IChiTietSanPhamService ctspService;
     @Autowired
     private SessionManager sessionManager;
+    @Autowired
+    private HttpSession session;
+    @Autowired
+    private WebApplicationContext appContext;
 
     @GetMapping
     public ResponseEntity<?> loadGioHangChiTiet(@PageableDefault(size = 1) Pageable pageable) {
@@ -59,7 +64,8 @@ public class GioHangRestController {
             @RequestParam("id") Integer idctsp,
             @RequestParam("quantity") Integer sl
     ) {
-        System.out.println("session kh" + sessionManager.getUserLogin());
+        // lấy thông tin khách hàng đã đăng nhập
+        System.out.println("khachHang"+ appContext.getServletContext().getAttribute("khachHang"));
 //        HttpSession session = request.getSession(false);
 //        System.out.println(session);
 //        KhachHang kh = (KhachHang) session.getAttribute("khachHang");

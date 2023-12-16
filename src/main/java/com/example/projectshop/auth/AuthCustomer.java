@@ -1,29 +1,29 @@
 package com.example.projectshop.auth;
 
+import com.example.projectshop.config.SessionManager;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.dto.BaseResponse;
-import com.example.projectshop.config.SessionManager;
 import com.example.projectshop.dto.auth.LoginRequest;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.khachhang.LoginKhachHang;
-import com.example.projectshop.exception.UnauthorizedException;
 import com.example.projectshop.service.IKhachHangService;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.ApplicationScope;
-import org.springframework.web.context.annotation.SessionScope;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.UnsupportedEncodingException;
 
@@ -47,6 +47,10 @@ public class AuthCustomer {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private WebApplicationContext appContext;
+
 
     @PostMapping("/register")//localhost:8080/api/auth/customer/register
     // trả về chuỗi string đăng ký thành công hay thất bại
@@ -75,8 +79,9 @@ public class AuthCustomer {
                 .email(khachHang.getEmail())
                 .password(khachHang.getMatKhau())
                 .build();
-        sessionManager.setUserLogins(lg);
-        System.out.println("kh login" + khachHang);
+
+        appContext.getServletContext().setAttribute("khachHang",khachHang);// lưu thông tin khách hàng đăng nhập
+
 
         return ResponseEntity.status(HttpStatus.OK).body(base.createBaseResponse(HttpStatus.OK.value(), khachHang, true, "login thanh cong")); // đăng ký thành công trả về thông tin của khách hàng
     }
@@ -113,9 +118,9 @@ public class AuthCustomer {
     }
 
     @GetMapping("/forgot-password")//localhost:8080/api/auth/customer/forgot-password
-    public ResponseEntity<?> forgotPassword(@RequestParam("email")String email) throws UnsupportedEncodingException, MessagingException {
-        httpSession.setAttribute("emailUserForgot",email);
-        System.out.println();
+    public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
+        appContext.getServletContext().setAttribute("emailUserForgot",email);
+        System.out.println(appContext.getServletContext().getAttribute("emailUserForgot"));
 //        MimeMessage message = mailSender.createMimeMessage();
 //        MimeMessageHelper helper = new MimeMessageHelper(message);
 //
@@ -143,7 +148,7 @@ public class AuthCustomer {
     }
 
     @PostMapping("/reset-password")//localhost:8080/api/auth/customer/forgot-password
-    public ResponseEntity<?> resetPassword(@RequestParam("password")String password){
+    public ResponseEntity<?> resetPassword(@RequestParam("password") String password) {
         String email = (String) httpSession.getAttribute("emailUserForgot");
         KhachHang khachHang = khachHangService.findByEmail(email);
         System.out.println(khachHang);
