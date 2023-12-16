@@ -3,17 +3,9 @@ package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
-import com.example.projectshop.repository.ChatLieuDeGiayRepository;
-import com.example.projectshop.repository.SanPhamRepository;
 import com.example.projectshop.service.IAttributeSevice;
 import com.example.projectshop.service.ISanPhamService;
-import com.example.projectshop.service.impl.ExcelProductsService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,22 +18,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/api/product")
 public class SanPhamRestController {
 
-    @Autowired
-    private ExcelProductsService excelProductsService;
 
     @Autowired
-    private ISanPhamService service;
+    private ISanPhamService sanPhamService;
 
     @Autowired
     private IAttributeSevice attributeSevice;
@@ -50,15 +37,27 @@ public class SanPhamRestController {
 
     @GetMapping()//localhost:8080/api/product
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-            return ResponseEntity.ok("*page || pageSize phải là số");
-        }
-        return ResponseEntity.ok(service.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc));
+        return ResponseEntity.ok(sanPhamService.findAll(
+                brand,
+                origin,
+                category,
+                keyword,
+                status,
+                page,
+                pageSize,
+                sortField,
+                isSortDesc
+        ));
     }
 
     @GetMapping("/filter")//localhost:8080/api/product/filter
@@ -72,15 +71,13 @@ public class SanPhamRestController {
             @RequestParam(value = "shoe_material", required = false) String shoe_material,
             @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
             @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-            return ResponseEntity.ok("*page || pageSize phải là số");
-        }
         return ResponseEntity.ok(
-                service.filter(
+                sanPhamService.filter(
                         pricemin,
                         pricemax,
                         brand,
@@ -89,10 +86,11 @@ public class SanPhamRestController {
                         size,
                         shoe_material,
                         shoe_sole_material,
+                        status,
                         keyword,
                         isSortAsc,
-                        Integer.valueOf(page),
-                        Integer.valueOf(pageSize))
+                        page,
+                        pageSize)
         );
     }
 
@@ -101,12 +99,12 @@ public class SanPhamRestController {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
-        return ResponseEntity.ok(service.findById(Integer.valueOf(id)));
+        return ResponseEntity.ok(sanPhamService.findById(Integer.valueOf(id)));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
-        return ResponseEntity.ok(service.create(sanPhamRequest));
+        return ResponseEntity.ok(sanPhamService.create(sanPhamRequest));
     }
 
 
@@ -118,7 +116,7 @@ public class SanPhamRestController {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
-        return ResponseEntity.ok(service.update(Integer.valueOf(id), sanPhamRequest));
+        return ResponseEntity.ok(sanPhamService.update(Integer.valueOf(id), sanPhamRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product/1
@@ -126,7 +124,7 @@ public class SanPhamRestController {
         if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id sản phẩm phải là số");
         }
-        service.delete(Integer.valueOf(id));
+        sanPhamService.delete(Integer.valueOf(id));
         return ResponseEntity.ok().build();
     }
 
@@ -137,12 +135,12 @@ public class SanPhamRestController {
 
     @PostMapping("/excel/import")//localhost:8080/api/product/excel/import
     public ResponseEntity<?> ImportExcel(@RequestBody List<ImportExcelSanPham> importExcelSanPhams) {
-        return ResponseEntity.ok(service.importExcel(importExcelSanPhams));
+        return ResponseEntity.ok(sanPhamService.importExcel(importExcelSanPhams));
     }
 
     @GetMapping("/excel/export")//localhost:8080/api/product/excel/export
     public  ResponseEntity<?> exportExcel() {
-        return ResponseEntity.ok(service.exportExcel());
+        return ResponseEntity.ok(sanPhamService.exportExcel());
     }
 
 

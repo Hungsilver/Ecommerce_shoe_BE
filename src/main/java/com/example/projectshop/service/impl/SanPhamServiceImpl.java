@@ -46,12 +46,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
     ThuongHieuRepository thuongHieuRepository;
 
     @Autowired
-    private DanhMucRepository danhMucRepository;
-
-    @Autowired
-    private XuatXuRepository xuatXuRepository;
-
-    @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
     @Autowired
@@ -68,14 +62,38 @@ public class SanPhamServiceImpl implements ISanPhamService {
 
 
     @Override
-    public Page<SanPham> findAll(Integer page,
-                                 Integer pageSize,
-                                 String sortField,
-                                 Boolean isSortDesc
+    public Page<SanPham> findAll( String brand,
+                                  String origin,
+                                  String category,
+                                  String keyword,
+                                  Integer status,
+                                  Integer page,
+                                  Integer pageSize,
+                                  String sortField,
+                                  Boolean isSortDesc
     ) {
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
-        return sanPhamrepo.findAll(pageable);
+
+        List<Integer> listThuongHieu = brand == null ? null : Arrays.stream(URLDecode.getDecode(brand).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> listXuatXu = origin == null ? null : Arrays.stream(URLDecode.getDecode(origin).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        List<Integer> listDanhMuc = origin == null ? null : Arrays.stream(URLDecode.getDecode(category).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        return sanPhamrepo.getAll(
+                listThuongHieu,
+                listXuatXu,
+                listDanhMuc,
+                keyword,
+                status,
+                pageable
+        );
     }
 
     @Override
@@ -87,10 +105,12 @@ public class SanPhamServiceImpl implements ISanPhamService {
                                 String size,
                                 String shoe_material,
                                 String shoe_sole_material,
+                                Integer status,
                                 String keyword,
                                 Boolean isSortAsc,
                                 Integer page,
                                 Integer pageSize) {
+
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
 
 
@@ -132,6 +152,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 listChatLieuGiay,
                 listChatLieuDeGiay,
                 keyword,
+                status,
                 pageable);
         for (SanPham sanPham : listSanPham.getContent()) {
             List<ChiTietSanPham> chiTietSanPhamList = sanPham.getListChiTietSanPham();
@@ -143,7 +164,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 Collections.sort(chiTietSanPhamList, (ctsp1, ctsp2) -> ctsp2.getGiaBan().compareTo(ctsp1.getGiaBan()));
             }
         }
-
         return listSanPham;
     }
 
@@ -208,7 +228,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                         .moTa(x.getMoTa())
                         .ngayTao(Date.valueOf(curruntDate))
                         .ngayCapNhat(null)
-                        .trangThai(0)
+                        .trangThai(1)
                         .danhMuc(danhMuc)
                         .xuatXu(xuatxu)
                         .thuongHieu(thuongHieu)
@@ -226,7 +246,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                         .moTa(x.getMoTa())
                         .ngayTao(sanPham.getNgayTao())
                         .ngayCapNhat(Date.valueOf(curruntDate))
-                        .trangThai(0)
+                        .trangThai(1)
                         .danhMuc(danhMuc)
                         .xuatXu(xuatxu)
                         .thuongHieu(thuongHieu)
@@ -271,7 +291,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .moTa(sanPhamRequest.getMoTa())
                 .ngayTao(Date.valueOf(curruntDate))
                 .ngayCapNhat(null)
-                .trangThai(0)
+                .trangThai(1)
                 .thuongHieu(thuongHieuService.findById(sanPhamRequest.getThuongHieu()))
                 .danhMuc(danhMucSevice.findById(sanPhamRequest.getDanhMuc()))
                 .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))
@@ -291,7 +311,7 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .moTa(sanPhamRequest.getMoTa())
                 .ngayTao(sanPhamrepo.findById(id).get().getNgayTao())
                 .ngayCapNhat(Date.valueOf(curruntDate))
-                .trangThai(0)
+                .trangThai(sanPhamRequest.getTrangThai())
                 .thuongHieu(thuongHieuService.findById(sanPhamRequest.getThuongHieu()))
                 .danhMuc(danhMucSevice.findById(sanPhamRequest.getDanhMuc()))
                 .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))

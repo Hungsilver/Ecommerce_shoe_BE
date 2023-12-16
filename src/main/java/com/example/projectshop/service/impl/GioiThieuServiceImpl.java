@@ -95,7 +95,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                         .moTa(x.getMoTa())
                         .ngayTao(Date.valueOf(curruntDate))
                         .ngayXoa(null)
-                        .trangThai(0)
+                        .trangThai(1)
                         .nhanVien(nhanVienService.findByName(x.getNhanVien()))
                         .build();
                 gioiThieuRepo.save(gioiThieu1);
@@ -109,7 +109,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                         .moTa(x.getMoTa())
                         .ngayTao(gioiThieu.getNgayTao())
                         .ngayXoa(null)
-                        .trangThai(0)
+                        .trangThai(gioiThieu.getTrangThai())
                         .nhanVien(nhanVienService.findByName(x.getNhanVien()))
                         .build();
                 gioiThieuRepo.save(gioiThieu2);
@@ -151,7 +151,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                 .moTa(gioiThieuRequest.getMoTa())
                 .ngayTao(Date.valueOf(curruntDate))
                 .ngayXoa(null)
-                .trangThai(gioiThieuRequest.getTrangThai())
+                .trangThai(1)
 //                .nhanVien(nhanVienService.findById(gioiThieuRequest.getNhanVien()))
                 .build();
         return gioiThieuRepo.save(gioiThieu);

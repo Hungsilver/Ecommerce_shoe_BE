@@ -13,6 +13,11 @@ public interface ISanPhamService {
 
 
     Page<SanPham> findAll(
+            String brand,
+            String origin,
+            String category,
+            String keyword,
+            Integer status,
             Integer page,
             Integer pageSize,
             String sortField,
@@ -22,12 +27,13 @@ public interface ISanPhamService {
     Page<SanPham> filter(
             String priceMin,
             String priceMax,
-            String trademark,
+            String brand,
             String origin,
             String color,
             String size,
             String shoe_material,
             String shoe_sole_materal,
+            Integer status,
             String keyword,
             Boolean isSortAsc,
             Integer page,
