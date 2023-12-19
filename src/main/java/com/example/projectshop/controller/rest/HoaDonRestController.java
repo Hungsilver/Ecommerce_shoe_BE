@@ -178,10 +178,10 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/export/1
     @GetMapping("/export/{id}")
     public ResponseEntity<?> exportPDF(HttpServletResponse response,
-                                       @PathVariable("id") String id) throws IOException {
-        if (!id.matches(p_chu)) {
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
+                                       @PathVariable("id") Integer id) throws IOException {
+//        if (!id.matches(p_chu)) {
+//            return ResponseEntity.ok("*id hóa đơn phải là số");
+//        }
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
