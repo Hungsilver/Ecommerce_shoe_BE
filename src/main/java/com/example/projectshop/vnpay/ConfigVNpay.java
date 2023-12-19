@@ -17,7 +17,8 @@ import java.util.Random;
 
 public class ConfigVNpay {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/api/invoice/online/payment-callback";
+    public static String vnp_ReturnOnlineUrl = "http://localhost:8080/api/invoice/online/payment-callback";
+    public static String vnp_ReturnShopUrl = "http://localhost:8080/api/invoice/shop/payment-callback";
     public static String vnp_TmnCode = "9YN9S64M";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
