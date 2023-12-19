@@ -83,12 +83,32 @@ public class HoaDonRestController {
 
     // Thanh toán hóa đơn
     @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
-    public ResponseEntity<?> shopCheckout(@PathVariable("id") String idHoaDon,
-                                          @RequestBody HoaDonRequest hoaDonRequest) {
-        if (!idHoaDon.matches(p_chu)) {
-            return ResponseEntity.ok("*id hóa đơn phải là số");
+    public ResponseEntity<?> shopCheckout(@PathVariable("id") Integer idHoaDon,
+                                          @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+        if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
+            return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
+        } else {
+            return ResponseEntity.ok(hoaDonService.vnPayShopService(idHoaDon, hoaDonRequest));
         }
-        return ResponseEntity.ok(hoaDonService.shopPayments(Integer.valueOf(idHoaDon), hoaDonRequest));
+    }
+
+    //localhost:8080/api/invoice/shop/payment-callback
+    @GetMapping("/shop/payment-callback")
+    public void shopPaymentCallback(
+            @RequestParam(value = "vnp_ResponseCode") String responseCode,
+            @RequestParam(value = "vnp_TxnRef") String maHoaDon,
+            HttpServletResponse response)
+            throws IOException {
+
+        if (responseCode.equals("00") && maHoaDon != null) {
+            Integer id = hoaDonService.findByMa(maHoaDon).getId();
+            hoaDonService.updateStatus(id,1);
+            response.sendRedirect("http://localhost:4200/"); //đường dẫn trang quản lý đơn hàng của user bên angular
+            //vd: https://localhost:4200/user/...
+        } else {
+            response.sendRedirect("http://localhost:4200/");//đường dẫn trang thanh toán đơn hàng của user bên angular
+            //vd: https://localhost:4200/user/...
+        }
     }
 
 
@@ -130,7 +150,8 @@ public class HoaDonRestController {
     // thanh toán online
     //localhost:8080/api/invoice/online/payment
     @PostMapping("/online/payment")
-    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest,
+                                            HttpServletResponse response) throws IOException {
         if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
             return ResponseEntity.ok(hoaDonService.onlinePayment(hoaDonRequest));
         } else {
@@ -151,7 +172,7 @@ public class HoaDonRestController {
             hoaDonService.vnPayment(maHoaDon);
             response.sendRedirect("http://localhost:4200/"); //đường dẫn trang quản lý đơn hàng của user bên angular
             //vd: https://localhost:4200/user/...
-        }else{
+        } else {
             hoaDonService.delete(maHoaDon);
             response.sendRedirect("http://localhost:4200/");//đường dẫn trang thanh toán đơn hàng của user bên angular
             //vd: https://localhost:4200/user/...
