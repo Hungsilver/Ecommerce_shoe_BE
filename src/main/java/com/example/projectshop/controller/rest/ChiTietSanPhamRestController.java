@@ -57,15 +57,17 @@ public class ChiTietSanPhamRestController {
             @RequestParam(value = "pricemin", required = false) String pricemin,
             @RequestParam(value = "pricemax", required = false) String pricemax,
             @RequestParam(value = "color", required = false) String color,
-            @RequestParam(value = "shoe-material", required = false) String shoe_material,
-            @RequestParam(value = "shoe-sole-material", required = false) String shoe_sole_material,
+            @RequestParam(value = "size", required = false) String size,
+            @RequestParam(value = "shoe_material", required = false) String shoe_material,
+            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "product", required = false) Integer product,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortDesc, sortField, page, pageSize));
+        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color,size, shoe_material, shoe_sole_material,product, keyword, isSortAsc, sortField, page, pageSize));
     }
 
     @GetMapping("{id}")//localhost:8080/api/product-detail/1

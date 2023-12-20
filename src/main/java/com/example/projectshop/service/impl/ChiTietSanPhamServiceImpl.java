@@ -81,17 +81,19 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
 
     @Override
-    public Page<ChiTietSanPham> filter(String priceMin,
-                                       String priceMax,
-                                       String color,
-                                       String shoe_material,
-                                       String shoe_sole_material,
-                                       String keyword,
-                                       Boolean isSortDesc,
-                                       String sortField,
-                                       Integer page,
-                                       Integer pageSize) {
-        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+    public Page<ChiTietSanPham> filter( String priceMin,
+                                               String priceMax,
+                                               String color,
+                                               String size,
+                                               String shoe_material,
+                                               String shoe_sole_material,
+                                               Integer product,
+                                               String keyword,
+                                               Boolean isSortAsc,
+                                               String sortField,
+                                               Integer page,
+                                               Integer pageSize) {
+        Sort sort = Sort.by(isSortAsc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
 
         BigDecimal priceMinOutput = priceMin == null ? BigDecimal.valueOf(0) : BigDecimal.valueOf(Long.valueOf(priceMin));
@@ -109,12 +111,18 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                 .map(Integer::valueOf)
                 .collect(Collectors.toList());
 
-        return chiTietSanPhamRepo.getAllByParam(
+        List<Integer> listKichCo = size == null ? null : Arrays.stream(URLDecode.getDecode(size).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+
+        return chiTietSanPhamRepo.filter(
                 priceMinOutput,
                 priceMaxOutput,
                 listMauSac,
+                listKichCo,
                 listChatLieuGiay,
                 listChatLieuDeGiay,
+                product,
                 keyword,
                 pageable);
     }

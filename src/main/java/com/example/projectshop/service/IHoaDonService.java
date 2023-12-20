@@ -23,7 +23,9 @@ public interface IHoaDonService {
 
     HoaDon findByMa(String ma);
 
-    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
+    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
+
+    String vnPayShopService(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
 
     HoaDon shopCreateInvoice(Integer idNhanVien);
 

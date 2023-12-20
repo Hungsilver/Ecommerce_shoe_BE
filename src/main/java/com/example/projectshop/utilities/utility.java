@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Random;
 
 public class utility {
 
@@ -121,6 +122,26 @@ public class utility {
             trangThai = null;
         }
         return trangThai;
+    }
+
+    public static String generateRandomString(Integer n) {
+        // Tạo mảng chứa tất cả các chữ cái trong bảng chữ cái
+        String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+        // Tạo đối tượng Random
+        Random random = new Random();
+
+        // Tạo chuỗi chứa 6 chữ cái ngẫu nhiên
+        String randomString = "";
+        for (int i = 0; i < n; i++) {
+            // Lấy ngẫu nhiên một chữ cái từ mảng alphabet
+            char randomCharacter = alphabet.charAt(random.nextInt(alphabet.length()));
+
+            // Thêm chữ cái đó vào chuỗi
+            randomString += randomCharacter;
+        }
+
+        return randomString;
     }
 
 }
