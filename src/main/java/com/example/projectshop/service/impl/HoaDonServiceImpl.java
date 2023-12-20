@@ -361,7 +361,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
                     .diaChi(hoaDonRequest.getDiaChi())
                     .phuongXa(hoaDonRequest.getPhuongXa())
                     .quanHuyen(hoaDonRequest.getQuanHuyen())
-                    .tinhThanh(hoaDonRequest.getTinhThanh())
+                     .tinhThanh(hoaDonRequest.getTinhThanh())
                     .ngayTao(Date.valueOf(curruntDate))
                     .ngayCapNhat(null)
                     .tongTien(new BigDecimal(hoaDonRequest.getTongTien()))
