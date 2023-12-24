@@ -18,9 +18,12 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @Service
 public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
@@ -190,13 +193,14 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
     @Override
     public PhieuGiamGia create(PhieuGiamGiaRequest phieuGiamGiaRequest) {
         String ma = "PGG" + phieuGiamGiaRepository.findAll().size() + 1;
+        System.out.println("ket thuc:"+phieuGiamGiaRequest.getThoiGianKetThuc());
         PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                 .id(null)
                 .ma(ma)
                 .ten(phieuGiamGiaRequest.getTen())
                 .chietKhau(phieuGiamGiaRequest.getChietKhau())
                 .hinhThucGiamGia(phieuGiamGiaRequest.getHinhThucGiamGia())
-                .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
+                .thoiGianBatDau(Date.valueOf(curruntDate))
                 .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
                 .moTa(phieuGiamGiaRequest.getMoTa())
                 .trangThai(1)
