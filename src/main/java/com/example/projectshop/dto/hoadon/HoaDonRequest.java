@@ -22,7 +22,6 @@ public class HoaDonRequest {
     private String tongTienSauGiam;
     private String phiVanChuyen;
     private Integer phuongThucThanhToan;
-    private String bankCode;
     private Integer trangThai;
     private Integer phieuGiamGia;
     private Integer khachHang;

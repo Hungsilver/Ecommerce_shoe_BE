@@ -98,5 +98,4 @@ public class HoaDon {
     @OneToMany(mappedBy = "hoaDon")
     private List<HoaDonChiTiet> listHoaDonChiTiet;
 
-
 }

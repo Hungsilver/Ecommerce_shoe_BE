@@ -1,14 +1,13 @@
 package com.example.projectshop.auth;
 
-import com.example.projectshop.config.SessionManager;
-import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.dto.BaseResponse;
-import com.example.projectshop.dto.auth.LoginRequest;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.khachhang.LoginKhachHang;
 import com.example.projectshop.service.IKhachHangService;
+import com.example.projectshop.utilities.utility;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,17 +40,15 @@ public class AuthCustomer {
 
     BaseResponse<KhachHang> base = new BaseResponse<>();
 
-    @Autowired
-    private HttpSession httpSession;
-
-    @Autowired
-    private SessionManager sessionManager;
 
     @Autowired
     private JavaMailSender mailSender;
 
     @Autowired
     private WebApplicationContext appContext;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @PostMapping("/register")//localhost:8080/api/auth/customer/register
@@ -75,15 +74,17 @@ public class AuthCustomer {
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(base.createBaseResponse(HttpStatus.UNAUTHORIZED.value(), null, false, "Tài khoản hoặc mật khẩu không chính xác"));
         }
-        LoginRequest lg = LoginRequest.builder()
-                .email(khachHang.getEmail())
-                .password(khachHang.getMatKhau())
-                .build();
 
-        appContext.getServletContext().setAttribute("khachHang",khachHang);// lưu thông tin khách hàng đăng nhập
+        appContext.getServletContext().setAttribute("khachHang", khachHang);// lưu thông tin khách hàng đăng nhập
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(base.createBaseResponse(HttpStatus.OK.value(), khachHang, true, "login thanh cong")); // đăng ký thành công trả về thông tin của khách hàng
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponse.<Object>builder()
+                .code(200)
+                .isOK(false)
+                .data(appContext.getServletContext().getAttribute("khachHang"))
+                .message("Login successfully")
+                .build()
+        );// đăng nhập thành công trả về thông tin của khách hàng
     }
 
     @GetMapping("/check-login-status")//localhost:8080/api/auth/customer/check-login-status
@@ -117,58 +118,53 @@ public class AuthCustomer {
         }
     }
 
-    @GetMapping("/forgot-password")//localhost:8080/api/auth/customer/forgot-password
+    @PostMapping("/forgot-password")//localhost:8080/api/auth/customer/forgot-password
     public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
-        appContext.getServletContext().setAttribute("emailUserForgot",email);
-        System.out.println(appContext.getServletContext().getAttribute("emailUserForgot"));
-//        MimeMessage message = mailSender.createMimeMessage();
-//        MimeMessageHelper helper = new MimeMessageHelper(message);
-//
-//        helper.setFrom("vuttph25379@fpt.edu.vn", "Shop Gens-z");
-//        helper.setTo(email);
-//
-//        String subject = "Đây là liên kết để đặt lại mật khẩu của bạn";
-//
-//        String content = "<p>Xin Chào,<p>" +
-//                "<p> Bạn đã yêu cầu đặt lại mật khẩu của mình.</p>" +
-//                "<p> Nhấp vào liên kết bên dưới để thay đổi mật khẩu của bạn:</p>" +
-//                "<p><b><a href=" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate" + ">" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate</a><b></p>" +
-//                "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
-//        helper.setSubject(subject);
-//        helper.setText(content, true);
-//
-//        mailSender.send(message);
+        KhachHang khachHang = khachHangService.findByEmail(email);
+        if (khachHang == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponse.<String>builder()
+                    .code(500)
+                    .isOK(false)
+                    .data(email)
+                    .message("Email not found")
+                    .build()
+            );
+        }
+
+        String password = utility.generateRandomString(6);
+        KhachHangRequest khachHangRequest = KhachHangRequest.builder()
+                .id(khachHang.getId())
+                .hoTen(khachHang.getHoTen())
+                .email(khachHang.getEmail())
+                .matKhau(passwordEncoder.encode(password))
+                .soDienThoai(khachHang.getSoDienThoai())
+                .ngaySinh(khachHang.getNgaySinh())
+                .trangThai(khachHang.getTrangThai())
+                .build();
+        khachHangService.update(khachHang.getId(), khachHangRequest);
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom("vuttph25379@fpt.edu.vn", "Shop Gens-z");
+        helper.setTo(email);
+
+        String subject = "Shop GENS-Z - Đây là mật khẩu của bạn";
+
+        String content = "<p>Xin Chào,<p>" +
+                "<p> Bạn đã yêu cầu lấy lại mật khẩu của mình.</p>" +
+                "<p> Đây là mật khẩu của bạn: " + password + "</p>" +
+                "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
+        helper.setSubject(subject);
+        helper.setText(content, true);
+
+        mailSender.send(message);
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<String>builder()
                 .code(200)
                 .isOK(true)
-                .data((String) httpSession.getAttribute("emailUserForgot"))
+                .data(null)
                 .message("Send email successfully")
                 .build()
         );
-    }
-
-    @PostMapping("/reset-password")//localhost:8080/api/auth/customer/forgot-password
-    public ResponseEntity<?> resetPassword(@RequestParam("password") String password) {
-        String email = (String) httpSession.getAttribute("emailUserForgot");
-        KhachHang khachHang = khachHangService.findByEmail(email);
-        System.out.println(khachHang);
-//        KhachHangRequest khachHangRequest =  KhachHangRequest.builder()
-//                .id(khachHang.getId())
-//                .hoTen(khachHang.getHoTen())
-//                .email(khachHang.getEmail())
-//                .matKhau(password)
-//                .soDienThoai(khachHang.getSoDienThoai())
-//                .ngaySinh(khachHang.getNgaySinh())
-//                .trangThai(khachHang.getTrangThai())
-//                .build();
-//        khachHangService.update(khachHang.getId(),khachHangRequest);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
-                .code(200)
-                .isOK(true)
-                .data(null)
-                .message("Reset password successfully")
-                .build()
-        );
-
     }
 }

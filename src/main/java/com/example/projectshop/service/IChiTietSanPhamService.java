@@ -23,8 +23,10 @@ public interface IChiTietSanPhamService {
             String priceMin,
             String priceMax,
             String color,
+            String size,
             String shoe_material,
             String shoe_sole_material,
+            Integer product,
             String keyword,
             Boolean isSortAsc,
             String sortField,
@@ -50,5 +52,5 @@ public interface IChiTietSanPhamService {
 
     ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
 
-    public ChiTietSanPham findByMa_ProductDetail(String ma);
+    public ChiTietSanPham findByMa_ProductDetail(String ma, Integer trangThais);
 }

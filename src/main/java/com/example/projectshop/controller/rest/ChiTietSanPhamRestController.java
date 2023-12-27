@@ -7,19 +7,12 @@ import com.example.projectshop.service.IChiTietSanPhamService;
 import com.google.zxing.WriterException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -57,15 +50,17 @@ public class ChiTietSanPhamRestController {
             @RequestParam(value = "pricemin", required = false) String pricemin,
             @RequestParam(value = "pricemax", required = false) String pricemax,
             @RequestParam(value = "color", required = false) String color,
-            @RequestParam(value = "shoe-material", required = false) String shoe_material,
-            @RequestParam(value = "shoe-sole-material", required = false) String shoe_sole_material,
+            @RequestParam(value = "size", required = false) String size,
+            @RequestParam(value = "shoe_material", required = false) String shoe_material,
+            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "product", required = false) Integer product,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
+            @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color, shoe_material, shoe_sole_material, keyword, isSortDesc, sortField, page, pageSize));
+        return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color,size, shoe_material, shoe_sole_material,product, keyword, isSortAsc, sortField, page, pageSize));
     }
 
     @GetMapping("{id}")//localhost:8080/api/product-detail/1
@@ -78,12 +73,21 @@ public class ChiTietSanPhamRestController {
 
     @GetMapping("/code/{ma}")//localhost:8080/api/product-detail/code/abc
     public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
-        return ResponseEntity.ok(chiTietSanPhamService.findByMa(ma));
+        return ResponseEntity.ok(chiTietSanPhamService.findByMa_ProductDetail(ma,1));
     }
 
     @GetMapping("/findByMa")
     public ResponseEntity<?> findByMa1(@RequestParam String ma) {
-        return ResponseEntity.ok(chiTietSanPhamService.findByMa_ProductDetail(ma));
+//        return ResponseEntity.ok(chiTietSanPhamService.findByMa_ProductDetail(ma));
+        if (ma==null){
+            return ResponseEntity.notFound().build();
+        }
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findByMa_ProductDetail(ma,1);
+        if (chiTietSanPham != null) {
+            return ResponseEntity.ok(chiTietSanPham);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/id-product/{idSanPham}")//localhost:8080/api/product-detail/id-product/1

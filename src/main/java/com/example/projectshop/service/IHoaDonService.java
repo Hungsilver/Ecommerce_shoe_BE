@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 public interface IHoaDonService {
 
@@ -23,7 +24,9 @@ public interface IHoaDonService {
 
     HoaDon findByMa(String ma);
 
-    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest);
+    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
+
+    String vnPayShopService(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
 
     HoaDon shopCreateInvoice(Integer idNhanVien);
 
@@ -48,4 +51,6 @@ public interface IHoaDonService {
     void exportPDF(HttpServletResponse response, Integer id) throws IOException;
 
     HoaDon CreateInvoice();
+
+    Optional<HoaDon> findByInvoiceNew();
 }
