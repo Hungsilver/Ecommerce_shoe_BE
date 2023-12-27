@@ -58,7 +58,6 @@ public class PhieuGiamGia {
     @Column(name = "trangthai")
     private Integer trangThai;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "phieuGiamGia")
     private List<HoaDon> listHoaDon;

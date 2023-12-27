@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class HoaDonRequest {
     private Integer id;
+    private String maHoaDon;
     private String tenKhachHang;
     private String soDienThoai;
     private String diaChi;

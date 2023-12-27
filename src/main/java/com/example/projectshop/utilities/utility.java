@@ -75,7 +75,8 @@ public class utility {
             trangThai = "Đã hủy";
         } else if (input == 7) {
             trangThai = "Trả hàng";
-        } else {
+        }
+        else {
             trangThai = null;
         }
         return trangThai;
@@ -100,9 +101,9 @@ public class utility {
         if(input == null){
             trangThai = null;
         }
-        else if (input == 0) {
+        else if (input == 1) {
             trangThai = "Hoạt Động";
-        } else if (input == 1) {
+        } else if (input == 0) {
             trangThai = "Không Hoạt Động";
         } else {
             trangThai = null;

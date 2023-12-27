@@ -109,7 +109,6 @@ public class AuthCustomer {
         }
     }
 
-
     @GetMapping("/checkSession")//localhost:8080/api/auth/customer/checkSession
     public ResponseEntity<String> checkSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
