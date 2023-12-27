@@ -5,6 +5,7 @@ import com.example.projectshop.config.SessionManager;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
+import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.service.IChiTietSanPhamService;
 import com.example.projectshop.service.IGioHangCTService;
 import com.example.projectshop.service.IGioHangService;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,84 +63,71 @@ public class GioHangRestController {
     // them san pham vao gio hang online
     @GetMapping("/addToCart") //http://localhost:8080/api/cart-detail/addToCart/?id=...&quality=soluongthem
     public ResponseEntity<?> addToCart(
-            @RequestParam("id") Integer idctsp,
-            @RequestParam("quantity") Integer sl
+            @RequestParam(value = "id", required = false) String idctsp,
+            @RequestParam(value = "quantity", required = false) String sl
     ) {
-        // lấy thông tin khách hàng đã đăng nhập
-        System.out.println("khachHang"+ appContext.getServletContext().getAttribute("khachHang"));
-//        HttpSession session = request.getSession(false);
-//        System.out.println(session);
-//        KhachHang kh = (KhachHang) session.getAttribute("khachHang");
-//        System.out.println("kh cart" + kh.getEmail());
-        return null;
-//        try {
-//        KhachHang kh1 = khachHangService.findById(1);
-//        if(kh1 ==null){
-//            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
-//                                                                     .code(200)
-//                                                                     .isOK(true)
-//                                                                     .data(null)
-//                                                                     .message("Khach hang trong")
-//                                                                     .build()
-//            );
-//        }
-//            if (kh != null) {
-//                if (kh != null && idctsp != null) {
-//                    GioHangChiTiet gh = iGioHangCTService.onlineCart(kh, idctsp, sl);
-//                    return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
-//                                                                             .code(200)
-//                                                                             .isOK(true)
-//                                                                             .data(gh)
-//                                                                             .message("Thêm thành công")
-//                                                                             .build()
-//                    );
-//                } else {
-//                    return ResponseEntity.ok("thah cong");
-//                }
-//
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
-//                                                                                  .code(400)
-//                                                                                  .isOK(false)
-//                                                                                  .data(null)
-//                                                                                  .message("Không tìm thấy khách hàng")
-//                                                                                  .build()
-//                );
-//            }
-//        } catch (Exception e) {
-//            System.out.println("chua login");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("khach hang chua login");
-//        }
 
+        // lấy thông tin khách hàng đã đăng nhập
+        KhachHang kh1 = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+        if (kh1 == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+                    .code(400)
+                    .isOK(false)
+                    .data(null)
+                    .message("Không tìm thấy khách hàng")
+                    .build()
+            );
+        } else if (kh1 != null && !idctsp.isEmpty()) {
+            GioHangChiTiet gh = iGioHangCTService.onlineCart(kh1, Integer.valueOf(idctsp), Integer.valueOf(sl));
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
+                    .code(200)
+                    .isOK(true)
+                    .data(gh)
+                    .message("Thêm thành công")
+                    .build()
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<GioHangChiTiet>builder()
+                    .code(200)
+                    .isOK(true)
+                    .data(null)
+                    .message("fgdfgfdgdfgdfg")
+                    .build()
+            );
+        }
     }
 
     // xoa theo id cua chi tiet san pham
-    @DeleteMapping("/remove/{id}") //http://localhost:8080/api/cart-detail/remove/idctsp
-    public ResponseEntity<?> remove(HttpServletRequest request, @PathVariable("id") Integer idctsp) {
-        System.out.println("khach hang " + kh);
-        HttpSession session = request.getSession();
-        kh = (KhachHang) session.getAttribute("khachHang");
-        if (kh != null && idctsp != null) {
-            iGioHangCTService.remove(kh, idctsp);
-
+    @DeleteMapping("/remove") //http://localhost:8080/api/cart-detail/remove
+    public ResponseEntity<?> remove(@RequestParam(value = "listIdGhct", required = false) String listIdGhct) {
+        KhachHang khload = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+        System.out.println(listIdGhct);
+        if (khload != null && listIdGhct != null) {
+            iGioHangCTService.remove(khload, listIdGhct);
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
+                    .code(200)
+                    .isOK(true)
+                    .data(null)
+                    .message("ok")
+                    .build());
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponse.<Object>builder()
+                .code(500)
+                .isOK(false)
+                .data(null)
+                .message("Không xóa được")
+                .build());
 
-        return ResponseEntity.ok("xoa thanh cong");
     }
 
-
-    KhachHang khload;
 
     // load gio hang chi tiet  cua khach hang trong session
     // anh em dang nhap truoc moi load gio hang nhe
     // dang nhap ở hàm loginkhachhang trong khachhangRestController
     // dang nhap xong thì chạy đoạn code này trước để có thể giảm hoặc tăng số lượng được
     @GetMapping("/ofcart")  //http://localhost:8080/api/cart-detail/ofcart
-    public ResponseEntity<?> getGHCTByGiohangID(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-
-        khload = (KhachHang) session.getAttribute("khachHang");
-
+    public ResponseEntity<?> getGHCTByGiohangID() {
+        KhachHang khload = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
         if (khload != null) {
             GioHang gh = khload.getGiohang();
             List<GioHangChiTiet> dsgh = iGioHangCTService.GetGioHangCTByIdGioHang(gh.getId());
@@ -149,12 +138,25 @@ public class GioHangRestController {
 
     }
 
+    @GetMapping("/findById")  //http://localhost:8080/api/cart-detail/ofcart
+    public ResponseEntity<?> findById(@RequestParam(value = "listIdGhct", required = false) String listIdGhct) {
+        return ResponseEntity.ok(iGioHangCTService.findById(listIdGhct));
+    }
+
+    @GetMapping("/update/quantity")  //http://localhost:8080/api/cart-detail//update/quantity
+    public ResponseEntity<?> updateQuantity(@RequestParam(value = "id", required = false) Integer id,
+                                            @RequestParam(value = "quantity", required = false) Integer soLuong) {
+        return ResponseEntity.ok(iGioHangCTService.updateQuantity(id, soLuong));
+    }
+
     // luu y khi su dung
     // phai load giở hàng trước mới cộng trừ được
     // tăng số lượng lên +1 sản phẩm trong giỏ
     @PutMapping("/increase/{id}") //http://localhost:8080/api/cart-detail/increase/id
     public ResponseEntity<?> increase(HttpServletRequest request,
                                       @PathVariable("id") Integer id) {
+        KhachHang khload = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+
         try {
 //        HttpSession session = request.getSession();
 //        khload = (KhachHang) session.getAttribute("khachHang");
@@ -176,6 +178,8 @@ public class GioHangRestController {
                                     @PathVariable("id") Integer id) {
 //        HttpSession session = request.getSession();
 //        kh = (KhachHang) session.getAttribute("khachHang");
+        KhachHang khload = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+
         try {
             if (khload != null) {
                 iGioHangCTService.reduce(khload, id);

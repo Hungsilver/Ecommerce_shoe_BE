@@ -78,6 +78,11 @@ public class ChiTietSanPhamRestController {
         return ResponseEntity.ok(chiTietSanPhamService.findById(Integer.valueOf(id)));
     }
 
+    @GetMapping("/pricemax")//localhost:8080/api/product-detail/pricemax
+    public ResponseEntity<?> getTop1ByPrice() {
+        return ResponseEntity.ok(chiTietSanPhamService.getTop1ByPrice());
+    }
+
     @GetMapping("/code/{ma}")//localhost:8080/api/product-detail/code/abc
     public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
         return ResponseEntity.ok(chiTietSanPhamService.findByMa(ma));

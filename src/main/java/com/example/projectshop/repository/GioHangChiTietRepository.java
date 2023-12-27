@@ -23,4 +23,5 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet,I
     @Query("SELECT ghct FROM GioHangChiTiet ghct WHERE ghct.gioHang.id = :idGH and ghct.chiTietSanPham.id = :idCTSP")
     GioHangChiTiet findByIdGioHangAndIdCTSP(@Param("idGH")Integer idGh,@Param("idCTSP")Integer idCTSP);
 
+
 }
