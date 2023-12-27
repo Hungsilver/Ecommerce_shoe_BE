@@ -30,7 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
-@CrossOrigin(value = "*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/cart-detail")
 public class GioHangRestController {

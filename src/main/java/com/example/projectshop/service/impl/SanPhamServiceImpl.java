@@ -298,7 +298,6 @@ public class SanPhamServiceImpl implements ISanPhamService {
                 .xuatXu(xuatXuService.findById(sanPhamRequest.getXuatXu()))
                 .build();
         return sanPhamrepo.save(sanPham);
-
     }
 
     @Override

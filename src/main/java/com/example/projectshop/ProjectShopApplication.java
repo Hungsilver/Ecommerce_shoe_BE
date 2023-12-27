@@ -33,6 +33,9 @@ public class ProjectShopApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ProjectShopApplication.class, args);
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        System.out.println(passwordEncoder.encode("2003"));
+
     }
 
     //    @Autowired
@@ -52,4 +55,6 @@ public class ProjectShopApplication {
 //        nv.setMatKhau(bCryptPasswordEncoder.encode("admin@123"));
 //        khRepo.save(nv);
 //    }
+
+
 }

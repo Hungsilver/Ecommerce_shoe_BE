@@ -362,4 +362,8 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         return null;
     }
 
+    @Override
+    public ChiTietSanPham findByMa_ProductDetail(String ma,Integer trangThai) {
+        return chiTietSanPhamRepo.findByMa1(ma,trangThai).get();
+    }
 }

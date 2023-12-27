@@ -53,7 +53,9 @@ public class PhieuGiamGia {
 
     @Column(name = "trangthai")
     private Integer trangThai;
-// ba trang thai :  dang dien ra, het han
+
+// ba trang thai : sap dien ra, dang dien ra, het han
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "phieuGiamGia")
