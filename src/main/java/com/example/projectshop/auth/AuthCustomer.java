@@ -78,13 +78,25 @@ public class AuthCustomer {
         appContext.getServletContext().setAttribute("khachHang", khachHang);// lưu thông tin khách hàng đăng nhập
 
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponse.<Object>builder()
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
                 .code(200)
                 .isOK(false)
                 .data(appContext.getServletContext().getAttribute("khachHang"))
                 .message("Login successfully")
                 .build()
         );// đăng nhập thành công trả về thông tin của khách hàng
+    }
+
+    @GetMapping("/logout")//localhost:8080/api/auth/customer/check-login-status
+    public ResponseEntity<?> logout() {
+        appContext.getServletContext().removeAttribute("khachHang");
+        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
+                .code(200)
+                .isOK(false)
+                .data(appContext.getServletContext().getAttribute("khachHang"))
+                .message("Login successfully")
+                .build()
+        );
     }
 
     @GetMapping("/check-login-status")//localhost:8080/api/auth/customer/check-login-status

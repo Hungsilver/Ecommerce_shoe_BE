@@ -112,7 +112,8 @@ public class SanPhamServiceImpl implements ISanPhamService {
                                 Integer pageSize) {
 
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize);
-
+        System.out.println(priceMin);
+        System.out.println(priceMax);
 
         BigDecimal priceMinOutput = priceMin == null ? BigDecimal.valueOf(0) : BigDecimal.valueOf(Long.valueOf(priceMin));
         BigDecimal priceMaxOutput = priceMax == null ? chiTietSanPhamRepo.getTop1ByPriceMax().getGiaBan() : BigDecimal.valueOf(Long.valueOf(priceMax));

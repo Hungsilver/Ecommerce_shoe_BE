@@ -138,6 +138,11 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     }
 
     @Override
+    public ChiTietSanPham getTop1ByPrice() {
+        return chiTietSanPhamRepo.getTop1ByPriceMax();
+    }
+
+    @Override
     public ChiTietSanPham findByMa(String ma) {
         Optional<ChiTietSanPham> chiTietSanPham = chiTietSanPhamRepo.findByMa(ma);
         if (chiTietSanPham.isPresent()) {

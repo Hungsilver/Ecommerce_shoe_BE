@@ -4,21 +4,21 @@ import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.KhachHang;
-import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.repository.GioHangChiTietRepository;
 import com.example.projectshop.repository.GioHangRepository;
 import com.example.projectshop.service.IGioHangCTService;
-import com.example.projectshop.service.ObjectMapperUtils;
-import jakarta.transaction.Transactional;
+import com.example.projectshop.utilities.URLDecode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GioHangCTServiceImpl implements IGioHangCTService {
@@ -48,33 +48,25 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
 
     @Override
     public GioHangChiTiet onlineCart(KhachHang kh, Integer idctsp, int soluong) {
-        gh = kh.getGiohang();
-        ChiTietSanPham ctsp = chiTietSanPhamRepository.findById(idctsp).orElse(null);
-        List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
-        for (GioHangChiTiet x : list) {
-            if (x.getChiTietSanPham().getId().equals(ctsp.getId())) {
-                System.out.println("chay vao if");
-                x.setSoLuong(x.getSoLuong() + soluong);
-                BigDecimal giamoi = x.getGiaBan().multiply(new BigDecimal(soluong));
-                x.setGiaBan(giamoi);
-                gioHangChiTietRepository.save(x);
 
-                return x;
-            }
+        GioHang gioHang = kh.getGiohang();
+        ChiTietSanPham ctsp = chiTietSanPhamRepository.findById(idctsp).get();
+        // Truong hop da có sản phẩm trong giohangchitiet
+        GioHangChiTiet gioHangChiTiet1 = gioHangChiTietRepository.findByIdGioHangAndIdCTSP(gioHang.getId(), idctsp);
+        if (gioHangChiTiet1 != null) {
+            gioHangChiTiet1.setGiaBan(ctsp.getGiaBan());
+            gioHangChiTiet1.setSoLuong(soluong+gioHangChiTiet1.getSoLuong());
+            return gioHangChiTietRepository.save(gioHangChiTiet1);
         }
-        // Truong Hop chua co SP trong ghct(Da co GioHang)
 
-        System.out.println(" truong hop tao ghct");
-        GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
-        gioHangChiTiet.setChiTietSanPham(ctsp);
-        gioHangChiTiet.setGioHang(gh);
-        gioHangChiTiet.setSoLuong(soluong);
-        BigDecimal dongia = ctsp.getGiaBan().multiply(new BigDecimal(soluong));
-        gioHangChiTiet.setGiaBan(dongia);
-        GioHangChiTiet sanphammoi = gioHangChiTietRepository.save(gioHangChiTiet);
-
-
-        return sanphammoi;
+        GioHangChiTiet gioHangChiTiet = GioHangChiTiet.builder()
+                .id(null)
+                .soLuong(soluong)
+                .giaBan(ctsp.getGiaBan())
+                .chiTietSanPham(ctsp)
+                .gioHang(gioHang)
+                .build();
+        return gioHangChiTietRepository.save(gioHangChiTiet);
     }
 
     @Override
@@ -84,22 +76,41 @@ public class GioHangCTServiceImpl implements IGioHangCTService {
     }
 
     @Override
+    public List<GioHangChiTiet> findById(String listIdGhct) {
+        List<GioHangChiTiet> list = new ArrayList<>();
+        List<Integer> listId = listIdGhct == null ? null : Arrays.stream(URLDecode.getDecode(listIdGhct).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        for (Integer x : listId) {
+            list.add(gioHangChiTietRepository.findById(x).get());
+        }
+        return list;
+    }
+
+    @Override
     public GioHangChiTiet update(GioHangChiTiet gioHangChiTiet) {
 
         return gioHangChiTietRepository.save(gioHangChiTiet);
     }
 
+    @Override
+    public GioHangChiTiet updateQuantity(Integer id, Integer soLuong) {
+        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.findById(id).get();
+        gioHangChiTiet.setSoLuong(soLuong);
+        gioHangChiTiet.setGiaBan(gioHangChiTiet.getChiTietSanPham().getGiaBan());
+        return gioHangChiTietRepository.save(gioHangChiTiet);
+    }
+
 
     @Override
-    public void remove(KhachHang kh, Integer id) {
+    public void remove(KhachHang kh, String listIdGhct) {
         GioHang gh = kh.getGiohang();
-        System.out.println("gio hang sevice" + gh);
-        List<GioHangChiTiet> list = gioHangChiTietRepository.findGioHangChiTietByGioHangId(gh.getId());
-        for (GioHangChiTiet x : list) {
-            if (x.getChiTietSanPham().getId().equals(id)) {
-                gioHangChiTietRepository.deleteById(x.getId());
-                break;
-            }
+        List<Integer> listId = listIdGhct == null ? null : Arrays.stream(URLDecode.getDecode(listIdGhct).split(","))
+                .map(Integer::valueOf)
+                .collect(Collectors.toList());
+        for (Integer x : listId) {
+            GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.findById(x).get();
+            gioHangChiTietRepository.delete(gioHangChiTiet);
         }
 
 
