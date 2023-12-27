@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,6 +34,23 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
 
     // lấy ra ngày hiện tại
     private LocalDate curruntDate = LocalDate.now();
+
+
+    // update thoi gian bat dau
+//    @Scheduled(fixedRate = 20000,initialDelay = 10000) // sau 20s
+//    @Scheduled(cron = "0 */10 * * * ?") // 10m chay 1 lan
+//    public void UpdateVoucherStatus(){
+//        List<PhieuGiamGia> phieuGiamGiaList = phieuGiamGiaRepository.findAll();
+//        for (PhieuGiamGia x:phieuGiamGiaList) {
+//            if (x.getThoiGianBatDau().before(Date.valueOf(curruntDate))){
+//              continue;
+//            } else if (x.getThoiGianBatDau().equals(curruntDate)){
+//                x.setTrangThai(1);
+//                phieuGiamGiaRepository.save(x);
+//            }
+//        }
+//    }
+
 
     @Override
     public Page<PhieuGiamGia> findAll(Integer page,
@@ -57,7 +75,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .thoiGianBatDau(x.getThoiGianBatDau())
                         .thoiGianKetThuc(x.getThoiGianKetThuc())
                         .moTa(x.getMoTa())
-                        .trangThai(1)
+                        .trangThai(0)
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia);
             } else {
@@ -200,10 +218,10 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                 .ten(phieuGiamGiaRequest.getTen())
                 .chietKhau(phieuGiamGiaRequest.getChietKhau())
                 .hinhThucGiamGia(phieuGiamGiaRequest.getHinhThucGiamGia())
-                .thoiGianBatDau(Date.valueOf(curruntDate))
+                .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
                 .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
                 .moTa(phieuGiamGiaRequest.getMoTa())
-                .trangThai(1)
+                .trangThai(2)
                 .build();
         return phieuGiamGiaRepository.save(phieuGiamGia);
     }
