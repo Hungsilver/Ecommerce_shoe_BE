@@ -27,5 +27,5 @@ public class GioiThieuRequest {
 
     private Integer trangThai;
 
-    private Integer nhanVien;
+//    private Integer nhanVien;
 }

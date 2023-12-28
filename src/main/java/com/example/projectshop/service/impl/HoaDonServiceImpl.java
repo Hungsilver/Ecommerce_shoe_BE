@@ -466,6 +466,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         PhieuGiamGia phieuGiamGia = phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia());
         NhanVien nhanVien = null;
         GioHang gioHang = gioHangRepo.findByIdKhachHang(khachHang.getId());
+
         // start add hoadon
         HoaDon hoaDon = HoaDon.builder()
                 .id(null)

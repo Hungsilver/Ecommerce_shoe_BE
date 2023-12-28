@@ -2,23 +2,17 @@ package com.example.projectshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -46,9 +40,11 @@ public class PhieuGiamGia {
     @Column(name = "hinhthucgiamgia")
     private Boolean hinhThucGiamGia;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "thoigianbatdau")
     private Date thoiGianBatDau;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "thoigianketthuc")
     private Date thoiGianKetThuc;
 
@@ -57,6 +53,9 @@ public class PhieuGiamGia {
 
     @Column(name = "trangthai")
     private Integer trangThai;
+
+// ba trang thai : sap dien ra, dang dien ra, het han
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "phieuGiamGia")
