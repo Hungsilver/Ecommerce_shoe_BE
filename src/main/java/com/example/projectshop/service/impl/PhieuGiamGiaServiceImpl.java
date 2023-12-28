@@ -78,6 +78,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .trangThai(0)
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia);
+
             } else {
                 // thời gian kết thúc trùng với ngày hiện tại
                 continue;
