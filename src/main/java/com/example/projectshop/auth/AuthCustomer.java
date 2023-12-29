@@ -74,7 +74,6 @@ public class AuthCustomer {
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(base.createBaseResponse(HttpStatus.UNAUTHORIZED.value(), null, false, "Tài khoản hoặc mật khẩu không chính xác"));
         }
-
         appContext.getServletContext().setAttribute("khachHang", khachHang);// lưu thông tin khách hàng đăng nhập
 
 

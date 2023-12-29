@@ -5,21 +5,24 @@ import com.example.projectshop.domain.GioHang;
 import com.example.projectshop.domain.GioHangChiTiet;
 import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.HoaDonChiTiet;
-
 import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.domain.NhanVien;
 import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
-import com.example.projectshop.repository.*;
-
-import com.example.projectshop.service.IHoaDonService;
+import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.repository.GioHangChiTietRepository;
+import com.example.projectshop.repository.GioHangRepository;
+import com.example.projectshop.repository.HoaDonChiTietRepository;
+import com.example.projectshop.repository.HoaDonRepository;
+import com.example.projectshop.repository.KhachHangRepository;
+import com.example.projectshop.repository.NhanVienRepository;
 import com.example.projectshop.service.IChiTietSanPhamService;
+import com.example.projectshop.service.IHoaDonService;
 import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.IPhieuGiamGiaService;
 import com.example.projectshop.utilities.QRCodeGenerator;
 import com.example.projectshop.utilities.utility;
-
 import com.example.projectshop.vnpay.ConfigVNpay;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
@@ -34,7 +37,6 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -87,6 +89,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Autowired
     NhanVienRepository nhanVienRepository;
 
+    @Autowired
     private GioHangChiTietRepository gioHangChiTietRepo;
 
     @Autowired
@@ -467,6 +470,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Override // thanh toán online
     public HoaDon onlinePayment(HoaDonRequest hoaDonRequest) {
         KhachHang khachHang = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+        System.out.println("khachHang"+khachHang.getHoTen());
         PhieuGiamGia phieuGiamGia = phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia());
         NhanVien nhanVien = null;
         GioHang gioHang = gioHangRepo.findByIdKhachHang(khachHang.getId());
