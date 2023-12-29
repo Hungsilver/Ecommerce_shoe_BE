@@ -22,11 +22,13 @@ import java.util.Map;
 public class QRCodeGenerator {
     public static void generateQRCodeCTSP(ChiTietSanPham chiTietSanPham) throws WriterException, IOException {
         String pathProject = System.getProperty("user.dir");// lấy ra đường dẫn của project, chỉ lấy đến tên của project
+//        String qrCodePath = pathProject+"\\src\\main\\resources\\static\\imageQRCode\\";
         String qrCodePath = pathProject+"\\src\\main\\resources\\static\\imageQRCode\\";
         String qrCodeName = qrCodePath + chiTietSanPham.getMa() + ".png";
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(
-                "MaSanPham: "+chiTietSanPham.getMa(), BarcodeFormat.QR_CODE, 400, 400);
+//                String.valueOf(chiTietSanPham.getId()), BarcodeFormat.QR_CODE, 400, 400);
+                chiTietSanPham.getMa(), BarcodeFormat.QR_CODE, 400, 400);
         Path path = FileSystems.getDefault().getPath(qrCodeName);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
     }

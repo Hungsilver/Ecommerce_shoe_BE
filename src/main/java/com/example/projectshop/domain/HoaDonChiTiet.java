@@ -46,6 +46,4 @@ public class HoaDonChiTiet {
     @ManyToOne()
     @JoinColumn(name = "id_chitietsanpham")
     private ChiTietSanPham chiTietSanPham;
-
-
 }

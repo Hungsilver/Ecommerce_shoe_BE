@@ -76,6 +76,7 @@ public class SanPhamRestController {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
+
         return ResponseEntity.ok(
                 sanPhamService.filter(
                         pricemin,
@@ -142,8 +143,5 @@ public class SanPhamRestController {
     public  ResponseEntity<?> exportExcel() {
         return ResponseEntity.ok(sanPhamService.exportExcel());
     }
-
-
-
 
 }

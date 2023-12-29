@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 @CrossOrigin(value = "*")
 @RestController
@@ -84,14 +86,35 @@ public class HoaDonRestController {
     // start bán hàng tại quầy
 
     // Thanh toán hóa đơn
-    @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
-    public ResponseEntity<?> shopCheckout(@PathVariable("id") Integer idHoaDon,
-                                          @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
-        if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
-            return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
-        } else {
-            return ResponseEntity.ok(hoaDonService.vnPayShopService(idHoaDon, hoaDonRequest));
-        }
+//        @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
+//        public ResponseEntity<?> shopCheckout(@PathVariable("id") String idHoaDon,
+//                                              @RequestBody HoaDonRequest hoaDonRequest) {
+//            if (!idHoaDon.matches(p_chu)) {
+//                return ResponseEntity.ok("*id hóa đơn phải là số");
+//            }
+//            return ResponseEntity.ok(hoaDonService.shopPayments(Integer.valueOf(idHoaDon), hoaDonRequest));
+//        }
+
+    //    @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
+//    public ResponseEntity<?> shopCheckout(@PathVariable("id") Integer idHoaDon,
+//                                          @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+//        if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
+//            return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
+//        } else {
+//            return ResponseEntity.ok(hoaDonService.vnPayShopService(idHoaDon, hoaDonRequest));
+//        }
+//    }
+    @PostMapping("/shop/payments/cast/{id}")//localhost:8080/api/invoice/shop/payments/1
+    public ResponseEntity<?> shopCheckoutCast(@PathVariable("id") Integer idHoaDon,
+                                              @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+        return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
+    }
+
+    @PostMapping("/shop/payments/vnpay/{id}")
+    public ResponseEntity<?> shopCheckoutVnpay(@PathVariable("id") Integer idHoaDon,
+                                               @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+        String vnpPaymentUrl = hoaDonService.vnPayShopService(idHoaDon, hoaDonRequest);
+        return ResponseEntity.ok(Collections.singletonMap("vnpPaymentUrl", vnpPaymentUrl));
     }
 
     //localhost:8080/api/invoice/shop/payment-callback
@@ -104,8 +127,10 @@ public class HoaDonRestController {
 
         if (responseCode.equals("00") && maHoaDon != null) {
             Integer id = hoaDonService.findByMa(maHoaDon).getId();
-            hoaDonService.updateStatus(id,1);
-            response.sendRedirect("http://localhost:4200/"); //đường dẫn trang quản lý đơn hàng của user bên angular
+            hoaDonService.updateStatus(id, 1);
+//            response.sendRedirect("http://localhost:4200/admin/payment-success"); //đường dẫn trang quản lý đơn hàng của user bên angular
+            response.sendRedirect("http://localhost:4200/admin/payment-success?printInvoice=true");
+
             //vd: https://localhost:4200/user/...
         } else {
             response.sendRedirect("http://localhost:4200/");//đường dẫn trang thanh toán đơn hàng của user bên angular
@@ -113,6 +138,11 @@ public class HoaDonRestController {
         }
     }
 
+//    @PostMapping("/shop/payments/{id}")//localhost:8080/api/invoice/shop/payments/1
+//    public ResponseEntity<?> shopCheckout(@PathVariable("id") Integer idHoaDon,
+//                                          @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+//        return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
+//    }
 
     // Tạo hóa đơn chờ với id là idNhanVien
     @PostMapping("/shop/create/{id}")//localhost:8080/api/invoice/shop/create/1
@@ -129,16 +159,14 @@ public class HoaDonRestController {
     // Xóa hóa đơn chi tiết với id của hóa đơn chi tiết
     //localhost:8080/api/invoice/shop/delete-invoie-detail/1
     @DeleteMapping("/shop/delete-invoice-detail/{id}")
-    public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") String id) {
-        if (!id.matches(p_chu)) {
-            return ResponseEntity.ok("*id phải là số");
-        }
-        hoaDonService.shopDeleteInvoiceDetail(Integer.valueOf(id));
+    public ResponseEntity<?> shopCreateInvoiceDetail(@PathVariable("id") Integer id) {
+        hoaDonService.shopDeleteInvoiceDetail(id);
         return ResponseEntity.ok().build();
     }
 
     // cập nhật số lượng sản phẩm trong hóa đơn chi tiết
     //localhost:8080/api/invoice/shop/update-invoie-detail
+
     @PutMapping("/shop/update-invoice-detail/{idHDCT}")
     public ResponseEntity<?> shopUpdateInvoiceDetail(@PathVariable Integer idHDCT,
                                                      @RequestBody HoaDonChiTietRequest hoaDonChiTietRequest) {
@@ -201,10 +229,10 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/export/1
     @GetMapping("/export/{id}")
     public ResponseEntity<?> exportPDF(HttpServletResponse response,
-                                       @PathVariable("id") String id) throws IOException {
-        if (!id.matches(p_chu)) {
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
+                                       @PathVariable("id") Integer id) throws IOException {
+//        if (!id.matches(p_chu)) {
+//            return ResponseEntity.ok("*id hóa đơn phải là số");
+//        }
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
@@ -218,5 +246,15 @@ public class HoaDonRestController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create/1
+    public ResponseEntity<?> CreateInvoice() {
+        return ResponseEntity.ok(hoaDonService.CreateInvoice());
+    }
 
+    @GetMapping("/new-invoice") // lay hoa don moi nhat
+    public ResponseEntity<HoaDon> getLatestHoaDonWithTrangThai1() {
+        Optional<HoaDon> hoaDon = hoaDonService.findByInvoiceNew();
+        return hoaDon.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

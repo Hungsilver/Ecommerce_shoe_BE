@@ -7,19 +7,12 @@ import com.example.projectshop.service.IChiTietSanPhamService;
 import com.google.zxing.WriterException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -85,7 +78,21 @@ public class ChiTietSanPhamRestController {
 
     @GetMapping("/code/{ma}")//localhost:8080/api/product-detail/code/abc
     public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
-        return ResponseEntity.ok(chiTietSanPhamService.findByMa(ma));
+        return ResponseEntity.ok(chiTietSanPhamService.findByMa_ProductDetail(ma,1));
+    }
+
+    @GetMapping("/findByMa")
+    public ResponseEntity<?> findByMa1(@RequestParam String ma) {
+//        return ResponseEntity.ok(chiTietSanPhamService.findByMa_ProductDetail(ma));
+        if (ma==null){
+            return ResponseEntity.notFound().build();
+        }
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.findByMa_ProductDetail(ma,1);
+        if (chiTietSanPham != null) {
+            return ResponseEntity.ok(chiTietSanPham);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/id-product/{idSanPham}")//localhost:8080/api/product-detail/id-product/1
@@ -142,7 +149,5 @@ public class ChiTietSanPhamRestController {
     public  ResponseEntity<?> exportExcel(@RequestBody List<ImportExcelCTSP> importExcelCTSPS) throws IOException, WriterException {
         return ResponseEntity.ok(chiTietSanPhamService.importExcel(importExcelCTSPS));
     }
-
-
 
 }

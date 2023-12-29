@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 public interface IHoaDonService {
 
@@ -50,4 +51,6 @@ public interface IHoaDonService {
     void exportPDF(HttpServletResponse response, Integer id) throws IOException;
 
     HoaDon CreateInvoice();
+
+    Optional<HoaDon> findByInvoiceNew();
 }

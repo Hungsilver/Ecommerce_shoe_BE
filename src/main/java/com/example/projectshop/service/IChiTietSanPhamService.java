@@ -55,4 +55,5 @@ public interface IChiTietSanPhamService {
 
     ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
 
+    public ChiTietSanPham findByMa_ProductDetail(String ma, Integer trangThais);
 }

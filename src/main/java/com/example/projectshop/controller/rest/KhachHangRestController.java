@@ -34,6 +34,7 @@ public class KhachHangRestController {
     @Autowired
     private HttpSession httpSession;
 
+
     private String p_chu = "\\d+";
     
     @GetMapping()//localhost:8080/api/customer
