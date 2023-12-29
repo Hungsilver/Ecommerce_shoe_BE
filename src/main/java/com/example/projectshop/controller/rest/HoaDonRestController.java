@@ -1,6 +1,7 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.HoaDon;
+import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
 import com.example.projectshop.repository.HoaDonRepository;
@@ -179,12 +180,18 @@ public class HoaDonRestController {
     // thanh toán online
     //localhost:8080/api/invoice/online/payment
     @PostMapping("/online/payment")
-    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest,
-                                            HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) throws IOException {
         if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
             return ResponseEntity.ok(hoaDonService.onlinePayment(hoaDonRequest));
         } else {
-            return ResponseEntity.ok(hoaDonService.vnPayService(hoaDonRequest));
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
+                    .code(200)
+                    .isOK(false)
+                    .data(hoaDonService.vnPayService(hoaDonRequest))
+                    .message("Payment successfully")
+                    .build()
+            );
+
         }
     }
 
@@ -199,11 +206,11 @@ public class HoaDonRestController {
 
         if (responseCode.equals("00") && maHoaDon != null) {
             hoaDonService.vnPayment(maHoaDon);
-            response.sendRedirect("http://localhost:4200/"); //đường dẫn trang quản lý đơn hàng của user bên angular
+            response.sendRedirect("http://localhost:4200/payment/success"); //đường dẫn trang quản lý đơn hàng của user bên angular
             //vd: https://localhost:4200/user/...
         } else {
             hoaDonService.delete(maHoaDon);
-            response.sendRedirect("http://localhost:4200/");//đường dẫn trang thanh toán đơn hàng của user bên angular
+            response.sendRedirect("http://localhost:4200/payment/error");//đường dẫn trang thanh toán đơn hàng của user bên angular
             //vd: https://localhost:4200/user/...
         }
     }

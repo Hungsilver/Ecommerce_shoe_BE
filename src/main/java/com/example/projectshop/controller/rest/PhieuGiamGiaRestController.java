@@ -58,6 +58,11 @@ public class PhieuGiamGiaRestController {
         return ResponseEntity.ok(phieuGiamGiaService.findById(Integer.valueOf(id)));
     }
 
+    @GetMapping("/code")//localhost:8080/api/voucher/code/abc
+    public ResponseEntity<?> findByMa(@RequestParam(value = "ma",required = false)String ma) {
+        return ResponseEntity.ok(phieuGiamGiaService.findByCode(ma));
+    }
+
 
     @PutMapping("{id}")//localhost:8080/api/voucher/1
     public ResponseEntity<?> update(

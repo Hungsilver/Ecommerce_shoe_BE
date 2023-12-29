@@ -105,6 +105,15 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
     }
 
     @Override
+    public PhieuGiamGia findByCode(String ma) {
+        Optional<PhieuGiamGia> phieuGiamGia = phieuGiamGiaRepository.findByMa(ma);
+        if (phieuGiamGia.isPresent()){
+            return phieuGiamGia.get();
+        }
+        return null;
+    }
+
+    @Override
     public PhieuGiamGia findByName(String name) {
         Optional<PhieuGiamGia> phieuGiamGia = phieuGiamGiaRepository.findByName(name);
         if (phieuGiamGia.isPresent()) {

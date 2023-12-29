@@ -41,6 +41,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -90,6 +91,9 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     @Autowired
     private GioHangRepository gioHangRepo;
+
+    @Autowired
+    private WebApplicationContext appContext;
 
     // lấy ra ngày hiện tại
     private LocalDate curruntDate = LocalDate.now();
@@ -462,7 +466,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     @Override // thanh toán online
     public HoaDon onlinePayment(HoaDonRequest hoaDonRequest) {
-        KhachHang khachHang = khachHangService.findById(hoaDonRequest.getKhachHang());
+        KhachHang khachHang = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
         PhieuGiamGia phieuGiamGia = phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia());
         NhanVien nhanVien = null;
         GioHang gioHang = gioHangRepo.findByIdKhachHang(khachHang.getId());
@@ -575,7 +579,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Override
     public String vnPayService(HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
         String maHoaDon = utility.renderCodeHoaDon();
-        KhachHang khachHang = khachHangService.findById(hoaDonRequest.getKhachHang());
+        KhachHang khachHang = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
         PhieuGiamGia phieuGiamGia = phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia());
         NhanVien nhanVien = null;
         GioHang gioHang = gioHangRepo.findByIdKhachHang(khachHang.getId());
