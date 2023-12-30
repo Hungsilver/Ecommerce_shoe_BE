@@ -154,6 +154,12 @@ public class HoaDonServiceImpl implements IHoaDonService {
         return null;
     }
 
+    @Override
+    public List<HoaDon> findByIdKhachHangAnhTrangThai(Integer trangThai) {
+        KhachHang khachHang = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+        return hoaDonRepo.findByIdKhachHangAndTrangThai(khachHang.getId(),trangThai);
+    }
+
     @Override // update hóa đơn
     public HoaDon update(Integer id, HoaDonRequest hoaDonRequest) {
         HoaDon resultFindById = this.findById(id);
@@ -966,7 +972,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         hoaDon.setTrangThai(0);
         hoaDon.setKhachHang(null);
 //        hoaDon.setKhachHang(khachHangRepository.findById(6).get());
-        hoaDon.setNhanVien(nhanVienRepository.findById(4).get());
+        hoaDon.setNhanVien(nhanVienRepository.findById(1).get());
         return hoaDonRepo.save(hoaDon);
     }
 
