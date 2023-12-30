@@ -30,6 +30,10 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     @Query(value = "select h from HoaDon h where h.trangThai = :trangThai")
     List<HoaDon> findByTrangThai(@Param("trangThai")Integer trangThai);
 
+    @Query(value = "select h from HoaDon h where h.trangThai = :trangThai and h.khachHang.id = :idKhachHang")
+    List<HoaDon> findByIdKhachHangAndTrangThai(@Param("trangThai")Integer trangThai,
+                                               @Param("idKhachHang")Integer idKhachHang);
+
     Optional<HoaDon> findTopByTrangThaiOrderByNgayTaoDesc(Integer trangThai);
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 public interface IHoaDonService {
@@ -23,6 +24,8 @@ public interface IHoaDonService {
     HoaDon findById(Integer id);
 
     HoaDon findByMa(String ma);
+
+    List<HoaDon> findByIdKhachHangAnhTrangThai(Integer trangThai);
 
     HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
 
