@@ -73,6 +73,11 @@ public class HoaDonRestController {
         return ResponseEntity.ok(hoaDonService.findByMa(ma));
     }
 
+    @GetMapping("/status/{id}")//localhost:8080/api/invoice/code/abc
+    public ResponseEntity<?> findByIdKhachHangAndTrangThai(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(hoaDonService.findByIdKhachHangAnhTrangThai(id));
+    }
+
     @PutMapping("{id}")//localhost:8080/api/invoice/1
     public ResponseEntity<?> update(
             @PathVariable("id") String id,
