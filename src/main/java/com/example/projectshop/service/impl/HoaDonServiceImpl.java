@@ -157,7 +157,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Override
     public List<HoaDon> findByIdKhachHangAnhTrangThai(Integer trangThai) {
         KhachHang khachHang = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
-        return hoaDonRepo.findByIdKhachHangAndTrangThai(khachHang.getId(),trangThai);
+        return hoaDonRepo.findByIdKhachHangAndTrangThai(trangThai,khachHang.getId());
     }
 
     @Override // update hóa đơn
@@ -561,7 +561,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
     public void vnPayment(String maHoaDon) {
         // start update hoadon
         HoaDon hoaDon = this.findByMa(maHoaDon);
-        hoaDon.setTrangThai(2);
+        hoaDon.setTrangThai(5);
         hoaDonRepo.save(hoaDon);
         // end update hoadon
 
@@ -610,7 +610,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
                 .tongTienSauGiam(new BigDecimal(hoaDonRequest.getTongTienSauGiam()))
                 .phiVanChuyen(new BigDecimal(hoaDonRequest.getPhiVanChuyen()))
                 .phuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan())
-                .trangThai(8)
+                .trangThai(2)
                 .phieuGiamGia(phieuGiamGia)
                 .khachHang(khachHang)
                 .nhanVien(null)
@@ -651,14 +651,17 @@ public class HoaDonServiceImpl implements IHoaDonService {
         }
 
         // start service vnpay
-        long amount = Integer.parseInt(hoaDonRequest.getTongTienSauGiam()) * 100;
+        int tongTien = Integer.valueOf(hoaDonRequest.getTongTienSauGiam());
+        long amount =  tongTien * 100;
+        System.out.println("tongTien"+tongTien);
+        System.out.println("amout"+amount);
         String vnp_TxnRef = maHoaDon;
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", ConfigVNpay.vnp_Version);
         vnp_Params.put("vnp_Command", ConfigVNpay.vnp_Command);
         vnp_Params.put("vnp_TmnCode", ConfigVNpay.vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
+        vnp_Params.put("vnp_Amount", String.valueOf(hoaDonRequest.getTongTienSauGiam()+"00"));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", null);
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
