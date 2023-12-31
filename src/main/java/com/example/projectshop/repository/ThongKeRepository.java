@@ -20,21 +20,21 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
     // start thống kế doanh thu
     @Query(value = "SELECT DATE_FORMAT(ngayTao, '%Y-%m-%d') AS ngayThang,SUM(tongTien) tongDoanhThu ,count(ngayTao) as tongDonHang\n" +
             "FROM hoadon\n" +
-            "WHERE  ngayTao = CURDATE() and trangThai = 5\n" +
+            "WHERE  ngayTao = CURDATE() AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by ngayTao", nativeQuery = true)
     List<Object[]> thongKeDoanhThuNgayHienTai();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(h.tongTien), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d')" +
-            "AND h.trangThai = 5 " +
+            "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu7NgayTruoc();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(h.tongTien), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d')" +
-            "AND h.trangThai = 5 " +
+            "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu28NgayTruoc();
 
@@ -42,21 +42,21 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(h.tongTien), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m') >= DATE_FORMAT(CURDATE() - INTERVAL 12 month, '%Y-%m')" +
-            "AND h.trangThai = 5 " +
+            "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu1NamTruoc();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(h.tongTien), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m') >= DATE_FORMAT(CURDATE() - INTERVAL 6 month, '%Y-%m')" +
-            "AND h.trangThai = 5 " +
+            "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu6ThangTruoc();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(h.tongTien), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang \n" +
             "            FROM HoaDon h \n" +
             "            WHERE h.ngayTao between :startDate and :endDate  " +
-            "            AND h.trangThai = 5\n" +
+            "            AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "            GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThuTheoKhoang(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
     // end thống kê doanh thu
@@ -69,7 +69,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join hoadonchitiet hdct on hdct.id_HoaDon = h.id\n" +
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id" +
-            "WHERE h.trangThai = 5\n" +
+            "WHERE AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by s.id, s.ten\n", nativeQuery = true)
     List<Object[]> tongThongKeSanPham();
 
@@ -80,7 +80,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join hoadonchitiet hdct on hdct.id_HoaDon = h.id\n" +
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by s.id, s.ten\n", nativeQuery = true)
     List<Object[]> thongKeSanPham7NgayTruoc();
 
@@ -91,7 +91,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join hoadonchitiet hdct on hdct.id_HoaDon = h.id\n" +
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by s.id, s.ten\n", nativeQuery = true)
     List<Object[]> thongKeSanPham28NgayTruoc();
 
@@ -102,7 +102,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join hoadonchitiet hdct on hdct.id_HoaDon = h.id\n" +
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 6 MONTH , '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 6 MONTH , '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by s.id, s.ten\n", nativeQuery = true)
     List<Object[]> thongKeSanPham6ThangTruoc();
 
@@ -113,7 +113,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join hoadonchitiet hdct on hdct.id_HoaDon = h.id\n" +
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 12 MONTH , '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 12 MONTH , '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by s.id, s.ten\n", nativeQuery = true)
     List<Object[]> thongKeSanPham1NamTruoc();
 
@@ -125,7 +125,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "WHERE h.ngayTao between :startDate and :endDate" +
-            "AND h.trangThai = 5\n" +
+            "AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by s.id, s.ten", nativeQuery = true)
     List<Object[]> thongKeSanPhamTheoKhoang(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
@@ -140,6 +140,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "inner join danhmuc d on s.id_DanhMuc = d.id\n" +
+            "where (h.trangThai = 5 OR h.trangThai = 1)" +
             "group by d.ten\n", nativeQuery = true)
     List<Object[]> tongThongKeDanhMuc();
 
@@ -151,7 +152,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "inner join danhmuc d on s.id_DanhMuc = d.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by d.ten", nativeQuery = true)
     List<Object[]> thongKeDanhMuc7NgayTruoc();
 
@@ -163,7 +164,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "inner join danhmuc d on s.id_DanhMuc = d.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by d.ten", nativeQuery = true)
     List<Object[]> thongKeDanhMuc28NgayTruoc();
 
@@ -175,7 +176,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "inner join danhmuc d on s.id_DanhMuc = d.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 6 MONTH , '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 6 MONTH , '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by d.ten", nativeQuery = true)
     List<Object[]> thongKeDanhMuc6ThangTruoc();
 
@@ -187,7 +188,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "inner join danhmuc d on s.id_DanhMuc = d.id\n" +
-            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 12 MONTH , '%Y-%m-%d')\n" +
+            "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 12 MONTH , '%Y-%m-%d') AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by d.ten", nativeQuery = true)
     List<Object[]> thongKeDanhMuc12ThangTruoc();
 
@@ -199,7 +200,7 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "inner join chitietsanpham c on hdct.id_ChiTietSanPham = c.id\n" +
             "inner join sanpham s on c.id_SanPham = s.id\n" +
             "inner join danhmuc d on s.id_DanhMuc = d.id\n" +
-            "WHERE h.ngayTao between :startDate and :endDate\n" +
+            "WHERE h.ngayTao between :startDate and :endDate AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by d.ten", nativeQuery = true)
     List<Object[]> thongKeDanhMucTheoKhoang(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
