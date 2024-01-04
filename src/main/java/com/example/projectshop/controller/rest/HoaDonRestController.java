@@ -28,6 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(value = "*")
@@ -68,6 +69,16 @@ public class HoaDonRestController {
         return ResponseEntity.ok(hoaDonService.findById(Integer.valueOf(id)));
     }
 
+    @PutMapping("/update")//localhost:8080/api/invoice/update
+    public ResponseEntity<?> updateInvoice(@RequestBody HoaDon hoaDon) {
+        return ResponseEntity.ok(hoaDonService.updateInvoice(hoaDon));
+    }
+
+    @GetMapping("/detail/{id}")//localhost:8080/api/invoice/detail/1
+    public ResponseEntity<?> findByIdHDCT(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(hoaDonService.findByIdHDCT(id));
+    }
+
     @GetMapping("/code/{ma}")//localhost:8080/api/invoice/code/abc
     public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
         return ResponseEntity.ok(hoaDonService.findByMa(ma));
@@ -86,6 +97,19 @@ public class HoaDonRestController {
             return ResponseEntity.ok("*id hóa đơn phải là số");
         }
         return ResponseEntity.ok(hoaDonService.update(Integer.valueOf(id), hoaDonRequest));
+    }
+
+    @GetMapping("/huy-don/{id}")//localhost:8080/api/invoice/huy-don1
+    public ResponseEntity<?> huyDon(
+            @PathVariable("id") Integer id) {
+        return ResponseEntity.ok(hoaDonService.huyDonHang(id));
+    }
+
+    @DeleteMapping("/detail/{id}")//localhost:8080/api/invoice/detail/1
+    public ResponseEntity<?> deleteInvoiceDetail(
+            @PathVariable("id") Integer id) {
+
+        return ResponseEntity.ok(hoaDonService.deleteHdct(id));
     }
 
     // start bán hàng tại quầy

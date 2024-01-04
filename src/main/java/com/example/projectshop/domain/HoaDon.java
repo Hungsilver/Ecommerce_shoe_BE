@@ -1,8 +1,7 @@
 package com.example.projectshop.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -93,8 +92,9 @@ public class HoaDon {
     @JoinColumn(name = "id_nhanvien", referencedColumnName = "id")
     private NhanVien nhanVien;
 
-//    @JsonManagedReference
-    @JsonIgnore
+    //    @JsonManagedReference
+//    @JsonIgnore
+    @JsonIgnoreProperties("hoaDon")
     @OneToMany(mappedBy = "hoaDon")
     private List<HoaDonChiTiet> listHoaDonChiTiet;
 
