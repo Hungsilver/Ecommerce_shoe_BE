@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class ThongKeImpl implements IThongKeService {
     public ThongKeHoaDon thongKeHoaDon() {
         ThongKeHoaDon thongKeHoaDon = new ThongKeHoaDon();
         thongKeHoaDon.setTongDonHang(thongKeRepo.demHoaDonByTrangThai(null));
-        thongKeHoaDon.setDonHangTaiQuay(thongKeRepo.demHoaDonByTrangThai(0));
-        thongKeHoaDon.setChoXacNhan(thongKeRepo.demHoaDonByTrangThai(1));
-        thongKeHoaDon.setChoVanChuyen(thongKeRepo.demHoaDonByTrangThai(2));
-        thongKeHoaDon.setDangGiaoHang(thongKeRepo.demHoaDonByTrangThai(3));
-        thongKeHoaDon.setDaGiaoHang(thongKeRepo.demHoaDonByTrangThai(4));
-        thongKeHoaDon.setDaHuy(thongKeRepo.demHoaDonByTrangThai(5));
-        thongKeHoaDon.setDoiHang(thongKeRepo.demHoaDonByTrangThai(6));
+        thongKeHoaDon.setDonHangTaiQuay(thongKeRepo.demHoaDonByTrangThai(1));
+        thongKeHoaDon.setChoXacNhan(thongKeRepo.demHoaDonByTrangThai(2));
+        thongKeHoaDon.setChoVanChuyen(thongKeRepo.demHoaDonByTrangThai(3));
+        thongKeHoaDon.setDangGiaoHang(thongKeRepo.demHoaDonByTrangThai(4));
+        thongKeHoaDon.setDaGiaoHang(thongKeRepo.demHoaDonByTrangThai(5));
+        thongKeHoaDon.setDaHuy(thongKeRepo.demHoaDonByTrangThai(6));
+        thongKeHoaDon.setDoiHang(thongKeRepo.demHoaDonByTrangThai(7));
         return thongKeHoaDon;
     }
 
@@ -75,6 +76,7 @@ public class ThongKeImpl implements IThongKeService {
             thongKeDoanhThu.setTongDonHang(Integer.valueOf(x[2].toString()));
             thongKeDoanhThus.add(thongKeDoanhThu);
         }
+        Collections.sort(thongKeDoanhThus, (tkdt1, tkdt2) -> tkdt1.getNgayThang().compareTo(tkdt2.getNgayThang()));
         return thongKeDoanhThus;
     }
 
@@ -114,6 +116,7 @@ public class ThongKeImpl implements IThongKeService {
             thongKeDoanhThu.setTongDonHang(Integer.valueOf(x[2].toString()));
             thongKeDoanhThus.add(thongKeDoanhThu);
         }
+        Collections.sort(thongKeDoanhThus, (tkdt1, tkdt2) -> tkdt1.getNgayThang().compareTo(tkdt2.getNgayThang()));
         return thongKeDoanhThus;
     }
 
@@ -153,6 +156,7 @@ public class ThongKeImpl implements IThongKeService {
             thongKeDoanhThu.setTongDonHang(Integer.valueOf(x[2].toString()));
             thongKeDoanhThus.add(thongKeDoanhThu);
         }
+        Collections.sort(thongKeDoanhThus, (tkdt1, tkdt2) -> tkdt1.getNgayThang().compareTo(tkdt2.getNgayThang()));
         return thongKeDoanhThus;
     }
 
@@ -192,7 +196,7 @@ public class ThongKeImpl implements IThongKeService {
             thongKeDoanhThu.setTongDonHang(Integer.valueOf(x[2].toString()));
             thongKeDoanhThus.add(thongKeDoanhThu);
         }
-
+        Collections.sort(thongKeDoanhThus, (tkdt1, tkdt2) -> tkdt1.getNgayThang().compareTo(tkdt2.getNgayThang()));
         return thongKeDoanhThus;
     }
 
@@ -245,6 +249,7 @@ public class ThongKeImpl implements IThongKeService {
             thongKeDoanhThu.setTongDonHang(Integer.valueOf(x[2].toString()));
             thongKeDoanhThus.add(thongKeDoanhThu);
         }//
+        Collections.sort(thongKeDoanhThus, (tkdt1, tkdt2) -> tkdt1.getNgayThang().compareTo(tkdt2.getNgayThang()));
         return thongKeDoanhThus;
     }
 
@@ -260,7 +265,7 @@ public class ThongKeImpl implements IThongKeService {
                     .build();
             thongKeSanPhams.add(thongKeSanPham);
         }//
-        return thongKeSanPhams;
+       return thongKeSanPhams;
     }
 
     @Override
