@@ -362,6 +362,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         hoaDon.setTrangThai(0);
         hoaDon.setNhanVien(null);
         hoaDon.setKhachHang(null);
+
         return hoaDonRepo.save(hoaDon);
     }
 
@@ -383,6 +384,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
                     .chiTietSanPham(hoaDonChiTiet1.getChiTietSanPham())
                     .soLuong(hoaDonChiTiet1.getSoLuong() + hoaDonChiTietRequest.getSoLuong())
                     .donGia(hoaDonChiTiet1.getDonGia())
+//                    .donGia(hoaDonChiTiet1.getDonGia())
 
                     .build();
             // start update chitietsanpham
@@ -849,11 +851,12 @@ public class HoaDonServiceImpl implements IHoaDonService {
             cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
             tableProduct.addCell(cellProduct);
 
-            cellProduct.setPhrase(new Phrase(String.valueOf(x.getDonGia()) + " đ"));
+//            cellProduct.setPhrase(new Phrase(String.valueOf(x.getDonGia()) + " đ"));
+            cellProduct.setPhrase(new Phrase(String.valueOf(x.getChiTietSanPham().getGiaBan()) + " đ"));
             cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
             tableProduct.addCell(cellProduct);
 
-            cellProduct.setPhrase(new Phrase(String.valueOf(x.getDonGia().multiply(new BigDecimal(x.getSoLuong()))) + " đ"));
+            cellProduct.setPhrase(new Phrase(String.valueOf(x.getChiTietSanPham().getGiaBan().multiply(new BigDecimal(x.getSoLuong()))) + " đ"));
             cellProduct.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
             tableProduct.addCell(cellProduct);
         }
@@ -963,6 +966,11 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     @Override
     public Optional<HoaDon> findByInvoiceNew() {
-        return hoaDonRepo.findTopByTrangThaiOrderByNgayTaoDesc(1);
+        return hoaDonRepo.findTopByTrangThaiAndPhuongThucThanhToanOrderByNgayTaoDesc(1,1);
+    }
+
+    @Override
+    public List<HoaDonChiTiet> findByIdInvoice(Integer idInvoice) {
+        return hoaDonChiTietRepo.findByIdHoaDon(idInvoice);
     }
 }

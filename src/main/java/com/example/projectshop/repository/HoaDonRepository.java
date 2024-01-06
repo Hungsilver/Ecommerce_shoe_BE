@@ -16,20 +16,22 @@ import java.util.Optional;
 @Repository
 public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     @Query(value = "select h from HoaDon h " +
-            "where (h.trangThai in :trangthai or :trangthai is null)\n "+
+            "where (h.trangThai in :trangthai or :trangthai is null)\n " +
             "and (h.id = :id or :id is null)"
     )
-    Page<HoaDon> findAll(@Param("trangthai")Integer trangThai, @Param("id")String id, Pageable pageable);
+    Page<HoaDon> findAll(@Param("trangthai") Integer trangThai, @Param("id") String id, Pageable pageable);
 
     @Query(value = "select * from hoadon order by id desc limit 1", nativeQuery = true)
     HoaDon getTop1ByIdMax();
 
     @Query(value = "select h from HoaDon h where h.maHoaDon = :maHoaDon")
-    Optional<HoaDon> findByMa(@Param("maHoaDon")String maHoaDon);
+    Optional<HoaDon> findByMa(@Param("maHoaDon") String maHoaDon);
 
     @Query(value = "select h from HoaDon h where h.trangThai = :trangThai")
-    List<HoaDon> findByTrangThai(@Param("trangThai")Integer trangThai);
+    List<HoaDon> findByTrangThai(@Param("trangThai") Integer trangThai);
 
-    Optional<HoaDon> findTopByTrangThaiOrderByNgayTaoDesc(Integer trangThai);
+    //    Optional<HoaDon> findTopByTrangThaiOrderByNgayTaoDesc(Integer trangThai);
+    Optional<HoaDon> findTopByTrangThaiAndPhuongThucThanhToanOrderByNgayTaoDesc(Integer trangThai, Integer phuongThucThanhToan);
+
 
 }

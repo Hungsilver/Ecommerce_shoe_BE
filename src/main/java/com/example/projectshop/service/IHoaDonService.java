@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 public interface IHoaDonService {
@@ -53,4 +54,6 @@ public interface IHoaDonService {
     HoaDon CreateInvoice();
 
     Optional<HoaDon> findByInvoiceNew();
+
+    List<HoaDonChiTiet> findByIdInvoice(Integer idInvoice);
 }

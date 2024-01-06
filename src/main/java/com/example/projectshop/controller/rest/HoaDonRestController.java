@@ -50,12 +50,12 @@ public class HoaDonRestController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
-            @RequestParam(value = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-            return ResponseEntity.ok("*page || pageSize || status phải là số");
-        }
+//        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
+//            return ResponseEntity.ok("*page || pageSize || status phải là số");
+//        }
         return ResponseEntity.ok(hoaDonService.findAll(status, keyword, sortField, isSortDesc, Integer.valueOf(page), Integer.valueOf(pageSize)));
     }
 
@@ -239,7 +239,7 @@ public class HoaDonRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create/1
+    @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create
     public ResponseEntity<?> CreateInvoice() {
         return ResponseEntity.ok(hoaDonService.CreateInvoice());
     }
@@ -249,5 +249,10 @@ public class HoaDonRestController {
         Optional<HoaDon> hoaDon = hoaDonService.findByInvoiceNew();
         return hoaDon.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/findByIdInvoice/{idHoaDon}")
+    public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon ){
+        return ResponseEntity.ok(hoaDonService.findByIdInvoice(idHoaDon));
     }
 }
