@@ -66,7 +66,6 @@ public class ChiTietSanPham {
 
 //    @JsonBackReference
 //    @JsonIgnoreProperties
-    @JsonIgnoreProperties("sanPham")
     @ManyToOne()
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
