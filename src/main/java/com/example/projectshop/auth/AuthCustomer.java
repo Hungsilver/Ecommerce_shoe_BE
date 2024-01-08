@@ -40,6 +40,9 @@ public class AuthCustomer {
 
     BaseResponse<KhachHang> base = new BaseResponse<>();
 
+    @Autowired
+    private AuthService authService;
+
 
     @Autowired
     private JavaMailSender mailSender;
@@ -53,10 +56,26 @@ public class AuthCustomer {
 
     @PostMapping("/register")//localhost:8080/api/auth/customer/register
     // trả về chuỗi string đăng ký thành công hay thất bại
-    public ResponseEntity<KhachHang> registerKhachHang(
+    public ResponseEntity<?> registerKhachHang(
             @RequestBody KhachHangRequest khachHangRequest) {
         KhachHang khachHang = khachHangService.registerKhachHang(khachHangRequest);
-        return ResponseEntity.ok(khachHang);
+        if(khachHang!=null) {
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
+                                                                     .code(200)
+                                                                     .isOK(true)
+                                                                     .data(khachHang)
+                                                                     .message("register successfully")
+                                                                     .build()
+            );
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponse.<Object>builder()
+                                                                     .code(400)
+                                                                     .isOK(false)
+                                                                     .data(null)
+                                                                     .message("register fail")
+                                                                     .build()
+            );
+        }
     }
 
     @PostMapping("/login")//localhost:8080/api/auth/customer/login
