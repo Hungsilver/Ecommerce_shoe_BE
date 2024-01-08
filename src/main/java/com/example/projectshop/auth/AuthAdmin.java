@@ -9,6 +9,7 @@ import com.example.projectshop.dto.auth.RegisterRequest;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.nhanvien.NhanVienRequest;
 import com.example.projectshop.dto.nhanvien.NhanVienResponse;
+import com.example.projectshop.service.IKhachHangService;
 import com.example.projectshop.service.impl.NhanVienServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -22,14 +23,17 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -47,65 +51,149 @@ public class AuthAdmin {
     private JavaMailSender mailSender;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
+    private WebApplicationContext appContext;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private IKhachHangService khachHangService;
 
     //TODO role: ADMIN và STAFF
     @PostMapping("/register-account")
-    public ResponseEntity<NhanVien> registerAccount(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<?> registerAccount(@RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(nhanVienService.registerAccount(registerRequest));
     }
 
+
     @PostMapping("/login")
-    public ResponseEntity<NhanVien> login(@RequestBody LoginRequest staffRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest staffRequest) {
         try {
             NhanVien nv = nhanVienService.authenticateUser(staffRequest);
-            return ResponseEntity.ok(nv);
+            if (nv != null) {
+                appContext.getServletContext().setAttribute("nhanVien", nv);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(BaseResponse.builder()
+                                      .code(200)
+                                      .isOK(true)
+                                      .data(nv)
+                                      .message("success")
+                                      .build()
+                        );
+            } else {
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(BaseResponse.builder()
+                                      .code(400)
+                                      .isOK(false)
+                                      .data(null)
+                                      .message("ko thanh cong")
+                                      .build()
+                        );
+            }
+
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
-    @PostMapping("/forgot-password/{email}")//localhost:8080/api/auth/admin/forgot-password
-    public ResponseEntity<?> forgotPassword(@PathVariable("email")String email) throws UnsupportedEncodingException, MessagingException {
-        httpSession.setAttribute("emailAdminForgot",email);
-//        MimeMessage message = mailSender.createMimeMessage();
-//        MimeMessageHelper helper = new MimeMessageHelper(message);
-//
-//        helper.setFrom("vuttph25379@fpt.edu.vn", "Shop Gens-z");
-//        helper.setTo(email);
-//
-//        String subject = "Đây là liên kết để đặt lại mật khẩu của bạn";
-//
-//        String content = "<p>Xin Chào,<p>" +
-//                "<p> Bạn đã yêu cầu đặt lại mật khẩu của mình.</p>" +
-//                "<p> Nhấp vào liên kết bên dưới để thay đổi mật khẩu của bạn:</p>" +
-//                "<p><b><a href=" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate" + ">" + "https://translate.google.com.vn/?hl=en&sl=en&tl=vi&op=translate</a><b></p>" +
-//                "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
-//        helper.setSubject(subject);
-//        helper.setText(content, true);
-//        System.out.println(passwordEncoder.encode("123"));
-//        mailSender.send(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
-                .code(200)
-                .isOK(true)
-                .data(null)
-                .message("Send email successfully")
-                .build()
-        );
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        Objects.requireNonNull(appContext.getServletContext()).removeAttribute("nhanVien");
+        Objects.requireNonNull(appContext.getServletContext()).removeAttribute("admin");
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.builder()
+                              .code(200)
+                              .isOK(true)
+                              .data(null)
+                              .message("success logout")
+                              .build()
+                );
     }
 
-    @PostMapping("/reset-password")//localhost:8080/api/auth/admin/forgot-password
-    public ResponseEntity<?> resetPassword(@RequestParam("password")String password){
+    @GetMapping("/forget-password/{email}")//localhost:8080/api/auth/admin/forgot-password
+    public ResponseEntity<?> forgetPassword(@PathVariable("email") String email) throws UnsupportedEncodingException, MessagingException {
+        NhanVien nv = nhanVienService.findByEmail(email);
+
+        if (nv != null) {
+            try {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message);
+                String passwordNew = authService.generateRandomPassword();
+
+                helper.setFrom("hungtdph25410@fpt.edu.vn", "Shop Gens-z");
+                helper.setTo(email);
+
+                String subject = "Đây là liên kết để đặt lại mật khẩu của bạn";
+
+                String content = "<p>Xin Chào,<p>" +
+                        "<p> Bạn đã yêu cầu đặt lại mật khẩu của mình.</p>" +
+                        "<p> Đây là mật khẩu của bạn: </p>" +
+                        "<p>" + passwordNew + "<p>" +
+                        "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
+                helper.setSubject(subject);
+                helper.setText(content, true);
+                mailSender.send(message);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+                                                                                  .code(200)
+                                                                                  .isOK(true)
+                                                                                  .data(null)
+                                                                                  .message("Send email successfully")
+                                                                                  .build()
+                );
+            }catch (Exception e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+                                                                                  .code(400)
+                                                                                  .isOK(false)
+                                                                                  .data(null)
+                                                                                  .message("Send email failed")
+                                                                                  .build()
+                );
+            }
+
+
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+                                                                              .code(400)
+                                                                              .isOK(false)
+                                                                              .data(null)
+                                                                              .message("email not found")
+                                                                              .build()
+            );
+        }
+    }
+
+    @PostMapping("/forget-password-confirm")//localhost:8080/api/auth/admin/forget-password-confirm
+    public ResponseEntity<?> forgetPassConfirm(@RequestParam("password") String password) {
 //        String email = (String) httpSession.getAttribute("emailAdminForgot");
 //        NhanVien nhanVien = nhanVienService.findByEmail(email);
 //        nhanVien.setMatKhau(passwordEncoder.encode(password));
 //        nhanVienService.update(nhanVien,nhanVien.getId());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
-                .code(200)
-                .isOK(true)
-                .data(null)
-                .message("Reset password successfully")
-                .build()
+                                                                          .code(200)
+                                                                         .isOK(true)
+                                                                           .data(null)
+                                                                          .message("Reset password successfully")
+                                                                          .build()
+        );
+
+    }
+
+    @GetMapping("/reset-password")//localhost:8080/api/auth/admin/forgot-password
+    public ResponseEntity<?> resetPassword(@RequestParam("password") String password) {
+//        String email = (String) httpSession.getAttribute("emailAdminForgot");
+//        NhanVien nhanVien = nhanVienService.findByEmail(email);
+//        nhanVien.setMatKhau(passwordEncoder.encode(password));
+//        nhanVienService.update(nhanVien,nhanVien.getId());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.<GioHangChiTiet>builder()
+                                                                          .code(200)
+                                                                          .isOK(true)
+                                                                          .data(null)
+                                                                          .message("Reset password successfully")
+                                                                          .build()
         );
 
     }

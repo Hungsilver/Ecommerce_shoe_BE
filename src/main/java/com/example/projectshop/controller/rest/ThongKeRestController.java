@@ -88,9 +88,9 @@ public class ThongKeRestController {
     @GetMapping("/product/last-one-month")
     public ResponseEntity<?> thongKeSanPham28NgayTruoc(){
         return ResponseEntity.ok(thongKeService.thongKeSanPham28NgayTruoc());
-    }
 
-    // thống kê sản phẩm 6 tháng trước
+        // thống kê sản phẩm 6 tháng trước
+    }
     //localhost:8080/api/statistic/product/last-six-month
     @GetMapping("/product/last-six-month")
     public ResponseEntity<?> thongKeSanPham6ThangTruoc(){
