@@ -22,10 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
@@ -237,11 +234,12 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
 
     @Override
     public PhieuGiamGia create(PhieuGiamGiaRequest phieuGiamGiaRequest) {
-        String ma = "PGG" + phieuGiamGiaRepository.findAll().size() + 1;
+//        String ma = "PGG" + (phieuGiamGiaRepository.findAll().size() + 1);
+        String manew = "PGG" + UUID.randomUUID().toString().substring(0,4);
         System.out.println("ket thuc:"+phieuGiamGiaRequest.getThoiGianKetThuc());
         PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                 .id(null)
-                .ma(ma)
+                .ma(manew)
                 .ten(phieuGiamGiaRequest.getTen())
                 .chietKhau(phieuGiamGiaRequest.getChietKhau())
                 .hinhThucGiamGia(phieuGiamGiaRequest.getHinhThucGiamGia())
@@ -264,7 +262,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                 .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
                 .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
                 .moTa(phieuGiamGiaRequest.getMoTa())
-                .trangThai(phieuGiamGiaRequest.getTrangThai())
+                .trangThai(2)
                 .build();
         return phieuGiamGiaRepository.save(phieuGiamGia);
     }
