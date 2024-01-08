@@ -21,6 +21,8 @@ public interface IPhieuGiamGiaService {
 
     PhieuGiamGia findById(Integer id);
 
+    PhieuGiamGia findByCode(String  ma);
+
     PhieuGiamGia findByName(String name);
 
     List<ImportExcelPGG> importExcel(List<ImportExcelPGG> importExcelPGGS);

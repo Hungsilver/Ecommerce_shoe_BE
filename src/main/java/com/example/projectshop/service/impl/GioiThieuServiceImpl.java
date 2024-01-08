@@ -152,7 +152,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                 .ngayTao(Date.valueOf(curruntDate))
                 .ngayXoa(null)
                 .trangThai(1)
-                .nhanVien(nhanVienService.findById(gioiThieuRequest.getNhanVien()))
+//                .nhanVien(nhanVienService.findById(gioiThieuRequest.getNhanVien()))
                 .build();
         return gioiThieuRepo.save(gioiThieu);
     }
@@ -169,7 +169,7 @@ public class GioiThieuServiceImpl implements IGioiThieuService {
                 .ngayTao(Date.valueOf(curruntDate))
                 .ngayXoa(null)
                 .trangThai(gioiThieuRequest.getTrangThai())
-                .nhanVien(nhanVienService.findById(gioiThieuRequest.getNhanVien()))
+//                .nhanVien(nhanVienService.findById(gioiThieuRequest.getNhanVien()))
                 .build();
         return gioiThieuRepo.save(gioiThieu);
     }

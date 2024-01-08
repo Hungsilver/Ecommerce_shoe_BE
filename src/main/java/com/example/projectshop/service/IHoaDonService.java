@@ -23,7 +23,11 @@ public interface IHoaDonService {
 
     HoaDon findById(Integer id);
 
+    HoaDonChiTiet findByIdHDCT(Integer id);
+
     HoaDon findByMa(String ma);
+
+    List<HoaDon> findByIdKhachHangAnhTrangThai(Integer trangThai);
 
     HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
 
@@ -45,7 +49,13 @@ public interface IHoaDonService {
 
     HoaDon update(Integer id, HoaDonRequest hoaDonRequest);
 
+    HoaDon updateInvoice(HoaDon hoaDon);
+
     void delete(String maHoaDon);
+
+    HoaDon huyDonHang(Integer id);
+
+    HoaDonChiTiet deleteHdct(Integer idHdct);
 
     HoaDon updateStatus(Integer id, Integer status);
 

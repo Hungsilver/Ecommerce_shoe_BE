@@ -18,4 +18,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, Inte
 
     @Query(value = "select p from PhieuGiamGia p where p.ten = :name")
     Optional<PhieuGiamGia> findByName(@Param("name")String name);
+
+    @Query(value = "select p from PhieuGiamGia p where p.ma = :ma")
+    Optional<PhieuGiamGia> findByMa(@Param("ma")String ma);
 }

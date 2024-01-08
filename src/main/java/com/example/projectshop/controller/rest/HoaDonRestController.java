@@ -1,6 +1,7 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.HoaDon;
+import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
 import com.example.projectshop.repository.HoaDonRepository;
@@ -27,6 +28,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(value = "*")
@@ -53,23 +55,35 @@ public class HoaDonRestController {
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
     ) {
-//        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-//            return ResponseEntity.ok("*page || pageSize || status phải là số");
-//        }
         return ResponseEntity.ok(hoaDonService.findAll(status, keyword, sortField, isSortDesc, Integer.valueOf(page), Integer.valueOf(pageSize)));
     }
 
     @GetMapping("{id}")//localhost:8080/api/invoice/1
-    public ResponseEntity<?> findById(@PathVariable("id") String id) {
-        if (!id.matches(p_chu)) {
-            return ResponseEntity.ok("*id hóa đơn phải là số");
-        }
-        return ResponseEntity.ok(hoaDonService.findById(Integer.valueOf(id)));
+    public ResponseEntity<?> findById(@PathVariable("id") Integer id) {
+//        if (!id.matches(p_chu)) {
+//            return ResponseEntity.ok("*id hóa đơn phải là số");
+//        }
+        return ResponseEntity.ok(hoaDonService.findById(id));
+    }
+
+    @PutMapping("/update")//localhost:8080/api/invoice/update
+    public ResponseEntity<?> updateInvoice(@RequestBody HoaDon hoaDon) {
+        return ResponseEntity.ok(hoaDonService.updateInvoice(hoaDon));
+    }
+
+    @GetMapping("/detail/{id}")//localhost:8080/api/invoice/detail/1
+    public ResponseEntity<?> findByIdHDCT(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(hoaDonService.findByIdHDCT(id));
     }
 
     @GetMapping("/code/{ma}")//localhost:8080/api/invoice/code/abc
     public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
         return ResponseEntity.ok(hoaDonService.findByMa(ma));
+    }
+
+    @GetMapping("/status/{id}")//localhost:8080/api/invoice/code/abc
+    public ResponseEntity<?> findByIdKhachHangAndTrangThai(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(hoaDonService.findByIdKhachHangAnhTrangThai(id));
     }
 
     @PutMapping("{id}")//localhost:8080/api/invoice/1
@@ -80,6 +94,19 @@ public class HoaDonRestController {
             return ResponseEntity.ok("*id hóa đơn phải là số");
         }
         return ResponseEntity.ok(hoaDonService.update(Integer.valueOf(id), hoaDonRequest));
+    }
+
+    @GetMapping("/huy-don/{id}")//localhost:8080/api/invoice/huy-don1
+    public ResponseEntity<?> huyDon(
+            @PathVariable("id") Integer id) {
+        return ResponseEntity.ok(hoaDonService.huyDonHang(id));
+    }
+
+    @DeleteMapping("/detail/{id}")//localhost:8080/api/invoice/detail/1
+    public ResponseEntity<?> deleteInvoiceDetail(
+            @PathVariable("id") Integer id) {
+
+        return ResponseEntity.ok(hoaDonService.deleteHdct(id));
     }
 
     // start bán hàng tại quầy
@@ -179,12 +206,18 @@ public class HoaDonRestController {
     // thanh toán online
     //localhost:8080/api/invoice/online/payment
     @PostMapping("/online/payment")
-    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest,
-                                            HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> onlineCheckout(@RequestBody HoaDonRequest hoaDonRequest) throws IOException {
         if (hoaDonRequest.getPhuongThucThanhToan() == 0) {
             return ResponseEntity.ok(hoaDonService.onlinePayment(hoaDonRequest));
         } else {
-            return ResponseEntity.ok(hoaDonService.vnPayService(hoaDonRequest));
+            return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
+                    .code(200)
+                    .isOK(false)
+                    .data(hoaDonService.vnPayService(hoaDonRequest))
+                    .message("Payment successfully")
+                    .build()
+            );
+
         }
     }
 
@@ -199,11 +232,11 @@ public class HoaDonRestController {
 
         if (responseCode.equals("00") && maHoaDon != null) {
             hoaDonService.vnPayment(maHoaDon);
-            response.sendRedirect("http://localhost:4200/"); //đường dẫn trang quản lý đơn hàng của user bên angular
+            response.sendRedirect("http://localhost:4200/payment/success"); //đường dẫn trang quản lý đơn hàng của user bên angular
             //vd: https://localhost:4200/user/...
         } else {
             hoaDonService.delete(maHoaDon);
-            response.sendRedirect("http://localhost:4200/");//đường dẫn trang thanh toán đơn hàng của user bên angular
+            response.sendRedirect("http://localhost:4200/payment/error");//đường dẫn trang thanh toán đơn hàng của user bên angular
             //vd: https://localhost:4200/user/...
         }
     }

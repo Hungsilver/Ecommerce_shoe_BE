@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,9 +19,13 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @Service
 public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
@@ -29,7 +34,25 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
     private PhieuGiamGiaRepository phieuGiamGiaRepository;
 
     // lấy ra ngày hiện tại
-    private LocalDate curruntDate = LocalDate.now();
+    private LocalDateTime curruntDate = LocalDateTime.now();
+
+
+    // update thoi gian bat dau
+//    @Scheduled(fixedRate = 20000,initialDelay = 10000) // sau 20s
+//    @Scheduled(cron = "0 */10 * * * ?") // 10m chay 1 lan
+//    public void UpdateVoucherStatus(){
+//        List<PhieuGiamGia> phieuGiamGiaList = phieuGiamGiaRepository.findAll();
+//        for (PhieuGiamGia x:phieuGiamGiaList) {
+
+//            if (x.getThoiGianBatDau().before(Date.valueOf(curruntDate))){
+//              continue;
+//            } else if (x.getThoiGianBatDau().equals(curruntDate)){
+//                x.setTrangThai(1);
+//                phieuGiamGiaRepository.save(x);
+//            }
+//        }
+//    }
+
 
     @Override
     public Page<PhieuGiamGia> findAll(Integer page,
@@ -38,12 +61,24 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                                       Boolean isSortDesc,
                                       String keyword) {
 
-        // kiểm tra nếu ngày kết thúc nhỏ hơn ngày hiện tại thì cập nhật lại trạng thái
+        System.out.println("time now:"+ curruntDate);
         for (PhieuGiamGia x : phieuGiamGiaRepository.findAll()) {
-            // thời gian kết thúc lớn hơn ngày hiện tại
-            if (x.getThoiGianKetThuc().after(Date.valueOf(curruntDate))) {
-                continue;
-            } else if (x.getThoiGianKetThuc().before(Date.valueOf(curruntDate))) {
+            LocalDateTime startTime = x.getThoiGianBatDau().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();  // Chuyển đổi Date sang ZonedDateTime
+            LocalDateTime endTime = x.getThoiGianKetThuc().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            // mặc định là sắp diễn ra
+            // update ngày bắt đầu đến ngày hiện tại, tự update
+            // TH dang diễn ra
+            if( ( startTime.isBefore(curruntDate) || startTime.equals(curruntDate)) && endTime.isAfter(curruntDate)){
+                System.out.println("time start");
+                            x.setTrangThai(1);
+                            phieuGiamGiaRepository.save(x);
+                            continue;
+//            }
+//            else if (endTime.isAfter(curruntDate)) {
+//                // thời gian kết thúc lớn hơn ngày hiện tại
+//                System.out.println("if 1");
+//                continue;
+            } else if (endTime.isBefore((curruntDate)) && startTime.isBefore(curruntDate)) {
                 // thời gian kết thúc nhỏ hơn ngày hiện tại => cập nhật lại
                 PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                         .id(x.getId())
@@ -54,13 +89,17 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .thoiGianBatDau(x.getThoiGianBatDau())
                         .thoiGianKetThuc(x.getThoiGianKetThuc())
                         .moTa(x.getMoTa())
-                        .trangThai(1)
+                        .trangThai(0)
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia);
+                System.out.println("if 2");
+
             } else {
+                System.out.println("if 5");
                 // thời gian kết thúc trùng với ngày hiện tại
                 continue;
             }
+
         }
 
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
@@ -78,6 +117,15 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
     public PhieuGiamGia findById(Integer id) {
         if (id != null) {
             return phieuGiamGiaRepository.findById(id).get();
+        }
+        return null;
+    }
+
+    @Override
+    public PhieuGiamGia findByCode(String ma) {
+        Optional<PhieuGiamGia> phieuGiamGia = phieuGiamGiaRepository.findByMa(ma);
+        if (phieuGiamGia.isPresent()){
+            return phieuGiamGia.get();
         }
         return null;
     }
@@ -190,6 +238,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
     @Override
     public PhieuGiamGia create(PhieuGiamGiaRequest phieuGiamGiaRequest) {
         String ma = "PGG" + phieuGiamGiaRepository.findAll().size() + 1;
+        System.out.println("ket thuc:"+phieuGiamGiaRequest.getThoiGianKetThuc());
         PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                 .id(null)
                 .ma(ma)
@@ -199,7 +248,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                 .thoiGianBatDau(phieuGiamGiaRequest.getThoiGianBatDau())
                 .thoiGianKetThuc(phieuGiamGiaRequest.getThoiGianKetThuc())
                 .moTa(phieuGiamGiaRequest.getMoTa())
-                .trangThai(1)
+                .trangThai(2)
                 .build();
         return phieuGiamGiaRepository.save(phieuGiamGia);
     }
