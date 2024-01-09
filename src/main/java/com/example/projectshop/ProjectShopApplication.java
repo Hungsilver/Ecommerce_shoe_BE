@@ -51,7 +51,7 @@ public class ProjectShopApplication {
     @Autowired
     KhachHangRepository khRepo;
 
-
+//
 //    @PostConstruct
 //    public void postcontruc() {
 //        KhachHang kh = khRepo.findById(1).get();
