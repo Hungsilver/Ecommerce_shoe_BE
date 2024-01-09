@@ -455,7 +455,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
         hoaDon.setId(null);
         hoaDon.setMaHoaDon(utility.renderCodeHoaDon());
         hoaDon.setTrangThai(0);
-        hoaDon.setNhanVien(null);
+        hoaDon.setNhanVien(nhanVienRepository.findById(1).get());
         hoaDon.setKhachHang(null);
 
         return hoaDonRepo.save(hoaDon);
