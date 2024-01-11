@@ -1,5 +1,6 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
@@ -62,6 +63,12 @@ public class ChiTietSanPhamRestController {
     ) {
         return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color,size, shoe_material, shoe_sole_material,product, keyword, isSortAsc, sortField, page, pageSize));
     }
+//    @GetMapping
+    public  ResponseEntity<?> findAnhByIdchiTietSanPham(@PathVariable("id") Integer id){
+        List<AnhSanPham> listanh = chiTietSanPhamService.findAnhByChiTietSanPhamId(id);
+        return ResponseEntity.ok(listanh);
+    }
+
 
     @GetMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> findById(@PathVariable("id") String id) {
