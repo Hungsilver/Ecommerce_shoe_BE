@@ -81,7 +81,7 @@ CREATE TABLE `SanPham`
 CREATE TABLE `ChiTietSanPham`
 (
     `id`                Integer AUTO_INCREMENT PRIMARY KEY,
-    `ma`                varchar(25),
+    `ma`                varchar(50),
     `soLuong`           int,
     `giaBan`            Decimal(20, 0),
     `ngayTao`           date,

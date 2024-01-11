@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, Integer> {
+//    @Query("select sum(h.donGia*h.soLuong) from HoaDonChiTiet h where h.hoaDon.id = :id")
     @Query("select sum(h.donGia*h.soLuong) from HoaDonChiTiet h where h.hoaDon.id = :id")
     BigDecimal tongTienByIdHoaDon(@Param("id") Integer id);
 

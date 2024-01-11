@@ -12,6 +12,7 @@ import com.example.projectshop.repository.KhachHangRepository;
 import com.example.projectshop.repository.NhanVienRepository;
 import com.example.projectshop.repository.SanPhamRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -45,15 +46,23 @@ public class ProjectShopApplication {
 
     @Autowired
     NhanVienRepository nvRepo;
+
+
     @Autowired
     KhachHangRepository khRepo;
 
+//
 //    @PostConstruct
 //    public void postcontruc() {
-//        KhachHang nv = khRepo.findById(1).get();
-//        nv.setEmail("customer@gmail.com");
-//        nv.setMatKhau(bCryptPasswordEncoder.encode("admin@123"));
-//        khRepo.save(nv);
+//        KhachHang kh = khRepo.findById(1).get();
+//        kh.setEmail("customer@gmail.com");
+//        kh.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
+//        khRepo.save(kh);
+//
+//        NhanVien nv = nvRepo.findById(1).get();
+//        nv.setEmail("admin@gmail.com");
+//        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
+//        nvRepo.save(nv);
 //    }
 
 
