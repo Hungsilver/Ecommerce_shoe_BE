@@ -64,4 +64,6 @@ public interface IHoaDonService {
     HoaDon CreateInvoice();
 
     Optional<HoaDon> findByInvoiceNew();
+
+    HoaDon updateTongTien(Integer idTraHang);
 }

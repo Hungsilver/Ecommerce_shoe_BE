@@ -83,7 +83,7 @@ CREATE TABLE `ChiTietSanPham`
     `id`                Integer AUTO_INCREMENT PRIMARY KEY,
     `ma`                varchar(25),
     `soLuong`           int,
-    `giaBan`            decimal(18, 2),
+    `giaBan`            Decimal(20, 0),
     `ngayTao`           date,
     `ngayCapNhat`       date,
     `trangThai`         int,
@@ -106,10 +106,10 @@ CREATE TABLE `HoaDon`
     `tinhThanh`           nvarchar(100),
     `ngayTao`             date,
     `ngayCapNhat`         date,
-    `tongTien`            Decimal(18, 2),
-    `tienGiam`            Decimal(18, 2),
-    `tongTienSauGiam`     Decimal(18, 2),
-    `phiVanChuyen`        Decimal(18, 2),
+    `tongTien`            Decimal(20, 0),
+    `tienGiam`            Decimal(20, 0),
+    `tongTienSauGiam`     Decimal(20, 0),
+    `phiVanChuyen`        Decimal(20, 0),
     `phuongThucThanhToan` int,
     `trangThai`           int,
     `id_PhieuGiamGia`     Integer,
@@ -122,9 +122,30 @@ CREATE TABLE `HoaDonChiTiet`
     `id`                Integer AUTO_INCREMENT PRIMARY KEY,
     `id_HoaDon`         Integer,
     `id_ChiTietSanPham` Integer,
-    `donGia`            Decimal(18, 2),
+    `donGia`            Decimal(20, 0),
     `soLuong`           int
 );
+
+CREATE TABLE `TraHang`
+(
+    `id`				Integer AUTO_INCREMENT PRIMARY KEY,
+    `id_HoaDon`			Integer,
+    `lyDo`				Varchar(200),
+    `ngayTao`           date,
+    `ngayCapNhat`       date,
+    `tienTraKhach`		Decimal(20, 0),
+    `trangThai`			Integer
+);
+
+CREATE TABLE `TraHangChiTiet`
+(
+    `id`				Integer AUTO_INCREMENT PRIMARY KEY,
+    `id_TraHang`		Integer,
+    `id_HoaDonChiTiet`  Integer,
+    `donGia`            Decimal(20, 0),
+    `soLuong`           Integer
+);
+
 
 CREATE TABLE `GioHang`
 (
@@ -138,7 +159,7 @@ CREATE TABLE `GioHangChiTiet`
     `id_GioHang`        Integer,
     `id_ChiTietSanPham` Integer,
     `soLuong`           Integer,
-    `giaBan`            Decimal(18, 2)
+    `giaBan`            Decimal(20, 0)
 );
 
 
@@ -197,10 +218,10 @@ CREATE TABLE `PhieuGiamGia`
     `id`              Integer AUTO_INCREMENT PRIMARY KEY,
     `ma`              varchar(10),
     `ten`             nvarchar(300),
-    `chietKhau`       Decimal(18, 2),
+    `chietKhau`       Decimal(20, 0),
     `hinhThucGiamGia` boolean,
-    `thoiGianBatDau`  Date,
-    `thoiGianKetThuc` Date,
+    `thoiGianBatDau`  datetime,
+    `thoiGianKetThuc` datetime,
     `moTa`            nvarchar(100),
     `trangThai`       int
 );
@@ -261,6 +282,15 @@ ALTER TABLE `HoaDonChiTiet`
 
 ALTER TABLE `HoaDonChiTiet`
     ADD FOREIGN KEY (`id_ChiTietSanPham`) REFERENCES `ChiTietSanPham` (`id`);
+
+ALTER TABLE `TraHang`
+    ADD FOREIGN KEY (`id_HoaDon`) REFERENCES `HoaDon` (`id`);
+
+ALTER TABLE `TraHangChiTiet`
+    ADD FOREIGN KEY (`id_TraHang`) REFERENCES `TraHang` (`id`);
+
+ALTER TABLE `TraHangChiTiet`
+    ADD FOREIGN KEY (`id_HoaDonChiTiet`) REFERENCES `HoaDonChiTiet` (`id`);
 
 ALTER TABLE `GioHang`
     ADD FOREIGN KEY (`id_khachHang`) REFERENCES `KhachHang` (`id`);
@@ -423,19 +453,19 @@ Insert into ChucVu value (null,"Quản Lý",0),
     (null,"Nhân Viên",0);
 
 -- Insert NhanVien
-Insert into NhanVien value (null,"admin",null,"admin@gmail.com","123","0987654321",0,"2023/10/08","ha noi",0),
-    (null,"nhanVien",null,"nhanVien@gmail.com","123","0987654321",0,"2023/10/08","ha noi",1);
+Insert into NhanVien value (null,"admin",null,"admin@gmail.com","$2a$10$d3XgEQxbzK/sIG4HbDIk0.lIQaDeLWPqv3bhuf7qt1YNgGAkw2Ln2","0987654321",0,"2023/10/08","ha noi",0),
+    (null,"nhanVien",null,"nhanVien@gmail.com","$2a$10$d3XgEQxbzK/sIG4HbDIk0.lIQaDeLWPqv3bhuf7qt1YNgGAkw2Ln2","0987654321",0,"2023/10/08","ha noi",1);
 
 -- Insert NhanVienChucVu
 Insert into NhanVienChucVu value (1,1),
     (2,2);
 
 -- Insert KhachHang
-Insert into KhachHang value (null,"KhachHang1","khachhang1@gmail.com","123","0987654321","2023/10/17",0),
-	(null,"KhachHang2","khachhang2@gmail.com","123","0987654322","2023/10/17",0),
-	(null,"KhachHang3","khachhang3@gmail.com","123","0987654323","2023/10/17",0),
-	(null,"KhachHang4","khachhang4@gmail.com","123","0987654324","2023/10/17",0),
-	(null,"KhachHang5","khachhang5@gmail.com","123","0987654325","2023/10/17",0);
+Insert into KhachHang value (null,"Trịnh Trọng Vũ","vuttph25379@fpt.edu.vn","$2a$10$A8M44tVtA.P0TUjUczlgMeskUu2WviP3BDS7G6X2tVx43WFScRFq6","0375111058","2023/10/17",0),
+	(null,"Trần Quyết Chiến","chientqph25370@fpt.edu.vn","$2a$10$TKWMK7CjCas4JGyAc4LZceOQmoIwt8Ss4jiPQAwbtGfKi7BSpo2e6","0346544561","2023/10/17",0),
+	(null,"Trương Duy Hưng","hungtdph254100@fpt.edu.vn","$2a$10$ySt2CyVKWYeSD/eOb4ps5u3ilsPk1gIBZO8NnS4ocYj1XAFZ/Xu1S","0348079278","2023/10/17",0),
+	(null,"Lê Mạnh Tuấn","tuanlmph25427@fpt.edu.vn","$2a$10$VTLSJMj1TBfk25Ko/w4et.2G69bN2E6W0aOB1UjzyPGoIR0YIpOqW","0967340351","2023/10/17",0),
+	(null,"Nguyễn Trọng Đức","ducntph25394@fpt.edu.vn","$2a$10$d3XgEQxbzK/sIG4HbDIk0.lIQaDeLWPqv3bhuf7qt1YNgGAkw2Ln2","0375670501","2023/10/17",0);
 
 -- Insert DiaChi
 Insert into DiaChi value (null,"hanoi",null,null,null,0,1),
@@ -451,6 +481,5 @@ Insert into GioiThieu value (null,"gioithieu1","noidung1",null,null,"mota1",null
 	(null,"gioithieu4","noidung4",null,null,"mota4",null,null,0,null),
 	(null,"gioithieu5","noidung5",null,null,"mota5",null,null,0,null)
 
--- Mô tả bản cập nhật 1.9:
--- Cập nhật sanpham thêm trường ngayCapNhat vào bảng hoadon, bỏ quan hệ giữa khachhang với phieugiamgia
+
 

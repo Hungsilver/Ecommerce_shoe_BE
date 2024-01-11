@@ -18,20 +18,20 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
     // end thống kê hóa đơn
 
     // start thống kế doanh thu
-    @Query(value = "SELECT DATE_FORMAT(ngayTao, '%Y-%m-%d') AS ngayThang,SUM(tongTienSauGiam-phiVanChuyen) tongDoanhThu ,count(ngayTao) as tongDonHang\n" +
+    @Query(value = "SELECT DATE_FORMAT(ngayTao, '%Y-%m-%d') AS ngayThang,SUM(tongTienSauGiam) tongDoanhThu ,count(ngayTao) as tongDonHang\n" +
             "FROM hoadon\n" +
             "WHERE  ngayTao = CURDATE() AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
             "group by ngayTao", nativeQuery = true)
     List<Object[]> thongKeDoanhThuNgayHienTai();
 
-    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(h.tongTienSauGiam-h.phiVanChuyen), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
+    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu7NgayTruoc();
 
-    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(h.tongTienSauGiam-h.phiVanChuyen), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
+    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
@@ -39,21 +39,21 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
     List<Object[]> thongKeDoanhThu28NgayTruoc();
 
 
-    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(h.tongTienSauGiam-h.phiVanChuyen), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
+    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m') >= DATE_FORMAT(CURDATE() - INTERVAL 12 month, '%Y-%m')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu1NamTruoc();
 
-    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(h.tongTienSauGiam-h.phiVanChuyen), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
+    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m') >= DATE_FORMAT(CURDATE() - INTERVAL 6 month, '%Y-%m')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
             "GROUP BY ngayThang,trangThai", nativeQuery = true)
     List<Object[]> thongKeDoanhThu6ThangTruoc();
 
-    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(h.tongTienSauGiam-h.phiVanChuyen), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang \n" +
+    @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang \n" +
             "            FROM HoaDon h \n" +
             "            WHERE h.ngayTao between :startDate and :endDate  " +
             "            AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
