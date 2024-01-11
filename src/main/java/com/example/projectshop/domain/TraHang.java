@@ -1,7 +1,5 @@
 package com.example.projectshop.domain;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
@@ -20,40 +18,43 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "hoadonchitiet")
+@Table(name = "trahang")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class HoaDonChiTiet {
+public class TraHang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "dongia")
-    private BigDecimal donGia;
+    @Column(name = "lydo")
+    private String lyDo;
 
-    @Column(name = "soluong")
-    private Integer soLuong;
+    @Column(name = "ngaytao")
+    private Date ngayTao;
 
-//    @JsonBackReference
-//    @JsonIgnore
+    @Column(name = "ngaycapnhat")
+    private Date ngayCapNhat;
+
+    @Column(name = "tientrakhach")
+    private BigDecimal tienTraKhach;
+
+    @Column(name = "trangthai")
+    private Integer trangThai;
+
     @ManyToOne()
     @JoinColumn(name = "id_hoadon")
     private HoaDon hoaDon;
 
-//    @JsonBackReference
-    @ManyToOne()
-    @JoinColumn(name = "id_chitietsanpham")
-    private ChiTietSanPham chiTietSanPham;
-
-//    @JsonIgnoreProperties("hoaDonChiTiet")
-    @JsonIgnore
-    @OneToMany(mappedBy = "hoaDonChiTiet")
+    @JsonIgnoreProperties("traHang")
+//    @JsonIgnore
+    @OneToMany(mappedBy = "traHang")
     private List<TraHangChiTiet> listTraHangChiTiet;
 }

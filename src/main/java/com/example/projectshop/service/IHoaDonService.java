@@ -65,5 +65,9 @@ public interface IHoaDonService {
 
     Optional<HoaDon> findByInvoiceNew();
 
+
+    HoaDon updateTongTien(Integer idTraHang);
+
     List<HoaDonChiTiet> findByIdInvoice(Integer idInvoice);
+
 }
