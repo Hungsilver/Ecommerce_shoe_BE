@@ -1,5 +1,6 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.phieugiamgia.ExportExcelPGG;
 import com.example.projectshop.dto.phieugiamgia.ImportExcelPGG;
@@ -34,4 +35,5 @@ public interface IPhieuGiamGiaService {
     PhieuGiamGia update(Integer id, PhieuGiamGiaRequest PhieuGiamGiaRequest);
 
     PhieuGiamGia delete(Integer id);
+
 }

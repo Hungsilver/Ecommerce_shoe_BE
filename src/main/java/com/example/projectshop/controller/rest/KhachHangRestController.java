@@ -57,11 +57,9 @@ public class KhachHangRestController {
     }
 
     @GetMapping("{id}")//localhost:8080/api/customer/1
-    public ResponseEntity<?> findById(@PathVariable String id) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id khách hàng phải là số");
-        }
-        return ResponseEntity.ok(khachHangService.findById(Integer.valueOf(id)));
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+
+        return ResponseEntity.ok(khachHangService.findById(id));
     }
 
 
