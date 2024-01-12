@@ -66,6 +66,9 @@ public interface IHoaDonService {
 
     Optional<HoaDon> findByInvoiceNew();
 
+
+    HoaDon updateTongTien(Integer idTraHang);
+
     List<HoaDonChiTiet> findByIdInvoice(Integer idInvoice);
 
     HoaDonChiTiet updateSalesQuantityAtTheCounter(Integer idHDCT, Integer soLuong);
@@ -73,6 +76,5 @@ public interface IHoaDonService {
     void cancellingInvoice(Integer idHoaDon);
 
     PhieuGiamGia addPhieuGiamGiaToHoaDon(Integer idHoaDon, String maPhieuGiamGia);
-
 
 }

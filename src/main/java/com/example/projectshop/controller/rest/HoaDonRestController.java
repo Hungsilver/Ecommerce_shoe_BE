@@ -78,6 +78,11 @@ public class HoaDonRestController {
         return ResponseEntity.ok(hoaDonService.findByIdHDCT(id));
     }
 
+    @GetMapping("/update-total/{id}")//localhost:8080/api/invoice/update-total/1
+    public ResponseEntity<?> updateTongTien(@PathVariable("id") Integer idTraHang) {
+        return ResponseEntity.ok(hoaDonService.updateTongTien(idTraHang));
+    }
+
     @GetMapping("/code/{ma}")//localhost:8080/api/invoice/code/abc
     public ResponseEntity<?> findByMa(@PathVariable("ma") String ma) {
         return ResponseEntity.ok(hoaDonService.findByMa(ma));
