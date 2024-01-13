@@ -36,7 +36,6 @@ public class ProjectShopApplication {
         SpringApplication.run(ProjectShopApplication.class, args);
 //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        System.out.println(passwordEncoder.encode("2003"));
-
     }
 
     //    @Autowired
@@ -54,16 +53,16 @@ public class ProjectShopApplication {
 //
     @PostConstruct
     public void postcontruc() {
-        KhachHang kh = khRepo.findById(1).get();
-        kh.setEmail("customer@gmail.com");
-        kh.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
-        khRepo.save(kh);
 
-        NhanVien nv = nvRepo.findById(1).get();
-        nv.setEmail("admin@gmail.com");
-        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
-        nvRepo.save(nv);
+//        KhachHang kh = khRepo.findById(1).get();
+//        kh.setEmail("customer@gmail.com");
+//        kh.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
+//        khRepo.save(kh);
+
+//        NhanVien nv = nvRepo.findById(1).get();
+//        nv.setEmail("admin@gmail.com");
+//        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
+//        nvRepo.save(nv);
     }
-
 
 }
