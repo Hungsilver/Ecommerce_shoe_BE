@@ -277,6 +277,44 @@ public class HoaDonRestController {
         return ResponseEntity.ok().build();
     }
 
+    // xuất hóa đơn file pdf với id hóa đơn
+    //localhost:8080/api/invoice/export/1
+    @GetMapping("/export/giao-hang/{id}")
+    public ResponseEntity<?> exportPDFGiaoHang(HttpServletResponse response,
+                                       @PathVariable("id") Integer id) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+
+        response.setHeader(headerKey, headerValue);
+        hoaDonService.exportPDFGiaoHang(response, Integer.valueOf(id));
+        return ResponseEntity.ok().build();
+    }
+
+    // xuất hóa đơn file pdf với id trả hàng
+    //localhost:8080/api/invoice/export/tra-hang/1
+    @GetMapping("/export/tra-hang/{id}")
+    public ResponseEntity<?> exportPDFTraHang(HttpServletResponse response,
+                                               @PathVariable("id") Integer id) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+
+        response.setHeader(headerKey, headerValue);
+        hoaDonService.exportPDFTraHang(response, Integer.valueOf(id));
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create
     public ResponseEntity<?> CreateInvoice() {
         return ResponseEntity.ok(hoaDonService.CreateInvoice());
