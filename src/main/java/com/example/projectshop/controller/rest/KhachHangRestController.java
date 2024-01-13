@@ -40,16 +40,13 @@ public class KhachHangRestController {
 
     @GetMapping()//localhost:8080/api/customer
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-        if (!page.matches(p_chu) || !pageSize.matches(p_chu)) {
-            return ResponseEntity.ok("*page || pageSize phải là số");
-        }
-        return ResponseEntity.ok(khachHangService.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc, keyword));
+        return ResponseEntity.ok(khachHangService.findAll(page, pageSize, sortField, isSortDesc, keyword));
     }
 
     @PostMapping()//localhost:8080/api/customer

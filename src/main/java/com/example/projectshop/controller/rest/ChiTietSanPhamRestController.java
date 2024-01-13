@@ -34,15 +34,15 @@ public class ChiTietSanPhamRestController {
 
     @GetMapping()//localhost:8080/api/product-detail
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
-            return ResponseEntity.ok("*page || pageSize phải là số");
-        }
-        return ResponseEntity.ok(chiTietSanPhamService.findAll(Integer.valueOf(page), Integer.valueOf(pageSize), sortField, isSortDesc));
+//        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+//            return ResponseEntity.ok("*page || pageSize phải là số");
+//        }
+        return ResponseEntity.ok(chiTietSanPhamService.findAll(page, pageSize, sortField, isSortDesc));
     }
 
     @GetMapping("filter")//localhost:8080/api/product-detail/filter
