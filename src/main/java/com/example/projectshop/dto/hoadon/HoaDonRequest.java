@@ -23,7 +23,7 @@ public class HoaDonRequest {
     private String phiVanChuyen;
     private Integer phuongThucThanhToan;
     private Integer trangThai;
-    private Integer phieuGiamGia;
+    private Integer phieuGiamGia; // id phieu giam gia
     private Integer khachHang;
     private Integer nhanVien;
     private List<HoaDonChiTietRequest> hoaDonChiTietRequests;

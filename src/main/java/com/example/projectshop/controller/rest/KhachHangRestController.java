@@ -62,6 +62,7 @@ public class KhachHangRestController {
             return ResponseEntity.ok("*id khách hàng phải là số");
         }
         return ResponseEntity.ok(khachHangService.findById(Integer.valueOf(id)));
+
     }
 
 

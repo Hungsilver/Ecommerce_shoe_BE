@@ -53,6 +53,7 @@ public class ProjectShopApplication {
 //
     @PostConstruct
     public void postcontruc() {
+
 //        KhachHang kh = khRepo.findById(1).get();
 //        kh.setEmail("customer@gmail.com");
 //        kh.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
@@ -63,4 +64,5 @@ public class ProjectShopApplication {
 //        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
 //        nvRepo.save(nv);
     }
+
 }
