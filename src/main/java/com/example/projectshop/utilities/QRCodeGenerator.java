@@ -40,8 +40,7 @@ public class QRCodeGenerator {
         BitMatrix bitMatrix;
         try {
             bitMatrix = qrCodeWriter.encode(
-                    "MaHoaDon: " + hoaDon.getMaHoaDon() + "\n"
-                    , BarcodeFormat.QR_CODE, 200, 200, hintsMap);
+                    hoaDon.getMaHoaDon() , BarcodeFormat.QR_CODE, 200, 200, hintsMap);
         } catch (Exception e) {
             throw new RuntimeException("Failed to generate QR code image.", e);
         }

@@ -1,6 +1,8 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.HoaDon;
+import com.example.projectshop.domain.HoaDonChiTiet;
+import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
@@ -138,6 +140,9 @@ public class HoaDonRestController {
     @PostMapping("/shop/payments/cast/{id}")//localhost:8080/api/invoice/shop/payments/1
     public ResponseEntity<?> shopCheckoutCast(@PathVariable("id") Integer idHoaDon,
                                               @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+        System.out.println(
+                "fdsfs" + hoaDonRequest
+        );
         return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
     }
 
@@ -277,6 +282,44 @@ public class HoaDonRestController {
         return ResponseEntity.ok().build();
     }
 
+    // xuất hóa đơn file pdf với id hóa đơn
+    //localhost:8080/api/invoice/export/1
+    @GetMapping("/export/giao-hang/{id}")
+    public ResponseEntity<?> exportPDFGiaoHang(HttpServletResponse response,
+                                       @PathVariable("id") Integer id) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+
+        response.setHeader(headerKey, headerValue);
+        hoaDonService.exportPDFGiaoHang(response, Integer.valueOf(id));
+        return ResponseEntity.ok().build();
+    }
+
+    // xuất hóa đơn file pdf với id trả hàng
+    //localhost:8080/api/invoice/export/tra-hang/1
+    @GetMapping("/export/tra-hang/{id}")
+    public ResponseEntity<?> exportPDFTraHang(HttpServletResponse response,
+                                               @PathVariable("id") Integer id) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+
+        response.setHeader(headerKey, headerValue);
+        hoaDonService.exportPDFTraHang(response, Integer.valueOf(id));
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create
     public ResponseEntity<?> CreateInvoice() {
         return ResponseEntity.ok(hoaDonService.CreateInvoice());
@@ -293,4 +336,39 @@ public class HoaDonRestController {
     public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon ){
         return ResponseEntity.ok(hoaDonService.findByIdInvoice(idHoaDon));
     }
+
+    //hủy hóa đơn
+    @PostMapping("/cance-invoice/{id}")
+    public ResponseEntity<?> canceInvoice(@PathVariable Integer id){
+        hoaDonService.cancellingInvoice(id);
+        return ResponseEntity.ok().build();
+    }
+
+    // update số lượng hdct tại quầy
+    @PutMapping("/update-quantity/{idHDCT}")
+    public ResponseEntity<?> updateQuantityInvoiceDetail(@PathVariable Integer idHDCT, @RequestParam Integer soLuong) {
+        HoaDonChiTiet updatedHoaDonChiTiet = hoaDonService.updateSalesQuantityAtTheCounter(idHDCT, soLuong);
+        if (updatedHoaDonChiTiet != null) {
+            return new ResponseEntity<>(updatedHoaDonChiTiet, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/add-phieu-giam-gia/{idHoaDon}")
+    public ResponseEntity<?> addPhieuGiamGiaToHoaDon(
+            @PathVariable Integer idHoaDon,
+            @RequestParam String maPhieuGiamGia
+    ) {
+        PhieuGiamGia phieuGiamGia = hoaDonService.addPhieuGiamGiaToHoaDon(idHoaDon, maPhieuGiamGia);
+
+        if (phieuGiamGia != null) {
+            System.out.println("pgg"+phieuGiamGia.getMa());
+            return ResponseEntity.ok(phieuGiamGia);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
