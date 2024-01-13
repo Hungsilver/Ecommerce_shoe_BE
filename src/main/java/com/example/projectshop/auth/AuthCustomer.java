@@ -5,13 +5,17 @@ import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.khachhang.LoginKhachHang;
 import com.example.projectshop.service.IKhachHangService;
+import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utilities.utility;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 
 @CrossOrigin(origins = "*")
 @RestController
+@Slf4j
 @RequestMapping("/api/auth/customer")
 //@RequiredArgsConstructor
 public class AuthCustomer {
@@ -54,12 +59,18 @@ public class AuthCustomer {
     private PasswordEncoder passwordEncoder;
 
 
+    @Autowired
+    private HttpSession httpSession;
+
+//    @Autowired
+//    private HttpCookie httpCookie;
+
     @PostMapping("/register")//localhost:8080/api/auth/customer/register
     // trả về chuỗi string đăng ký thành công hay thất bại
     public ResponseEntity<?> registerKhachHang(
             @RequestBody KhachHangRequest khachHangRequest) {
         KhachHang khachHang = khachHangService.registerKhachHang(khachHangRequest);
-        if(khachHang!=null) {
+        if (khachHang != null) {
             return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
                                                                      .code(200)
                                                                      .isOK(true)
@@ -67,13 +78,13 @@ public class AuthCustomer {
                                                                      .message("register successfully")
                                                                      .build()
             );
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(BaseResponse.<Object>builder()
-                                                                     .code(400)
-                                                                     .isOK(false)
-                                                                     .data(null)
-                                                                     .message("register fail")
-                                                                     .build()
+                                                                            .code(400)
+                                                                            .isOK(false)
+                                                                            .data(null)
+                                                                            .message("Email đã tồn tại")
+                                                                            .build()
             );
         }
     }
@@ -84,36 +95,37 @@ public class AuthCustomer {
 
         if (loginKhachHang == null) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(base.createBaseResponse(HttpStatus.UNAUTHORIZED.value(), null, false, "Thông tin khách hàng trống"));
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(base.createBaseResponse(HttpStatus.BAD_REQUEST.value(), null, false, "Thông tin khách hàng trống"));
         }
         KhachHang khachHang = khachHangService.loginKhachHang(loginKhachHang.getEmail(), loginKhachHang.getMatKhau());
         if (khachHang == null) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(base.createBaseResponse(HttpStatus.UNAUTHORIZED.value(), null, false, "Tài khoản hoặc mật khẩu không chính xác"));
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(base.createBaseResponse(HttpStatus.BAD_REQUEST.value(), null, false, "Tài khoản hoặc mật khẩu không chính xác"));
         }
         appContext.getServletContext().setAttribute("khachHang", khachHang);// lưu thông tin khách hàng đăng nhập
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
-                .code(200)
-                .isOK(false)
-                .data(appContext.getServletContext().getAttribute("khachHang"))
-                .message("Login successfully")
-                .build()
-        );// đăng nhập thành công trả về thông tin của khách hàng
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.<Object>builder()
+                              .code(200)
+                              .isOK(false)
+                              .data(appContext.getServletContext().getAttribute("khachHang"))
+                              .message("Login successfully")
+                              .build()
+                );// đăng nhập thành công trả về thông tin của khách hàng
     }
 
     @GetMapping("/logout")//localhost:8080/api/auth/customer/check-login-status
     public ResponseEntity<?> logout() {
         appContext.getServletContext().removeAttribute("khachHang");
         return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<Object>builder()
-                .code(200)
-                .isOK(false)
-                .data(appContext.getServletContext().getAttribute("khachHang"))
-                .message("Login successfully")
-                .build()
+                                                                 .code(200)
+                                                                 .isOK(false)
+                                                                 .data(appContext.getServletContext().getAttribute("khachHang"))
+                                                                 .message("Login successfully")
+                                                                 .build()
         );
     }
 
@@ -127,74 +139,139 @@ public class AuthCustomer {
         }
     }
 
-    @GetMapping("/checkSession")//localhost:8080/api/auth/customer/checkSession
-    public ResponseEntity<String> checkSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-//        check-login-status bor
-        if (session != null) {
-            // Lấy thông tin khách hàng từ Session
-            KhachHang khachHang = (KhachHang) session.getAttribute("khachHang");
 
-            if (khachHang != null) {
-                // Khách hàng đã đăng nhập
-                return ResponseEntity.ok("Khách hàng đã đăng nhập: " + khachHang.getHoTen());
-            } else {
-                // Session tồn tại nhưng không có thông tin khách hàng
-                return ResponseEntity.ok("Khách hàng chưa đăng nhập");
-            }
-        } else {
-            // Session không tồn tại
-            return ResponseEntity.ok("Khách hàng chưa đăng nhập");
-        }
-    }
-
-    @PostMapping("/forgot-password")//localhost:8080/api/auth/customer/forgot-password
+    @GetMapping("/forget-password")//localhost:8080/api/auth/customer/forget-password
     public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
         KhachHang khachHang = khachHangService.findByEmail(email);
         if (khachHang == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponse.<String>builder()
-                    .code(500)
-                    .isOK(false)
-                    .data(email)
-                    .message("Email not found")
-                    .build()
-            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(BaseResponse.<String>builder()
+                                  .code(404)
+                                  .isOK(false)
+                                  .data(email)
+                                  .message("Email not found")
+                                  .build()
+                    );
+        }
+        String password = utility.generateRandomString(6);
+        try {
+            log.info(khachHang.getEmail() + "__" + khachHang.getMatKhau());
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom("vuttph25379@fpt.edu.vnn", "Shop Gens-z");
+            helper.setTo(email);
+
+            String subject = "Shop GENS-Z - Đây là mật khẩu của bạn";
+
+            String content = "<p>Xin Chào,<p>" +
+                    "<p> Bạn đã yêu cầu lấy lại mật khẩu của mình.</p>" +
+                    "<p> Đây là mật khẩu mới của bạn: " + password + "</p>" +
+                    "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
+            helper.setSubject(subject);
+            helper.setText(content, true);
+            mailSender.send(message);
+
+            KhachHangRequest khreq = KhachHangRequest.builder()
+                    .trangThai(khachHang.getTrangThai())
+                    .soDienThoai(khachHang.getSoDienThoai())
+                    .email(khachHang.getEmail())
+                    .hoTen(khachHang.getHoTen())
+                    .id(khachHang.getId())
+                    .matKhau(password )
+                    .ngaySinh(khachHang.getNgaySinh())
+                    .build();
+
+            KhachHang khUpdate = khachHangService.update(khachHang.getId(), khreq);
+
+            if (khUpdate != null) {
+
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(BaseResponse.<String>builder()
+                                      .code(200)
+                                      .isOK(true)
+                                      .data(null)
+                                      .message("Send email successfully")
+                                      .build()
+                        );
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(BaseResponse.<String>builder()
+                                      .code(400)
+                                      .isOK(false)
+                                      .data(null)
+                                      .message("error update kh")
+                                      .build()
+                        );
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(BaseResponse.<String>builder()
+                                  .code(400)
+                                  .isOK(false)
+                                  .data(null)
+                                  .message("Send email error")
+                                  .build()
+                    );
+        }
+    }
+
+    //get otp by email
+    @GetMapping("/forget-password-otp")//localhost:8080/api/auth/customer/forget-password
+    public ResponseEntity<?> getOtpForgetPass(@RequestParam("email") String email) throws UnsupportedEncodingException, MessagingException {
+        KhachHang khachHang = khachHangService.findByEmail(email);
+        if (khachHang == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(BaseResponse.<String>builder()
+                                  .isOK(false)
+                                  .data(email)
+                                  .code(404)
+                                  .message("Email not found")
+                                  .build()
+                    );
         }
 
-        String password = utility.generateRandomString(6);
-        KhachHangRequest khachHangRequest = KhachHangRequest.builder()
-                .id(khachHang.getId())
-                .hoTen(khachHang.getHoTen())
-                .email(khachHang.getEmail())
-                .matKhau(passwordEncoder.encode(password))
-                .soDienThoai(khachHang.getSoDienThoai())
-                .ngaySinh(khachHang.getNgaySinh())
-                .trangThai(khachHang.getTrangThai())
-                .build();
-        khachHangService.update(khachHang.getId(), khachHangRequest);
+        Integer otp = utility.generateOTP();
+//        httpSession.setAttribute('');
 
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom("vuttph25379@fpt.edu.vn", "Shop Gens-z");
-        helper.setTo(email);
+            helper.setFrom("vuttph25379@fpt.edu.vnn", "Shop Gens-z");
+            helper.setTo(email);
 
-        String subject = "Shop GENS-Z - Đây là mật khẩu của bạn";
+            String subject = "Shop GENS-Z - Đây là mật khẩu của bạn";
 
-        String content = "<p>Xin Chào,<p>" +
-                "<p> Bạn đã yêu cầu lấy lại mật khẩu của mình.</p>" +
-                "<p> Đây là mật khẩu của bạn: " + password + "</p>" +
-                "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
-        helper.setSubject(subject);
-        helper.setText(content, true);
+            String content = "<p>Xin Chào,<p>" +
+                    "<p> Bạn đã yêu cầu lấy lại mật khẩu của mình.</p>" +
+                    "<p> Đây là mã OTP của bạn: " + otp + "</p>" +
+                    "<p> Bỏ qua email này nếu bạn nhớ mật khẩu của mình hoặc bạn chưa thực hiện yêu cầu";
+            helper.setSubject(subject);
+            helper.setText(content, true);
 
-        mailSender.send(message);
-        return ResponseEntity.status(HttpStatus.OK).body(BaseResponse.<String>builder()
-                .code(200)
-                .isOK(true)
-                .data(null)
-                .message("Send email successfully")
-                .build()
-        );
+            mailSender.send(message);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(BaseResponse.<String>builder()
+                                  .code(200)
+                                  .isOK(true)
+                                  .data(null)
+                                  .message("Send email successfully")
+                                  .build()
+                    );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(BaseResponse.<String>builder()
+                                  .code(400)
+                                  .isOK(false)
+                                  .data(null)
+                                  .message("Send email error")
+                                  .build()
+                    );
+        }
     }
+
 }

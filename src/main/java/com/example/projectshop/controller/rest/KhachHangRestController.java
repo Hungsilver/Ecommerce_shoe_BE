@@ -1,6 +1,7 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.KhachHang;
+import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.phieugiamgia.PhieuGiamGiaRequest;
 import com.example.projectshop.exception.UnauthorizedException;
@@ -36,7 +37,7 @@ public class KhachHangRestController {
 
 
     private String p_chu = "\\d+";
-    
+
     @GetMapping()//localhost:8080/api/customer
     public ResponseEntity<?> findAll(
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
@@ -45,7 +46,6 @@ public class KhachHangRestController {
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-
         return ResponseEntity.ok(khachHangService.findAll(page, pageSize, sortField, isSortDesc, keyword));
     }
 
@@ -58,10 +58,11 @@ public class KhachHangRestController {
 
     @GetMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> findById(@PathVariable String id) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id khách hàng phải là số");
         }
         return ResponseEntity.ok(khachHangService.findById(Integer.valueOf(id)));
+
     }
 
 
@@ -70,25 +71,40 @@ public class KhachHangRestController {
             @RequestBody KhachHangRequest khachHangRequest,
             @PathVariable("id") String id
     ) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id khách hàng phải là số");
         }
-        return ResponseEntity.ok(khachHangService.update(Integer.valueOf(id), khachHangRequest));
+        KhachHang kh = khachHangService.update(Integer.valueOf(id), khachHangRequest);
+        return kh != null ? ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.builder()
+                              .code(200)
+                              .data(kh)
+                              .isOK(true)
+                              .message("update khach hang thanh cong")
+                              .build()
+                ) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(BaseResponse.builder()
+                                      .data(null)
+                                      .code(404)
+                                      .isOK(false)
+                                      .message("update khach hang that bai")
+                                      .build()
+                        );
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> delete(@PathVariable("id") String id) {
-        if (!id.matches(p_chu)){
+        if (!id.matches(p_chu)) {
             return ResponseEntity.ok("*id khách hàng phải là số");
         }
         return ResponseEntity.ok(khachHangService.delete(Integer.valueOf(id)));
     }
 
     @GetMapping("/excel/export")//localhost:8080/api/customer/excel/export
-    public  ResponseEntity<?> exportExcel() {
+    public ResponseEntity<?> exportExcel() {
         return ResponseEntity.ok(khachHangService.exportExcel());
     }
-
 
 
 //    @PostMapping("/register")//localhost:8080/api/customer/register

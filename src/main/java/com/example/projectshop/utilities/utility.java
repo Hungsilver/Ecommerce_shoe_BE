@@ -75,8 +75,7 @@ public class utility {
             trangThai = "Đã hủy";
         } else if (input == 7) {
             trangThai = "Trả hàng";
-        }
-        else {
+        } else {
             trangThai = null;
         }
         return trangThai;
@@ -98,10 +97,9 @@ public class utility {
 
     public static String trangThaiSanPham(Integer input) {
         String trangThai;
-        if(input == null){
+        if (input == null) {
             trangThai = null;
-        }
-        else if (input == 1) {
+        } else if (input == 1) {
             trangThai = "Hoạt Động";
         } else if (input == 0) {
             trangThai = "Không Hoạt Động";
@@ -123,6 +121,17 @@ public class utility {
             trangThai = null;
         }
         return trangThai;
+    }
+
+    public static int generateOTP() {
+        Random rand = new Random();
+
+        int num1 = rand.nextInt(10) + 1;
+        int num2 = rand.nextInt(10);
+        int num3 = rand.nextInt(10);
+        int num4 = rand.nextInt(10);
+
+        return Integer.parseInt(num1 + "" + num2 + "" + num3 + "" + num4);
     }
 
     public static String generateRandomString(Integer n) {

@@ -1,6 +1,8 @@
 package com.example.projectshop.controller.rest;
 
 import com.example.projectshop.domain.HoaDon;
+import com.example.projectshop.domain.HoaDonChiTiet;
+import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
@@ -138,6 +140,9 @@ public class HoaDonRestController {
     @PostMapping("/shop/payments/cast/{id}")//localhost:8080/api/invoice/shop/payments/1
     public ResponseEntity<?> shopCheckoutCast(@PathVariable("id") Integer idHoaDon,
                                               @RequestBody HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException {
+        System.out.println(
+                "fdsfs" + hoaDonRequest
+        );
         return ResponseEntity.ok(hoaDonService.shopPayments(idHoaDon, hoaDonRequest));
     }
 
@@ -331,4 +336,39 @@ public class HoaDonRestController {
     public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon ){
         return ResponseEntity.ok(hoaDonService.findByIdInvoice(idHoaDon));
     }
+
+    //hủy hóa đơn
+    @PostMapping("/cance-invoice/{id}")
+    public ResponseEntity<?> canceInvoice(@PathVariable Integer id){
+        hoaDonService.cancellingInvoice(id);
+        return ResponseEntity.ok().build();
+    }
+
+    // update số lượng hdct tại quầy
+    @PutMapping("/update-quantity/{idHDCT}")
+    public ResponseEntity<?> updateQuantityInvoiceDetail(@PathVariable Integer idHDCT, @RequestParam Integer soLuong) {
+        HoaDonChiTiet updatedHoaDonChiTiet = hoaDonService.updateSalesQuantityAtTheCounter(idHDCT, soLuong);
+        if (updatedHoaDonChiTiet != null) {
+            return new ResponseEntity<>(updatedHoaDonChiTiet, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/add-phieu-giam-gia/{idHoaDon}")
+    public ResponseEntity<?> addPhieuGiamGiaToHoaDon(
+            @PathVariable Integer idHoaDon,
+            @RequestParam String maPhieuGiamGia
+    ) {
+        PhieuGiamGia phieuGiamGia = hoaDonService.addPhieuGiamGiaToHoaDon(idHoaDon, maPhieuGiamGia);
+
+        if (phieuGiamGia != null) {
+            System.out.println("pgg"+phieuGiamGia.getMa());
+            return ResponseEntity.ok(phieuGiamGia);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

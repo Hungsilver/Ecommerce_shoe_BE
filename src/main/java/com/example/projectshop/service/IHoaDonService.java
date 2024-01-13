@@ -2,6 +2,7 @@ package com.example.projectshop.service;
 
 import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.HoaDonChiTiet;
+import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -72,5 +73,11 @@ public interface IHoaDonService {
     HoaDon updateTongTien(Integer idTraHang);
 
     List<HoaDonChiTiet> findByIdInvoice(Integer idInvoice);
+
+    HoaDonChiTiet updateSalesQuantityAtTheCounter(Integer idHDCT, Integer soLuong);
+
+    void cancellingInvoice(Integer idHoaDon);
+
+    PhieuGiamGia addPhieuGiamGiaToHoaDon(Integer idHoaDon, String maPhieuGiamGia);
 
 }
