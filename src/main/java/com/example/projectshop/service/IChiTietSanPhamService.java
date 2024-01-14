@@ -1,5 +1,6 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
@@ -34,7 +35,7 @@ public interface IChiTietSanPhamService {
             Integer page,
             Integer pageSize
     );
-
+    List<AnhSanPham> findAnhByChiTietSanPhamId(Integer id);
     ChiTietSanPham findById(Integer id);
 
     ChiTietSanPham getTop1ByPrice();
