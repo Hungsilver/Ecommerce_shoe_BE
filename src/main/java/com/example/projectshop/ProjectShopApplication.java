@@ -50,10 +50,12 @@ public class ProjectShopApplication {
     @Autowired
     KhachHangRepository khRepo;
 
-//
+
+
 //    @PostConstruct
 //    public void postcontruc() {
-//
+
+
 //        KhachHang kh = khRepo.findById(1).get();
 //        kh.setEmail("customer@gmail.com");
 //        kh.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
@@ -63,6 +65,9 @@ public class ProjectShopApplication {
 //        nv.setEmail("admin@gmail.com");
 //        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
 //        nvRepo.save(nv);
-//    }
 
-}
+
+    }
+
+
+//}
