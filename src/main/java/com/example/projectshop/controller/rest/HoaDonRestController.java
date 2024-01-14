@@ -253,10 +253,10 @@ public class HoaDonRestController {
 
 
     // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/update-status?id=1&status=2
-    @GetMapping("/update-status")
-    public ResponseEntity<?> choVanChuyen(@RequestParam(value = "id") Integer id,
-                                          @RequestParam(value = "status") Integer status) {
+    //localhost:8080/api/invoice/update-status/1/1
+    @GetMapping("/update-status/{id}/{status}")
+    public ResponseEntity<?> choVanChuyen(@PathVariable("id") Integer id,
+                                          @PathVariable("status") Integer status) {
         return ResponseEntity.ok(hoaDonService.updateStatus(id, status));
     }
 
@@ -283,7 +283,7 @@ public class HoaDonRestController {
     }
 
     // xuất hóa đơn file pdf với id hóa đơn
-    //localhost:8080/api/invoice/export/1
+    //localhost:8080/api/invoice/export/giao-hang/1
     @GetMapping("/export/giao-hang/{id}")
     public ResponseEntity<?> exportPDFGiaoHang(HttpServletResponse response,
                                        @PathVariable("id") Integer id) throws IOException {
