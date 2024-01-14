@@ -21,4 +21,6 @@ public class ImportExcelCTSP {
     private String chatLieuGiay;
     private String chatLieuDeGiay;
     private String trangThai;
+    private String []listAnh;
+
 }
