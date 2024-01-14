@@ -62,10 +62,13 @@ public interface IHoaDonService {
 
     void exportPDF(HttpServletResponse response, Integer id) throws IOException;
 
+    void exportPDFGiaoHang(HttpServletResponse response, Integer id) throws IOException;
+
+    void exportPDFTraHang(HttpServletResponse response, Integer id) throws IOException;
+
     HoaDon CreateInvoice();
 
     Optional<HoaDon> findByInvoiceNew();
-
 
     HoaDon updateTongTien(Integer idTraHang);
 
