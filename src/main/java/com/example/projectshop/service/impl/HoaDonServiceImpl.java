@@ -1680,12 +1680,16 @@ public class HoaDonServiceImpl implements IHoaDonService {
             if (hoaDon != null) {
                 hoaDon.setPhieuGiamGia(phieuGiamGia);
                 hoaDonRepo.save(hoaDon);
-                return phieuGiamGia; // Trả về đối tượng PhieuGiamGia sau khi thêm vào hóa đơn
+                return phieuGiamGia;
             }
         }
-        return null; // Trả về null nếu không tìm thấy hoặc có lỗi
+        return null;
     }
 
+    @Override
+    public HoaDon getByInvoiceNewWithStatus1() {
+        return hoaDonRepo.findLatestHoaDonWithTrangThai1();
+    }
 
 
     @Override
