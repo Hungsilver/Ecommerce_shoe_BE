@@ -80,4 +80,6 @@ public interface IHoaDonService {
 
     PhieuGiamGia addPhieuGiamGiaToHoaDon(Integer idHoaDon, String maPhieuGiamGia);
 
+    HoaDon getByInvoiceNewWithStatus1();
+
 }
