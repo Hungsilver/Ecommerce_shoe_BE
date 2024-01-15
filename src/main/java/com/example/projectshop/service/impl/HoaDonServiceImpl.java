@@ -206,32 +206,34 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Override
     public HoaDon updateInvoice(HoaDon hoaDon) {
         HoaDon hoaDon2 = this.hoaDonRepo.findById(hoaDon.getId()).get();
-        for (HoaDonChiTiet x : hoaDon2.getListHoaDonChiTiet()) {
-            for (HoaDonChiTiet y : hoaDon.getListHoaDonChiTiet()) {
-                if (x.getId().equals(y.getId())) {
-                    if (x.getSoLuong() > y.getSoLuong()) {
-                        Integer soLuong = x.getSoLuong() - y.getSoLuong();
-                        ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
-                        chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() + soLuong);
-                        this.chiTietSanPhamRepo.save(chiTietSanPham);
-                    } else if (y.getSoLuong() > x.getSoLuong()) {
-                        Integer soLuong = y.getSoLuong() - x.getSoLuong();
-                        ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
-                        chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() - soLuong);
-                        this.chiTietSanPhamRepo.save(chiTietSanPham);
-                    } else {
+        if(hoaDon.getListHoaDonChiTiet() != null){
+            for (HoaDonChiTiet x : hoaDon2.getListHoaDonChiTiet()) {
+                for (HoaDonChiTiet y : hoaDon.getListHoaDonChiTiet()) {
+                    if (x.getId().equals(y.getId())) {
+                        if (x.getSoLuong() > y.getSoLuong()) {
+                            Integer soLuong = x.getSoLuong() - y.getSoLuong();
+                            ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
+                            chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() + soLuong);
+                            this.chiTietSanPhamRepo.save(chiTietSanPham);
+                        } else if (y.getSoLuong() > x.getSoLuong()) {
+                            Integer soLuong = y.getSoLuong() - x.getSoLuong();
+                            ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
+                            chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() - soLuong);
+                            this.chiTietSanPhamRepo.save(chiTietSanPham);
+                        } else {
 
+                        }
+                        // cập nhật hóa đơn chi tiết
+                        HoaDonChiTiet hoaDonChiTiet = HoaDonChiTiet.builder()
+                                .id(x.getId())
+                                .hoaDon(hoaDon2)
+                                .chiTietSanPham(x.getChiTietSanPham())
+                                .soLuong(y.getSoLuong())
+                                .donGia(x.getDonGia())
+                                .build();
+                        this.hoaDonChiTietRepo.save(hoaDonChiTiet);
+                        break;
                     }
-                    // cập nhật hóa đơn chi tiết
-                    HoaDonChiTiet hoaDonChiTiet = HoaDonChiTiet.builder()
-                            .id(x.getId())
-                            .hoaDon(hoaDon2)
-                            .chiTietSanPham(x.getChiTietSanPham())
-                            .soLuong(y.getSoLuong())
-                            .donGia(x.getDonGia())
-                            .build();
-                    this.hoaDonChiTietRepo.save(hoaDonChiTiet);
-                    break;
                 }
             }
         }
