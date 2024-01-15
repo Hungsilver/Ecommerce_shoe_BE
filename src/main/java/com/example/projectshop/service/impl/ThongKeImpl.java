@@ -136,7 +136,7 @@ public class ThongKeImpl implements IThongKeService {
                 if (dateFormat.format(month).equals(data[0])) {
                     resultData.add(data); // add đối tượng data từ db trả về vào list khai bảo ở trên
                     found = true;
-                    break;
+                    continue;
                 }
             }
 
