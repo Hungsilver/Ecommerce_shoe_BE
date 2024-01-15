@@ -55,8 +55,8 @@ public class NhanVienRestController {
 
     @PostMapping//localhost:8080/api/staff
     public ResponseEntity<?> create(@RequestBody NhanVienRequest request) {
-        NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
-        return ResponseEntity.ok(nhanVienService.create(xx));
+//        NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
+        return ResponseEntity.ok(nhanVienService.insertNhanVien(request));
     }
 
     @PutMapping("{id}")//localhost:8080/api/staff/1
