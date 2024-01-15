@@ -18,10 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,9 +104,10 @@ public class NhanVienServiceImpl implements INhanVienService {
         nhanVien.setDiaChi(nhanVienRequest.getDiaChi());
         nhanVien.setTrangThai(1);
         Set<ChucVu> roles = new HashSet<>();
-        roles.add(chucVuRepository.findByTenChucVu(nhanVienRequest.getRole()));// TODO role ADMIN, STAFF
+         roles.add(chucVuRepository.findById(2).get());
+//        roles.add(chucVuRepository.findByTenChucVu(nhanVienRequest.getRole()));// TODO role ADMIN, STAFF
         nhanVien.setChucVus(roles);
-        validateAccount(nhanVienRequest); // kiem tra role có tồn tại và mail có tồn tại không
+//       validateAccount(nhanVienRequest); // kiem tra role có tồn tại và mail có tồn tại không
         return nhanVienRepository.save(nhanVien);
     }
 

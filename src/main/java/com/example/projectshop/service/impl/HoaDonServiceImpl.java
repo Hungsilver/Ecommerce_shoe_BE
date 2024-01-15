@@ -374,18 +374,18 @@ public class HoaDonServiceImpl implements IHoaDonService {
                 .ngayTao(hoaDon.getNgayTao())
                 .ngayCapNhat(Date.valueOf(curruntDate))
                 .tongTien(new BigDecimal(hoaDonRequest.getTongTien()))
-                .tienGiam(new BigDecimal(0))
-//                .tienGiam(new BigDecimal(hoaDonRequest.getTienGiam()))
+//                .tienGiam(new BigDecimal(0))
+                .tienGiam(new BigDecimal(hoaDonRequest.getTienGiam()))
 //                .tongTienSauGiam(new BigDecimal(0))
                 .tongTienSauGiam(new BigDecimal(hoaDonRequest.getTongTienSauGiam()))
-//                .phiVanChuyen(new BigDecimal(hoaDonRequest.getPhiVanChuyen()))
-                .phiVanChuyen(new BigDecimal(0))
+                .phiVanChuyen(new BigDecimal(hoaDonRequest.getPhiVanChuyen()))
+//                .phiVanChuyen(new BigDecimal(0))
                 .phuongThucThanhToan(hoaDonRequest.getPhuongThucThanhToan())
                 .trangThai(0)
                 .phieuGiamGia(phieuGiamGiaService.findById(hoaDonRequest.getPhieuGiamGia()))
-                .khachHang(null)
-//                .khachHang(khachHangService.findById(hoaDonRequest.getKhachHang()))
-                .nhanVien(null)
+//                .khachHang(null)
+                .khachHang(khachHangService.findById(hoaDonRequest.getKhachHang()))
+                .nhanVien(nhanVienRepository.findById(hoaDonRequest.getNhanVien()).get())
                 .build();
 
         hoaDonRepo.save(hoaDon1);
@@ -1033,7 +1033,9 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
         if (hoaDon.getPhieuGiamGia() == null) {
 //            cellTotalAmout.setPhrase(new Phrase(String.valueOf("\n0 đ")));
-            cellTotalAmout.setPhrase(new Phrase(" "));
+
+            cellTotalAmout.setPhrase(new Phrase(String.valueOf(0 + " đ")));
+
             cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
             cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
             tableTotalAmout.addCell(cellTotalAmout);
@@ -1682,7 +1684,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
             chiTietSanPhamRepo.save(chiTietSanPham);
             return hoaDonChiTietRepo.save(hoaDonChiTiet.get());
         }
-        return null;// lỗi không cập nhật được
+        return null;
     }
 
     @Override
@@ -1696,12 +1698,16 @@ public class HoaDonServiceImpl implements IHoaDonService {
             if (hoaDon != null) {
                 hoaDon.setPhieuGiamGia(phieuGiamGia);
                 hoaDonRepo.save(hoaDon);
-                return phieuGiamGia; // Trả về đối tượng PhieuGiamGia sau khi thêm vào hóa đơn
+                return phieuGiamGia;
             }
         }
-        return null; // Trả về null nếu không tìm thấy hoặc có lỗi
+        return null;
     }
 
+    @Override
+    public HoaDon getByInvoiceNewWithStatus1() {
+        return hoaDonRepo.findLatestHoaDonWithTrangThai1();
+    }
 
 
     @Override

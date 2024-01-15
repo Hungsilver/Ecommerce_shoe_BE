@@ -33,6 +33,9 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     //    Optional<HoaDon> findTopByTrangThaiOrderByNgayTaoDesc(Integer trangThai);
     Optional<HoaDon> findTopByTrangThaiAndPhuongThucThanhToanOrderByNgayTaoDesc(Integer trangThai, Integer phuongThucThanhToan);
 
+    @Query(value = "SELECT * FROM hoadon WHERE trangthai = 1 AND phuongthucthanhtoan = 1 ORDER BY ngaytao DESC, ngaycapnhat DESC, id DESC LIMIT 1", nativeQuery = true)
+    HoaDon findLatestHoaDonWithTrangThai1();
+
     @Query(value = "select h from HoaDon h where h.trangThai = :trangThai and h.khachHang.id = :idKhachHang ORDER BY h.ngayTao DESC")
     List<HoaDon> findByIdKhachHangAndTrangThai(@Param("trangThai")Integer trangThai,
                                                @Param("idKhachHang")Integer idKhachHang);

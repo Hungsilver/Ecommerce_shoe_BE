@@ -286,7 +286,7 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/export/giao-hang/1
     @GetMapping("/export/giao-hang/{id}")
     public ResponseEntity<?> exportPDFGiaoHang(HttpServletResponse response,
-                                       @PathVariable("id") Integer id) throws IOException {
+                                               @PathVariable("id") Integer id) throws IOException {
 
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
@@ -305,7 +305,7 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/export/tra-hang/1
     @GetMapping("/export/tra-hang/{id}")
     public ResponseEntity<?> exportPDFTraHang(HttpServletResponse response,
-                                               @PathVariable("id") Integer id) throws IOException {
+                                              @PathVariable("id") Integer id) throws IOException {
 
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
@@ -333,13 +333,13 @@ public class HoaDonRestController {
     }
 
     @GetMapping("/findByIdInvoice/{idHoaDon}")
-    public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon ){
+    public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon) {
         return ResponseEntity.ok(hoaDonService.findByIdInvoice(idHoaDon));
     }
 
     //hủy hóa đơn
     @PostMapping("/cance-invoice/{id}")
-    public ResponseEntity<?> canceInvoice(@PathVariable Integer id){
+    public ResponseEntity<?> canceInvoice(@PathVariable Integer id) {
         hoaDonService.cancellingInvoice(id);
         return ResponseEntity.ok().build();
     }
@@ -363,12 +363,16 @@ public class HoaDonRestController {
         PhieuGiamGia phieuGiamGia = hoaDonService.addPhieuGiamGiaToHoaDon(idHoaDon, maPhieuGiamGia);
 
         if (phieuGiamGia != null) {
-            System.out.println("pgg"+phieuGiamGia.getMa());
+            System.out.println("pgg" + phieuGiamGia.getMa());
             return ResponseEntity.ok(phieuGiamGia);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @GetMapping("/getInvoice-new")
+    public ResponseEntity<?> getInvoiceNewWithStatus1() {
+        return ResponseEntity.ok(hoaDonService.getByInvoiceNewWithStatus1());
+    }
 
 }

@@ -127,6 +127,12 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                 pageable);
     }
 
+    @Override
+    public List<AnhSanPham> findAnhByChiTietSanPhamId(Integer id) {
+        List<AnhSanPham> listAnhSanPham = anhSanPhamRepo.findByChiTietSanPhamId(id);
+        return listAnhSanPham;
+    }
+
 
     @Override
     public ChiTietSanPham findById(Integer id) {
@@ -198,6 +204,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
             ChatLieuGiay chatLieuGiay = chatLieuGiayService.findByName(x.getChatLieuGiay());
             ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findByName(x.getChatLieuDeGiay());
             SanPham sanPham = sanPhamService.findByName(x.getTenSanPham());
+
             // end:
 
             // start: kiểm tra nếu 1 trong các đối tượng là null thì add vào list sản phẩm lỗi
