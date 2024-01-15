@@ -3,6 +3,7 @@ package com.example.projectshop.service.impl;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.KhachHang;
+import com.example.projectshop.domain.NhanVien;
 import com.example.projectshop.domain.TraHang;
 import com.example.projectshop.domain.TraHangChiTiet;
 import com.example.projectshop.dto.trahang.TraHangChiTietRequest;
@@ -107,6 +108,7 @@ public class ITraHangServiceImpl implements ITraHangService {
 
     @Override
     public TraHang shopAdd(TraHangRequest traHangRequest) {
+        NhanVien nhanVien = (NhanVien) appContext.getServletContext().getAttribute("nhanVien");
         TraHang traHang = TraHang.builder()
                 .id(null)
                 .lyDo(traHangRequest.getLyDo())
@@ -129,8 +131,18 @@ public class ITraHangServiceImpl implements ITraHangService {
         }
         HoaDon hoaDon = hoaDonRepo.findById(traHangRequest.getIdHoaDon()).get();
         BigDecimal tienTraKhach = hoaDon.getTongTienSauGiam().subtract(traHangRequest.getTienTraKhach());
-        hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
-        hoaDonRepo.save(hoaDon);
+        if (tienTraKhach.compareTo(BigDecimal.ZERO) <= 0) {
+            hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
+            hoaDon.setNhanVien(nhanVien);
+            hoaDon.setTrangThai(6);
+            hoaDonRepo.save(hoaDon);
+        }else{
+            hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
+            hoaDon.setNhanVien(nhanVien);
+            hoaDon.setTrangThai(7);
+            hoaDonRepo.save(hoaDon);
+        }
+
         return traHang1;
     }
 
@@ -189,9 +201,29 @@ public class ITraHangServiceImpl implements ITraHangService {
 
     @Override
     public TraHang updateStatus(Integer id, Integer trangThai) {
+        NhanVien nhanVien = (NhanVien) appContext.getServletContext().getAttribute("nhanVien");
+
         TraHang traHang = traHangRepo.findById(id).get();
         traHang.setNgayCapNhat(Date.valueOf(curruntDate));
         traHang.setTrangThai(trangThai);
+
+        if(trangThai == 2){
+            HoaDon hoaDon = traHang.getHoaDon();
+            BigDecimal tienTraKhach = hoaDon.getTongTienSauGiam().subtract(traHang.getTienTraKhach());
+            if (tienTraKhach.compareTo(BigDecimal.ZERO) <= 0) {
+                hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
+                hoaDon.setNhanVien(nhanVien);
+                hoaDon.setTrangThai(6);
+                hoaDonRepo.save(hoaDon);
+            }else{
+                hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
+                hoaDon.setNhanVien(nhanVien);
+                hoaDon.setTrangThai(7);
+                hoaDonRepo.save(hoaDon);
+            }
+        }
+
+
         return traHangRepo.save(traHang);
     }
 }

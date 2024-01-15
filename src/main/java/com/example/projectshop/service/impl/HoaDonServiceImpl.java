@@ -143,7 +143,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
             }
         }
 
-        Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
+        Sort sort = Sort.by(isSortDesc ? Sort.Direction.ASC : Sort.Direction.DESC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
         return hoaDonRepo.findAll(status, keyword, pageable);
     }
@@ -206,32 +206,34 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Override
     public HoaDon updateInvoice(HoaDon hoaDon) {
         HoaDon hoaDon2 = this.hoaDonRepo.findById(hoaDon.getId()).get();
-        for (HoaDonChiTiet x : hoaDon2.getListHoaDonChiTiet()) {
-            for (HoaDonChiTiet y : hoaDon.getListHoaDonChiTiet()) {
-                if (x.getId().equals(y.getId())) {
-                    if (x.getSoLuong() > y.getSoLuong()) {
-                        Integer soLuong = x.getSoLuong() - y.getSoLuong();
-                        ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
-                        chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() + soLuong);
-                        this.chiTietSanPhamRepo.save(chiTietSanPham);
-                    } else if (y.getSoLuong() > x.getSoLuong()) {
-                        Integer soLuong = y.getSoLuong() - x.getSoLuong();
-                        ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
-                        chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() - soLuong);
-                        this.chiTietSanPhamRepo.save(chiTietSanPham);
-                    } else {
+        if(hoaDon.getListHoaDonChiTiet() != null){
+            for (HoaDonChiTiet x : hoaDon2.getListHoaDonChiTiet()) {
+                for (HoaDonChiTiet y : hoaDon.getListHoaDonChiTiet()) {
+                    if (x.getId().equals(y.getId())) {
+                        if (x.getSoLuong() > y.getSoLuong()) {
+                            Integer soLuong = x.getSoLuong() - y.getSoLuong();
+                            ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
+                            chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() + soLuong);
+                            this.chiTietSanPhamRepo.save(chiTietSanPham);
+                        } else if (y.getSoLuong() > x.getSoLuong()) {
+                            Integer soLuong = y.getSoLuong() - x.getSoLuong();
+                            ChiTietSanPham chiTietSanPham = this.chiTietSanPhamService.findById(x.getChiTietSanPham().getId());
+                            chiTietSanPham.setSoLuong(x.getChiTietSanPham().getSoLuong() - soLuong);
+                            this.chiTietSanPhamRepo.save(chiTietSanPham);
+                        } else {
 
+                        }
+                        // cập nhật hóa đơn chi tiết
+                        HoaDonChiTiet hoaDonChiTiet = HoaDonChiTiet.builder()
+                                .id(x.getId())
+                                .hoaDon(hoaDon2)
+                                .chiTietSanPham(x.getChiTietSanPham())
+                                .soLuong(y.getSoLuong())
+                                .donGia(x.getDonGia())
+                                .build();
+                        this.hoaDonChiTietRepo.save(hoaDonChiTiet);
+                        break;
                     }
-                    // cập nhật hóa đơn chi tiết
-                    HoaDonChiTiet hoaDonChiTiet = HoaDonChiTiet.builder()
-                            .id(x.getId())
-                            .hoaDon(hoaDon2)
-                            .chiTietSanPham(x.getChiTietSanPham())
-                            .soLuong(y.getSoLuong())
-                            .donGia(x.getDonGia())
-                            .build();
-                    this.hoaDonChiTietRepo.save(hoaDonChiTiet);
-                    break;
                 }
             }
         }
@@ -816,6 +818,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
     @Override // cập nhật trạng thái hóa đơn
     public HoaDon updateStatus(Integer id, Integer status) {
+        NhanVien nhanVien = (NhanVien) appContext.getServletContext().getAttribute("nhanVien");
         HoaDon hoaDon = this.findById(id);
         if (hoaDon == null) {
             return null;
@@ -823,10 +826,12 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
         if (status == 0) {
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(0);// cập nhật trạng thái hóa đơn => đã thanh toán
             return hoaDonRepo.save(hoaDon);
         } else if (status == 1) {
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(1);// cập nhật trạng thái hóa đơn => chờ xác nhận
             return hoaDonRepo.save(hoaDon);
         } else if (status == 2) {
@@ -838,26 +843,37 @@ public class HoaDonServiceImpl implements IHoaDonService {
                 }
             }
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(2);// cập nhật trạng thái hóa đơn => chờ xác nhận
             return hoaDonRepo.save(hoaDon);
         } else if (status == 3) {
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(3);// cập nhật trạng thái hóa đơn => chờ vận chuyển
             return hoaDonRepo.save(hoaDon);
         } else if (status == 4) {
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(4);// cập nhật trạng thái hóa đơn => đang giao hàng
             return hoaDonRepo.save(hoaDon);
         } else if (status == 5) {
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(5);// cập nhật trạng thái hóa đơn => đã giao hàng
             return hoaDonRepo.save(hoaDon);
         } else if (status == 6) {
+            for (HoaDonChiTiet x : hoaDon.getListHoaDonChiTiet()) {
+                ChiTietSanPham chiTietSanPham = x.getChiTietSanPham();
+                chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + x.getSoLuong());
+                this.chiTietSanPhamRepo.save(chiTietSanPham);
+            }
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(6);// cập nhật trạng thái hóa đơn => đã hủy
             return hoaDonRepo.save(hoaDon);
         } else if (status == 7) {
             hoaDon.setNgayCapNhat(Date.valueOf(curruntDate));
+            hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(7);// cập nhật trạng thái hóa đơn => trả hàng
             return hoaDonRepo.save(hoaDon);
         } else {
@@ -929,7 +945,7 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
         Paragraph infoInvoice = new Paragraph("\nNgày mua: " + hoaDon.getNgayTao() +
                 "\nKhách hàng: " + khachHangText +
-                "\nĐịa chỉ: " + diaChi +
+                "\nĐịa chỉ: "  +
                 "\nSố điện thoại: " + hoaDon.getSoDienThoai() +
                 "\nNhân viên bán hàng: " + nhanVien
                 , fontContent);
@@ -1017,7 +1033,9 @@ public class HoaDonServiceImpl implements IHoaDonService {
 
         if (hoaDon.getPhieuGiamGia() == null) {
 //            cellTotalAmout.setPhrase(new Phrase(String.valueOf("\n0 đ")));
+
             cellTotalAmout.setPhrase(new Phrase(String.valueOf(0 + " đ")));
+
             cellTotalAmout.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
             cellTotalAmout.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
             tableTotalAmout.addCell(cellTotalAmout);
