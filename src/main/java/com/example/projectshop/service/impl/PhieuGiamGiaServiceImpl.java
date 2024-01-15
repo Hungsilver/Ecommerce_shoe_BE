@@ -61,19 +61,18 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
         for (PhieuGiamGia x : phieuGiamGiaRepository.findAll()) {
             LocalDateTime startTime = x.getThoiGianBatDau().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();  // Chuyển đổi Date sang ZonedDateTime
 //            LocalDate startdate = x.getThoiGianBatDau().toInstant().atZone()
-
             LocalDateTime endTime = x.getThoiGianKetThuc().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             // mặc định là sắp diễn ra
             // update ngày bắt đầu đến ngày hiện tại, tự update
             // TH dang diễn ra
-//            if( ( startTime.isBefore(curruntDate) || startTime.equals(curruntDate)) && endTime.isAfter(curruntDate)){
-//                System.out.println("time start");
-//                            x.setTrangThai(1);
-//                            phieuGiamGiaRepository.save(x);
-//                            continue;
-//
-//            } else
-                if (endTime.isBefore((curruntDate)) && startTime.isBefore(curruntDate)) {
+            if( ( startTime.isBefore(curruntDate) || startTime.equals(curruntDate)) && endTime.isAfter(curruntDate)){
+                System.out.println("time start");
+                            x.setTrangThai(1);
+                            phieuGiamGiaRepository.save(x);
+                            continue;
+
+            } else if (endTime.isBefore((curruntDate)) && startTime.isBefore(curruntDate)) {
+                System.out.println("if ket thuc");
                 // thời gian kết thúc nhỏ hơn ngày hiện tại => cập nhật lại
                 PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                         .id(x.getId())
@@ -88,7 +87,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia);
                 System.out.println("if 2");
-            continue;
+//            continue;
             } else {
                 System.out.println("if 5");
                 // thời gian kết thúc trùng với ngày hiện tại
