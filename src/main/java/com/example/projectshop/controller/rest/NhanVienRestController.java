@@ -56,6 +56,9 @@ public class NhanVienRestController {
     @PostMapping//localhost:8080/api/staff
     public ResponseEntity<?> create(@RequestBody NhanVienRequest request) {
 //        NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
+//        if(request ==null){
+//
+//        }
         return ResponseEntity.ok(nhanVienService.insertNhanVien(request));
     }
 
@@ -65,7 +68,7 @@ public class NhanVienRestController {
     {
         if (!id.matches(p_chu)){
             return ResponseEntity.ok("*id nhân viên phải là số");
-        }
+        } 
         NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
         return ResponseEntity.ok(nhanVienService.update(xx, Integer.valueOf(id)));
     }
