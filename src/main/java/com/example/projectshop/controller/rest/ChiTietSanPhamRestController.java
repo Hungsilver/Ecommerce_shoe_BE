@@ -122,7 +122,7 @@ public class ChiTietSanPhamRestController {
         }
         ChiTietSanPham chiTietSanPham = chiTietSanPhamService.create(chiTietSanPhamRequest);
         if (chiTietSanPham == null) {
-            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
             return ResponseEntity.ok(chiTietSanPham);
         }
