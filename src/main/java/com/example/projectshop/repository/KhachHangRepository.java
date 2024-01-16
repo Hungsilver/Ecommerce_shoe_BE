@@ -14,4 +14,5 @@ public interface KhachHangRepository extends JpaRepository<KhachHang,Integer> {
     Page<KhachHang> findAllByEmailOrSoDienThoai(@Param("input") String input, Pageable pageable);
 
     KhachHang findByEmail(String email);
+    KhachHang findBySoDienThoai(String sdt);
 }

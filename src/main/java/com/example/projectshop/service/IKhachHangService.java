@@ -33,4 +33,5 @@ public interface IKhachHangService {
     KhachHang loginKhachHang(String email, String matKhau);
 
     KhachHang findByEmail(String email);
+    KhachHang findBySdt(String sdt);
 }

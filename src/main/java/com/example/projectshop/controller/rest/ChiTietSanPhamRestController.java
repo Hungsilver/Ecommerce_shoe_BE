@@ -128,6 +128,12 @@ public class ChiTietSanPhamRestController {
         }
     }
 
+    @GetMapping("/TrungMa/{ma}")
+    public  boolean checktrungctsp(@PathVariable String ma){
+        ChiTietSanPham ctsp = chiTietSanPhamService.findByMa(ma);
+        return  ctsp !=null;
+    }
+
     @PutMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> update(
             @PathVariable("id") String id,
@@ -136,7 +142,13 @@ public class ChiTietSanPhamRestController {
         if (!id.matches(p_chu)){
             return ResponseEntity.ok("*id chi tiết sản phẩm phải là số");
         }
-        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
+        ChiTietSanPham ctsp = chiTietSanPhamService.update(Integer.valueOf(id),chiTietSanPhamRequest);
+        if (ctsp == null){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }else {
+            return  ResponseEntity.ok(ctsp);
+        }
+//        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product-detail/1

@@ -285,7 +285,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         String maMauSac = utility.tiengVietKhongDau(mauSac.getTen());
         String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
         String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
-        String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
+        String  maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
 
         if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isEmpty()) {
             ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
@@ -322,35 +322,48 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
     @Override
     public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
-        ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
-                .id(id)
-                .ma(this.findById(id).getMa())
-                .soLuong(chiTietSanPhamRequest.getSoLuong())
-                .giaBan(chiTietSanPhamRequest.getGiaBan())
-                .ngayTao(chiTietSanPhamRepo.findById(id).get().getNgayTao())
-                .ngayCapNhat(Date.valueOf(curruntDate))
-                .trangThai(chiTietSanPhamRequest.getTrangThai())
-                .mauSac(mauSacService.findById(chiTietSanPhamRequest.getMauSac()))
-                .kichCo(kichCoService.findById(chiTietSanPhamRequest.getKichCo()))
-                .chatLieuGiay(chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay()))
-                .chatLieuDeGiay(chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay()))
-                .sanPham(sanPhamService.findById(chiTietSanPhamRequest.getSanPham()))
-                .build();
-        ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
-        if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
-            for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
-                if (!anhSanPhamRepo.getByTen(x).isPresent()) { // check tên ảnh trong db nếu chưa có thì insert
-                    AnhSanPham anhSanPham = AnhSanPham.builder()
-                            .id(null)
-                            .chiTietSanPham(saveChiTietSanPham)
-                            .ten(x)
-                            .build();
-                    anhSanPhamRepo.save(anhSanPham);
+//        MauSac mauSac = mauSacService.findById(chiTietSanPhamRequest.getMauSac());
+//        KichCo kichCo = kichCoService.findById(chiTietSanPhamRequest.getKichCo());
+//        ChatLieuGiay chatLieuGiay = chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay());
+//        ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay());
+//        SanPham sanPham = sanPhamService.findById(chiTietSanPhamRequest.getSanPham());
+//        String maMauSac = utility.tiengVietKhongDau(mauSac.getTen());
+//        String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
+//        String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
+//     String    maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
+//        if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isEmpty()) {
+            ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
+                    .id(id)
+                    .ma(this.findById(id).getMa())
+                    .soLuong(chiTietSanPhamRequest.getSoLuong())
+                    .giaBan(chiTietSanPhamRequest.getGiaBan())
+                    .ngayTao(chiTietSanPhamRepo.findById(id).get().getNgayTao())
+                    .ngayCapNhat(Date.valueOf(curruntDate))
+                    .trangThai(chiTietSanPhamRequest.getTrangThai())
+                    .mauSac(mauSacService.findById(chiTietSanPhamRequest.getMauSac()))
+                    .kichCo(kichCoService.findById(chiTietSanPhamRequest.getKichCo()))
+                    .chatLieuGiay(chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay()))
+                    .chatLieuDeGiay(chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay()))
+                    .sanPham(sanPhamService.findById(chiTietSanPhamRequest.getSanPham()))
+                    .build();
+            ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
+            if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
+                for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
+                    if (!anhSanPhamRepo.getByTen(x).isPresent()) { // check tên ảnh trong db nếu chưa có thì insert
+                        AnhSanPham anhSanPham = AnhSanPham.builder()
+                                .id(null)
+                                .chiTietSanPham(saveChiTietSanPham)
+                                .ten(x)
+                                .build();
+                        anhSanPhamRepo.save(anhSanPham);
+                    }
                 }
             }
-        }
 
-        return saveChiTietSanPham;
+            return saveChiTietSanPham;
+//        }else {
+//            return null;
+//        }
     }
 
     @Override
