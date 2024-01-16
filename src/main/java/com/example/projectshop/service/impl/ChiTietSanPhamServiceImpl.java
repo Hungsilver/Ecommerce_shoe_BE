@@ -27,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,18 +83,18 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
 
     @Override
-    public Page<ChiTietSanPham> filter( String priceMin,
-                                               String priceMax,
-                                               String color,
-                                               String size,
-                                               String shoe_material,
-                                               String shoe_sole_material,
-                                               Integer product,
-                                               String keyword,
-                                               Boolean isSortAsc,
-                                               String sortField,
-                                               Integer page,
-                                               Integer pageSize) {
+    public Page<ChiTietSanPham> filter(String priceMin,
+                                       String priceMax,
+                                       String color,
+                                       String size,
+                                       String shoe_material,
+                                       String shoe_sole_material,
+                                       Integer product,
+                                       String keyword,
+                                       Boolean isSortAsc,
+                                       String sortField,
+                                       Integer page,
+                                       Integer pageSize) {
         Sort sort = Sort.by(isSortAsc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
 
@@ -232,7 +234,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
 
             // kiểm tra nếu mã của chitietsanpham không tồn tại thì thêm mới
             ChiTietSanPham chiTietSanPham = this.findByMa(maChiTietSanPham);
-            if ( chiTietSanPham == null) {
+            if (chiTietSanPham == null) {
                 ChiTietSanPham chiTietSanPham1 = ChiTietSanPham.builder()
                         .id(null)
                         .ma(maChiTietSanPham)
@@ -251,12 +253,12 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                 QRCodeGenerator.generateQRCodeCTSP(saveChiTietSanPham);// tạo mã qrcode
                 System.out.println("case2");
                 continue;
-            }else{
+            } else {
                 // nếu chitietsanpham đã tồn tại thì cập nhật lại số lượng, giá bán và ngày cập nhật
                 ChiTietSanPham chiTietSanPham2 = ChiTietSanPham.builder()
                         .id(chiTietSanPham.getId())
                         .ma(chiTietSanPham.getMa())
-                        .soLuong(Integer.valueOf(x.getSoLuong())+chiTietSanPham.getSoLuong())
+                        .soLuong(Integer.valueOf(x.getSoLuong()) + chiTietSanPham.getSoLuong())
                         .giaBan(new BigDecimal(x.getGiaBan()))
                         .ngayTao(chiTietSanPham.getNgayTao())
                         .ngayCapNhat(Date.valueOf(curruntDate))
@@ -320,10 +322,35 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         }
     }
 
+    private String generateMaChiTietSanPham(ChiTietSanPhamRequest chiTietSanPhamRequest) {
+        MauSac mauSac = mauSacService.findById(chiTietSanPhamRequest.getMauSac());
+        KichCo kichCo = kichCoService.findById(chiTietSanPhamRequest.getKichCo());
+        ChatLieuGiay chatLieuGiay = chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay());
+        ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay());
+        SanPham sanPham = sanPhamService.findById(chiTietSanPhamRequest.getSanPham());
+        String maMauSac = utility.tiengVietKhongDau(mauSac.getTen());
+        String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
+        String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
+        String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
+        return maChiTietSanPham;
+    }
+
     @Override
     public ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest) {
+        MauSac mauSac = mauSacService.findById(chiTietSanPhamRequest.getMauSac());
+        KichCo kichCo = kichCoService.findById(chiTietSanPhamRequest.getKichCo());
+        ChatLieuGiay chatLieuGiay = chatLieuGiayService.findById(chiTietSanPhamRequest.getChatLieuGiay());
+        ChatLieuDeGiay chatLieuDeGiay = chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay());
+        SanPham sanPham = sanPhamService.findById(chiTietSanPhamRequest.getSanPham());
+        String maMauSac = utility.tiengVietKhongDau(mauSac.getTen());
+        String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
+        String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
+        String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
+
+
         ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
                 .id(id)
+//                .ma(this.findById(id).getMa())
                 .ma(this.findById(id).getMa())
                 .soLuong(chiTietSanPhamRequest.getSoLuong())
                 .giaBan(chiTietSanPhamRequest.getGiaBan())
@@ -336,21 +363,45 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
                 .chatLieuDeGiay(chatLieuDeGiayService.findById(chiTietSanPhamRequest.getChatLieuDeGiay()))
                 .sanPham(sanPhamService.findById(chiTietSanPhamRequest.getSanPham()))
                 .build();
-        ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
-        if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
-            for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
-                if (!anhSanPhamRepo.getByTen(x).isPresent()) { // check tên ảnh trong db nếu chưa có thì insert
-                    AnhSanPham anhSanPham = AnhSanPham.builder()
-                            .id(null)
-                            .chiTietSanPham(saveChiTietSanPham)
-                            .ten(x)
-                            .build();
-                    anhSanPhamRepo.save(anhSanPham);
+
+        if (!maChiTietSanPham.equals(chiTietSanPham.getMa())) {
+            if (chiTietSanPhamRepo.findByMa(maChiTietSanPham).isPresent()) {
+                System.out.println("null");
+                return null;
+            } else {
+                chiTietSanPham.setMa(maChiTietSanPham);
+                ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
+                if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
+                    for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
+                        if (!anhSanPhamRepo.getByTen(x).isPresent()) { // check tên ảnh trong db nếu chưa có thì insert
+                            AnhSanPham anhSanPham = AnhSanPham.builder()
+                                    .id(null)
+                                    .chiTietSanPham(saveChiTietSanPham)
+                                    .ten(x)
+                                    .build();
+                            anhSanPhamRepo.save(anhSanPham);
+                        }
+                    }
+                }
+                return saveChiTietSanPham;
+            }
+        }else{
+            ChiTietSanPham saveChiTietSanPham = chiTietSanPhamRepo.save(chiTietSanPham);
+            if (!chiTietSanPhamRequest.getAnhSanPhams().isEmpty()) { // check rỗng list ảnh
+                for (String x : chiTietSanPhamRequest.getAnhSanPhams()) { // lặp list đường dẫn ảnh gửi từ client
+                    if (!anhSanPhamRepo.getByTen(x).isPresent()) { // check tên ảnh trong db nếu chưa có thì insert
+                        AnhSanPham anhSanPham = AnhSanPham.builder()
+                                .id(null)
+                                .chiTietSanPham(saveChiTietSanPham)
+                                .ten(x)
+                                .build();
+                        anhSanPhamRepo.save(anhSanPham);
+                    }
                 }
             }
+            return saveChiTietSanPham;
         }
 
-        return saveChiTietSanPham;
     }
 
     @Override
@@ -370,7 +421,7 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
     }
 
     @Override
-    public ChiTietSanPham findByMa_ProductDetail(String ma,Integer trangThai) {
-        return chiTietSanPhamRepo.findByMa1(ma,trangThai).get();
+    public ChiTietSanPham findByMa_ProductDetail(String ma, Integer trangThai) {
+        return chiTietSanPhamRepo.findByMa1(ma, trangThai).get();
     }
 }
