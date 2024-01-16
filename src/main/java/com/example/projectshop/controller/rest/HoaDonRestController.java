@@ -305,7 +305,7 @@ public class HoaDonRestController {
     //localhost:8080/api/invoice/export/tra-hang/1
     @GetMapping("/export/tra-hang/{id}")
     public ResponseEntity<?> exportPDFTraHang(HttpServletResponse response,
-                                              @PathVariable("id") Integer id) throws IOException {
+                                              @PathVariable("id") Integer idTraHang) throws IOException {
 
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
@@ -316,7 +316,7 @@ public class HoaDonRestController {
         String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
 
         response.setHeader(headerKey, headerValue);
-        hoaDonService.exportPDFTraHang(response, Integer.valueOf(id));
+        hoaDonService.exportPDFTraHang(response, Integer.valueOf(idTraHang));
         return ResponseEntity.ok().build();
     }
 

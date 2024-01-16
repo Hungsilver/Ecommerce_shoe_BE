@@ -97,8 +97,8 @@ public class HoaDonServiceImpl implements IHoaDonService {
     @Autowired
     private PhieuGiamGiaRepository phieuGiamGiaRepository;
 
+    @Autowired
     private TraHangRepository traHangRepo;
-
 
     @Autowired
     private TraHangChiTietRepository traHangChiTietRepo;
@@ -1603,10 +1603,18 @@ public class HoaDonServiceImpl implements IHoaDonService {
         tableTotalTraHang.addCell(cellTotalTraHang);
 
 
-        cellTotalTraHang.setPhrase(new Phrase("\n"+currencyFormatter.format(hoaDon.getTongTienSauGiam().add(hoaDon.getPhiVanChuyen()))));
-        cellTotalTraHang.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
-        cellTotalTraHang.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
-        tableTotalTraHang.addCell(cellTotalTraHang);
+        if (hoaDon.getTongTienSauGiam().compareTo(BigDecimal.ZERO) <= 0){
+            cellTotalTraHang.setPhrase(new Phrase("\n"+currencyFormatter.format(0)));
+            cellTotalTraHang.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            cellTotalTraHang.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+            tableTotalTraHang.addCell(cellTotalTraHang);
+        }else{
+            cellTotalTraHang.setPhrase(new Phrase("\n"+currencyFormatter.format(hoaDon.getTongTienSauGiam())));
+            cellTotalTraHang.setHorizontalAlignment(PdfCell.ALIGN_RIGHT);
+            cellTotalTraHang.setBorder(PdfPCell.NO_BORDER); // Không có đường viền
+            tableTotalTraHang.addCell(cellTotalTraHang);
+        }
+
 
         cellTotalTraHang.setPhrase(new Phrase("\nTrạng thái đơn hàng:"));
         cellTotalTraHang.setHorizontalAlignment(PdfCell.ALIGN_LEFT);
