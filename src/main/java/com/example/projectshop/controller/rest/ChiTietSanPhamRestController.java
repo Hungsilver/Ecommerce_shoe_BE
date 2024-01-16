@@ -122,33 +122,38 @@ public class ChiTietSanPhamRestController {
         }
         ChiTietSanPham chiTietSanPham = chiTietSanPhamService.create(chiTietSanPhamRequest);
         if (chiTietSanPham == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sản phẩm chi tiết đã tồn tại");
+
         } else {
             return ResponseEntity.ok(chiTietSanPham);
         }
     }
 
-    @GetMapping("/TrungMa/{ma}")
-    public  boolean checktrungctsp(@PathVariable String ma){
-        ChiTietSanPham ctsp = chiTietSanPhamService.findByMa(ma);
-        return  ctsp !=null;
-    }
 
-    @PutMapping("{id}")//localhost:8080/api/product-detail/1
+//    @PutMapping("{id}")//localhost:8080/api/product-detail/1
+//    public ResponseEntity<?> update(
+//            @PathVariable("id") Integer id,
+//            @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
+//    ) {
+//        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
+//    }
+
+    @PutMapping("{id}") // localhost:8080/api/product-detail/1
     public ResponseEntity<?> update(
-            @PathVariable("id") String id,
+            @PathVariable("id") Integer id,
             @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
     ) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id chi tiết sản phẩm phải là số");
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.update(id,chiTietSanPhamRequest);
+        if (chiTietSanPham == null) {
+//            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Lỗi trùng mã");
+
+        } else {
+            return ResponseEntity.ok(chiTietSanPham);
         }
-        ChiTietSanPham ctsp = chiTietSanPhamService.update(Integer.valueOf(id),chiTietSanPhamRequest);
-        if (ctsp == null){
-            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }else {
-            return  ResponseEntity.ok(ctsp);
-        }
-//        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
+
+
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product-detail/1

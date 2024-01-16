@@ -167,4 +167,14 @@ public class KhachHangServiceImpl implements IKhachHangService {
     public KhachHang findBySdt(String sdt) {
         return khachHangRepo.findBySoDienThoai(sdt);
     }
+    @Override
+    public boolean isSoDienThoaiExists(String soDienThoai) {
+        return false;
+    }
+
+    @Override
+    public boolean isEmailExists(String email) {
+        return false;
+
+    }
 }

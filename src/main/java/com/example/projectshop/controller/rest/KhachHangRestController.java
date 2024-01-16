@@ -49,12 +49,24 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.findAll(page, pageSize, sortField, isSortDesc, keyword));
     }
 
-    @PostMapping()//localhost:8080/api/customer
-    public ResponseEntity<?> create(
-            @RequestBody KhachHangRequest khachHangRequest
-    ) {
+//    @PostMapping()//localhost:8080/api/customer
+//    public ResponseEntity<?> create(
+//            @RequestBody KhachHangRequest khachHangRequest
+//    ) {
+//        return ResponseEntity.ok(khachHangService.create(khachHangRequest));
+//    }
+
+    @PostMapping("/create-customer")
+    public ResponseEntity<?> create(@RequestBody KhachHangRequest khachHangRequest) {
+        boolean isDuplicateSoDienThoai = khachHangService.isSoDienThoaiExists(khachHangRequest.getSoDienThoai());
+        boolean isDuplicateEmail = khachHangService.isEmailExists(khachHangRequest.getEmail());
+
+        if (isDuplicateSoDienThoai || isDuplicateEmail) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số điện thoại hoặc Email đã tồn tại");
+        }
         return ResponseEntity.ok(khachHangService.create(khachHangRequest));
     }
+
 
     @GetMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> findById(@PathVariable String id) {
@@ -115,6 +127,20 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.exportExcel());
     }
 
+    @GetMapping("/check-duplicate")
+     public ResponseEntity<?>checkDuplicate( @RequestParam String field,
+                                             @RequestParam String value){
+        boolean isDuplicate = false;
+
+        if ("soDienThoai".equals(field)) {
+            isDuplicate = khachHangService.isSoDienThoaiExists(value);
+        } else if ("email".equals(field)) {
+            isDuplicate = khachHangService.isEmailExists(value);
+        }
+
+        return ResponseEntity.ok(isDuplicate);
+
+    }
 
 //    @PostMapping("/register")//localhost:8080/api/customer/register
 //    // trả về chuỗi string đăng ký thành công hay thất bại
