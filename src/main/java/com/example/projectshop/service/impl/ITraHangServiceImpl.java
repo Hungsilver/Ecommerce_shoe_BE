@@ -1,6 +1,7 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChiTietSanPham;
+import com.example.projectshop.domain.GhiChu;
 import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.KhachHang;
 import com.example.projectshop.domain.NhanVien;
@@ -10,6 +11,7 @@ import com.example.projectshop.dto.trahang.TraHangChiTietRequest;
 import com.example.projectshop.dto.trahang.TraHangRequest;
 import com.example.projectshop.dto.trahang.UpdateCTSP;
 import com.example.projectshop.repository.ChiTietSanPhamRepository;
+import com.example.projectshop.repository.GhiChuRepository;
 import com.example.projectshop.repository.HoaDonChiTietRepository;
 import com.example.projectshop.repository.HoaDonRepository;
 import com.example.projectshop.repository.TraHangChiTietRepository;
@@ -45,6 +47,9 @@ public class ITraHangServiceImpl implements ITraHangService {
 
     @Autowired
     private ChiTietSanPhamRepository chiTietSanPhamRepo;
+
+    @Autowired
+    private GhiChuRepository ghiChuRepo;
 
     @Autowired
     private WebApplicationContext appContext;
@@ -109,6 +114,7 @@ public class ITraHangServiceImpl implements ITraHangService {
     @Override
     public TraHang shopAdd(TraHangRequest traHangRequest) {
         NhanVien nhanVien = (NhanVien) appContext.getServletContext().getAttribute("nhanVien");
+        Date currentDate = new Date(System.currentTimeMillis());
         TraHang traHang = TraHang.builder()
                 .id(null)
                 .lyDo(traHangRequest.getLyDo())
@@ -136,11 +142,32 @@ public class ITraHangServiceImpl implements ITraHangService {
             hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(6);
             hoaDonRepo.save(hoaDon);
+
+
+            GhiChu ghiChu1 = GhiChu.builder()
+                    .id(null)
+                    .ghiChu("Xác nhận trả hàng")
+                    .ngayTao(currentDate)
+                    .trangThai(6)
+                    .hoaDon(hoaDon)
+                    .nhanVien(nhanVien)
+                    .build();
+            ghiChuRepo.save(ghiChu1);
         }else{
             hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
             hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(7);
             hoaDonRepo.save(hoaDon);
+
+            GhiChu ghiChu1 = GhiChu.builder()
+                    .id(null)
+                    .ghiChu("Xác nhận trả hàng")
+                    .ngayTao(currentDate)
+                    .trangThai(7)
+                    .hoaDon(hoaDon)
+                    .nhanVien(nhanVien)
+                    .build();
+            ghiChuRepo.save(ghiChu1);
         }
 
         return traHang1;
@@ -202,6 +229,7 @@ public class ITraHangServiceImpl implements ITraHangService {
     @Override
     public TraHang updateStatus(Integer id, Integer trangThai) {
         NhanVien nhanVien = (NhanVien) appContext.getServletContext().getAttribute("nhanVien");
+        Date currentDate = new Date(System.currentTimeMillis());
 
         TraHang traHang = traHangRepo.findById(id).get();
         traHang.setNgayCapNhat(Date.valueOf(curruntDate));
@@ -215,11 +243,32 @@ public class ITraHangServiceImpl implements ITraHangService {
                 hoaDon.setNhanVien(nhanVien);
                 hoaDon.setTrangThai(6);
                 hoaDonRepo.save(hoaDon);
+
+                GhiChu ghiChu1 = GhiChu.builder()
+                        .id(null)
+                        .ghiChu("Xác nhận trả hàng")
+                        .ngayTao(currentDate)
+                        .trangThai(6)
+                        .hoaDon(hoaDon)
+                        .nhanVien(nhanVien)
+                        .build();
+                ghiChuRepo.save(ghiChu1);
             }else{
+
                 hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
                 hoaDon.setNhanVien(nhanVien);
                 hoaDon.setTrangThai(7);
                 hoaDonRepo.save(hoaDon);
+
+                GhiChu ghiChu1 = GhiChu.builder()
+                        .id(null)
+                        .ghiChu("Xác nhận trả hàng")
+                        .ngayTao(currentDate)
+                        .trangThai(7)
+                        .hoaDon(hoaDon)
+                        .nhanVien(nhanVien)
+                        .build();
+                ghiChuRepo.save(ghiChu1);
             }
         }
 
