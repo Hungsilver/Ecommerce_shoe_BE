@@ -5,17 +5,13 @@ import com.example.projectshop.dto.BaseResponse;
 import com.example.projectshop.dto.khachhang.KhachHangRequest;
 import com.example.projectshop.dto.khachhang.LoginKhachHang;
 import com.example.projectshop.service.IKhachHangService;
-import com.example.projectshop.service.ObjectMapperUtils;
 import com.example.projectshop.utilities.utility;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -117,6 +113,25 @@ public class AuthCustomer {
                 );// đăng nhập thành công trả về thông tin của khách hàng
     }
 
+    @PostMapping("/change-password")//localhost:8080/api/auth/customer/change-password
+    private ResponseEntity<?> changePassword(
+            @RequestBody KhachHangRequest account
+    ) {
+        KhachHang  kh = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+        if(kh==null){
+            return ResponseEntity.ok(null);
+        }
+        KhachHang khDB = khachHangService.findById(kh.getId());
+        khDB.setMatKhau(passwordEncoder.encode(account.getMatKhau()));
+        KhachHang khUpdate = khachHangService.updateKHv1(khDB.getId(), khDB);
+        if (khUpdate == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        khUpdate.setMatKhau(null);
+        return ResponseEntity.status(HttpStatus.OK).body(khUpdate);
+    }
+
+
     @GetMapping("/logout")//localhost:8080/api/auth/customer/check-login-status
     public ResponseEntity<?> logout() {
         appContext.getServletContext().removeAttribute("khachHang");
@@ -179,7 +194,7 @@ public class AuthCustomer {
                     .email(khachHang.getEmail())
                     .hoTen(khachHang.getHoTen())
                     .id(khachHang.getId())
-                    .matKhau(password )
+                    .matKhau(password)
                     .ngaySinh(khachHang.getNgaySinh())
                     .build();
 
