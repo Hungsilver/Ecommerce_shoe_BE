@@ -34,7 +34,11 @@ public interface IKhachHangService {
 
     KhachHang findByEmail(String email);
 
+
     KhachHang findBySdt(String sdt);
+
+
+    KhachHang updateKHv1(Integer id,KhachHang kh);
 
 
     boolean isSoDienThoaiExists(String soDienThoai);
