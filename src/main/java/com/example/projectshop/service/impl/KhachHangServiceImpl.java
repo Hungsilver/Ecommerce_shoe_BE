@@ -164,6 +164,11 @@ public class KhachHangServiceImpl implements IKhachHangService {
     }
 
     @Override
+    public KhachHang updateKHv1(Integer id, KhachHang kh) {
+        kh.setId(id);
+        return khachHangRepo.save(kh);
+    }
+
     public boolean isSoDienThoaiExists(String soDienThoai) {
         return false;
     }

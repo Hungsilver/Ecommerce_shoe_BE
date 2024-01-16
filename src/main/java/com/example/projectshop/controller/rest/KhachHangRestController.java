@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -35,6 +36,8 @@ public class KhachHangRestController {
     @Autowired
     private HttpSession httpSession;
 
+    @Autowired
+    private WebApplicationContext appContext;
 
     private String p_chu = "\\d+";
 
@@ -133,6 +136,39 @@ public class KhachHangRestController {
 
     }
 
+    @PutMapping("v1/{id}")//localhost:8080/api/customer/1
+    public ResponseEntity<?> updateKH(
+            @RequestBody KhachHangRequest khachHangRequest,
+            @PathVariable("id") String id
+    ) {
+        if (!id.matches(p_chu)) {
+            return ResponseEntity.ok("*id khách hàng phải là số");
+        }
+        KhachHang khLSession = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
+        KhachHang kh = khachHangService.findById(khLSession.getId());
+        kh.setHoTen(khachHangRequest.getHoTen());
+        kh.setNgaySinh(khachHangRequest.getNgaySinh());
+        kh.setSoDienThoai(khachHangRequest.getSoDienThoai());
+        KhachHang khUpdate = khachHangService.updateKHv1(Integer.valueOf(id), kh);
+
+        return khUpdate != null ? ResponseEntity.status(HttpStatus.OK)
+                .body(BaseResponse.builder()
+                              .code(200)
+                              .data(kh)
+                              .isOK(true)
+                              .message("update khach hang thanh cong")
+                              .build()
+                ) :
+                ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(BaseResponse.builder()
+                                      .data(null)
+                                      .code(404)
+                                      .isOK(false)
+                                      .message("update khach hang that bai")
+                                      .build()
+                        );
+    }
+
 //    @PostMapping("/register")//localhost:8080/api/customer/register
 //    // trả về chuỗi string đăng ký thành công hay thất bại
 //    public ResponseEntity<String> registerKhachHang(@RequestBody KhachHangRequest khachHangRequest) {
@@ -187,5 +223,7 @@ public class KhachHangRestController {
 //            return ResponseEntity.ok("Khách hàng chưa đăng nhập");
 //        }
 //    }
+
+
 
 }
