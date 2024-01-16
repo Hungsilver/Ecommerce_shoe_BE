@@ -33,4 +33,8 @@ public interface IKhachHangService {
     KhachHang loginKhachHang(String email, String matKhau);
 
     KhachHang findByEmail(String email);
+
+    boolean isSoDienThoaiExists(String soDienThoai);
+
+    boolean isEmailExists(String email);
 }
