@@ -62,6 +62,10 @@ public class NhanVien {
     @OneToMany(mappedBy = "nhanVien")
     private List<HoaDon> listHoaDon;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "nhanVien")
+    private List<GhiChu> listGhiChu;
+
 //    @JsonIgnore
 //    @JsonIgnoreProperties("nhanViens")
 //    @ManyToMany(fetch = FetchType.LAZY)
