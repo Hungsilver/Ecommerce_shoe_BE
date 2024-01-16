@@ -162,4 +162,11 @@ public class KhachHangServiceImpl implements IKhachHangService {
     public KhachHang findByEmail(String email) {
         return khachHangRepo.findByEmail(email);
     }
+
+    @Override
+    public KhachHang updateKHv1(Integer id, KhachHang kh) {
+        kh.setId(id);
+        return khachHangRepo.save(kh);
+    }
+
 }

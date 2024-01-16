@@ -33,4 +33,6 @@ public interface IKhachHangService {
     KhachHang loginKhachHang(String email, String matKhau);
 
     KhachHang findByEmail(String email);
+
+    KhachHang updateKHv1(Integer id,KhachHang kh);
 }
