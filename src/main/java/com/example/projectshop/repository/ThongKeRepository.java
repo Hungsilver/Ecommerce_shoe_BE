@@ -28,14 +28,14 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 7 DAY, '%Y-%m-%d')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
-            "GROUP BY ngayThang,trangThai", nativeQuery = true)
+            "GROUP BY ngayThang", nativeQuery = true)
     List<Object[]> thongKeDoanhThu7NgayTruoc();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m-%d') >= DATE_FORMAT(CURDATE() - INTERVAL 28 DAY, '%Y-%m-%d')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
-            "GROUP BY ngayThang,trangThai", nativeQuery = true)
+            "GROUP BY ngayThang", nativeQuery = true)
     List<Object[]> thongKeDoanhThu28NgayTruoc();
 
 
@@ -43,21 +43,21 @@ public interface ThongKeRepository extends JpaRepository<HoaDon, Integer> {
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m') >= DATE_FORMAT(CURDATE() - INTERVAL 12 month, '%Y-%m')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
-            "GROUP BY ngayThang,trangThai", nativeQuery = true)
+            "GROUP BY ngayThang", nativeQuery = true)
     List<Object[]> thongKeDoanhThu1NamTruoc();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang " +
             "FROM HoaDon h " +
             "WHERE DATE_FORMAT(h.ngayTao, '%Y-%m') >= DATE_FORMAT(CURDATE() - INTERVAL 6 month, '%Y-%m')" +
             "AND (h.trangThai = 5 OR h.trangThai = 1)" +
-            "GROUP BY ngayThang,trangThai", nativeQuery = true)
+            "GROUP BY ngayThang", nativeQuery = true)
     List<Object[]> thongKeDoanhThu6ThangTruoc();
 
     @Query(value = "SELECT DATE_FORMAT(h.ngayTao, '%Y-%m-%d') AS ngayThang, IFNULL(SUM(tongTienSauGiam), 0) AS tongDoanhThu, COUNT(h.trangThai) AS tongDonHang \n" +
             "            FROM HoaDon h \n" +
             "            WHERE h.ngayTao between :startDate and :endDate  " +
             "            AND (h.trangThai = 5 OR h.trangThai = 1)\n" +
-            "            GROUP BY ngayThang,trangThai", nativeQuery = true)
+            "            GROUP BY ngayThang", nativeQuery = true)
     List<Object[]> thongKeDoanhThuTheoKhoang(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
     // end thống kê doanh thu
 
