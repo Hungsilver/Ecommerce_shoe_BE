@@ -1,5 +1,6 @@
 package com.example.projectshop.controller.rest;
 
+import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChiTietSanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
 import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
@@ -62,6 +63,12 @@ public class ChiTietSanPhamRestController {
     ) {
         return ResponseEntity.ok(chiTietSanPhamService.filter(pricemin, pricemax, color,size, shoe_material, shoe_sole_material,product, keyword, isSortAsc, sortField, page, pageSize));
     }
+//    @GetMapping
+    public  ResponseEntity<?> findAnhByIdchiTietSanPham(@PathVariable("id") Integer id){
+        List<AnhSanPham> listanh = chiTietSanPhamService.findAnhByChiTietSanPhamId(id);
+        return ResponseEntity.ok(listanh);
+    }
+
 
     @GetMapping("{id}")//localhost:8080/api/product-detail/1
     public ResponseEntity<?> findById(@PathVariable("id") String id) {
@@ -115,21 +122,35 @@ public class ChiTietSanPhamRestController {
         }
         ChiTietSanPham chiTietSanPham = chiTietSanPhamService.create(chiTietSanPhamRequest);
         if (chiTietSanPham == null) {
-            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+//            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sản phẩm chi tiết đã tồn tại");
+
         } else {
             return ResponseEntity.ok(chiTietSanPham);
         }
     }
 
-    @PutMapping("{id}")//localhost:8080/api/product-detail/1
+//    @PutMapping("{id}")//localhost:8080/api/product-detail/1
+//    public ResponseEntity<?> update(
+//            @PathVariable("id") Integer id,
+//            @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
+//    ) {
+//        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
+//    }
+
+    @PutMapping("{id}") // localhost:8080/api/product-detail/1
     public ResponseEntity<?> update(
-            @PathVariable("id") String id,
+            @PathVariable("id") Integer id,
             @RequestBody ChiTietSanPhamRequest chiTietSanPhamRequest
     ) {
-        if (!id.matches(p_chu)){
-            return ResponseEntity.ok("*id chi tiết sản phẩm phải là số");
+        ChiTietSanPham chiTietSanPham = chiTietSanPhamService.update(id,chiTietSanPhamRequest);
+        if (chiTietSanPham == null) {
+//            return ResponseEntity.ok("Sản phẩm chi tiết đã tồn tại");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Lỗi trùng mã");
+
+        } else {
+            return ResponseEntity.ok(chiTietSanPham);
         }
-        return ResponseEntity.ok(chiTietSanPhamService.update(Integer.valueOf(id), chiTietSanPhamRequest));
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product-detail/1

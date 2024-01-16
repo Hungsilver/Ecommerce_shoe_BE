@@ -19,14 +19,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.time.*;
+import java.util.*;
 
 @Service
 public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
@@ -36,7 +30,8 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
 
     // lấy ra ngày hiện tại
     private LocalDateTime curruntDate = LocalDateTime.now();
-
+    private  LocalDate datenow = LocalDate.now();
+    private LocalTime timenow = LocalTime.now();
 
     // update thoi gian bat dau
 //    @Scheduled(fixedRate = 20000,initialDelay = 10000) // sau 20s
@@ -65,6 +60,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
         System.out.println("time now:"+ curruntDate);
         for (PhieuGiamGia x : phieuGiamGiaRepository.findAll()) {
             LocalDateTime startTime = x.getThoiGianBatDau().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();  // Chuyển đổi Date sang ZonedDateTime
+//            LocalDate startdate = x.getThoiGianBatDau().toInstant().atZone()
             LocalDateTime endTime = x.getThoiGianKetThuc().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             // mặc định là sắp diễn ra
             // update ngày bắt đầu đến ngày hiện tại, tự update
@@ -74,12 +70,9 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                             x.setTrangThai(1);
                             phieuGiamGiaRepository.save(x);
                             continue;
-//            }
-//            else if (endTime.isAfter(curruntDate)) {
-//                // thời gian kết thúc lớn hơn ngày hiện tại
-//                System.out.println("if 1");
-//                continue;
+
             } else if (endTime.isBefore((curruntDate)) && startTime.isBefore(curruntDate)) {
+                System.out.println("if ket thuc");
                 // thời gian kết thúc nhỏ hơn ngày hiện tại => cập nhật lại
                 PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                         .id(x.getId())
@@ -94,7 +87,7 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
                         .build();
                 phieuGiamGiaRepository.save(phieuGiamGia);
                 System.out.println("if 2");
-
+//            continue;
             } else {
                 System.out.println("if 5");
                 // thời gian kết thúc trùng với ngày hiện tại
@@ -239,11 +232,12 @@ public class PhieuGiamGiaServiceImpl implements IPhieuGiamGiaService {
 
     @Override
     public PhieuGiamGia create(PhieuGiamGiaRequest phieuGiamGiaRequest) {
-        String ma = "PGG" + phieuGiamGiaRepository.findAll().size() + 1;
+//        String ma = "PGG" + (phieuGiamGiaRepository.findAll().size() + 1);
+        String manew = "PGG" + UUID.randomUUID().toString().substring(0,4);
         System.out.println("ket thuc:"+phieuGiamGiaRequest.getThoiGianKetThuc());
         PhieuGiamGia phieuGiamGia = PhieuGiamGia.builder()
                 .id(null)
-                .ma(ma)
+                .ma(manew)
                 .ten(phieuGiamGiaRequest.getTen())
                 .chietKhau(phieuGiamGiaRequest.getChietKhau())
                 .hinhThucGiamGia(phieuGiamGiaRequest.getHinhThucGiamGia())

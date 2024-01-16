@@ -84,9 +84,9 @@ public class utility {
     public static String trangThaiThanhToan(Integer input) {
         String trangThai;
         if (input == 0) {
-            trangThai = "Thanh toán tiền mặt";
+            trangThai = "Tiền mặt";
         } else if (input == 1) {
-            trangThai = "Thanh toán online";
+            trangThai = "Chuyển khoản";
         } else if (input == 2) {
             trangThai = "Trả sau";
         } else {

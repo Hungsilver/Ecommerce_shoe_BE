@@ -253,10 +253,10 @@ public class HoaDonRestController {
 
 
     // cập nhật trạng thái hóa đơn với id của hóa đơn
-    //localhost:8080/api/invoice/update-status?id=1&status=2
-    @GetMapping("/update-status")
-    public ResponseEntity<?> choVanChuyen(@RequestParam(value = "id") Integer id,
-                                          @RequestParam(value = "status") Integer status) {
+    //localhost:8080/api/invoice/update-status/1/1
+    @GetMapping("/update-status/{id}/{status}")
+    public ResponseEntity<?> choVanChuyen(@PathVariable("id") Integer id,
+                                          @PathVariable("status") Integer status) {
         return ResponseEntity.ok(hoaDonService.updateStatus(id, status));
     }
 
@@ -282,6 +282,44 @@ public class HoaDonRestController {
         return ResponseEntity.ok().build();
     }
 
+    // xuất hóa đơn file pdf với id hóa đơn
+    //localhost:8080/api/invoice/export/giao-hang/1
+    @GetMapping("/export/giao-hang/{id}")
+    public ResponseEntity<?> exportPDFGiaoHang(HttpServletResponse response,
+                                               @PathVariable("id") Integer id) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+
+        response.setHeader(headerKey, headerValue);
+        hoaDonService.exportPDFGiaoHang(response, Integer.valueOf(id));
+        return ResponseEntity.ok().build();
+    }
+
+    // xuất hóa đơn file pdf với id trả hàng
+    //localhost:8080/api/invoice/export/tra-hang/1
+    @GetMapping("/export/tra-hang/{id}")
+    public ResponseEntity<?> exportPDFTraHang(HttpServletResponse response,
+                                              @PathVariable("id") Integer idTraHang) throws IOException {
+
+        response.setContentType("application/pdf");
+        response.setCharacterEncoding("UTF-8");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
+        String currentDateTime = dateFormat.format(new Date());
+
+        String headerKey = "Content-Dispostion";
+        String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
+
+        response.setHeader(headerKey, headerValue);
+        hoaDonService.exportPDFTraHang(response, Integer.valueOf(idTraHang));
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/shop/create")//localhost:8080/api/invoice/shop/create
     public ResponseEntity<?> CreateInvoice() {
         return ResponseEntity.ok(hoaDonService.CreateInvoice());
@@ -295,13 +333,13 @@ public class HoaDonRestController {
     }
 
     @GetMapping("/findByIdInvoice/{idHoaDon}")
-    public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon ){
+    public ResponseEntity<?> findByIdInvoice(@PathVariable Integer idHoaDon) {
         return ResponseEntity.ok(hoaDonService.findByIdInvoice(idHoaDon));
     }
 
     //hủy hóa đơn
     @PostMapping("/cance-invoice/{id}")
-    public ResponseEntity<?> canceInvoice(@PathVariable Integer id){
+    public ResponseEntity<?> canceInvoice(@PathVariable Integer id) {
         hoaDonService.cancellingInvoice(id);
         return ResponseEntity.ok().build();
     }
@@ -325,12 +363,16 @@ public class HoaDonRestController {
         PhieuGiamGia phieuGiamGia = hoaDonService.addPhieuGiamGiaToHoaDon(idHoaDon, maPhieuGiamGia);
 
         if (phieuGiamGia != null) {
-            System.out.println("pgg"+phieuGiamGia.getMa());
+            System.out.println("pgg" + phieuGiamGia.getMa());
             return ResponseEntity.ok(phieuGiamGia);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @GetMapping("/getInvoice-new")
+    public ResponseEntity<?> getInvoiceNewWithStatus1() {
+        return ResponseEntity.ok(hoaDonService.getByInvoiceNewWithStatus1());
+    }
 
 }

@@ -88,10 +88,10 @@ public class KhachHangServiceImpl implements IKhachHangService {
                 .id(null)
                 .hoTen(khachHangRequest.getHoTen())
                 .email(khachHangRequest.getEmail())
-                .matKhau(khachHangRequest.getMatKhau())
+                .matKhau(null)
                 .soDienThoai(khachHangRequest.getSoDienThoai())
                 .ngaySinh(khachHangRequest.getNgaySinh())
-                .trangThai(khachHangRequest.getTrangThai())
+                .trangThai(1)
                 .build();
         return khachHangRepo.save(khachHang);
     }
@@ -169,4 +169,12 @@ public class KhachHangServiceImpl implements IKhachHangService {
         return khachHangRepo.save(kh);
     }
 
+    public boolean isSoDienThoaiExists(String soDienThoai) {
+        return false;
+    }
+
+    @Override
+    public boolean isEmailExists(String email) {
+        return false;
+    }
 }

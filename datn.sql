@@ -175,7 +175,7 @@ CREATE TABLE `NhanVien`
 (
     `id`          Integer AUTO_INCREMENT PRIMARY KEY,
     `hoTen`       nvarchar(50),
-    `anhDaiDien`  varchar(100),
+    `anhDaiDien`  varchar(500),
     `email`       varchar(50),
     `matKhau`     varchar(255),
     `soDienThoai` varchar(10),

@@ -43,7 +43,7 @@ public class ThongKeRestController {
     }
 
     // thống kê doanh thu 6 tháng trước
-    //localhost:8080/api/statistic/invoice/last-six-month
+    //localhost:8080/api/statistic/revenue/last-six-month
     @GetMapping("/revenue/last-six-month")
     public ResponseEntity<?> thongKeDoanhThu6ThangTruoc(){
         return ResponseEntity.ok(thongKeService.thongKeDoanhThu6ThangTruoc());

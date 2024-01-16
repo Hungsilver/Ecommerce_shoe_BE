@@ -65,7 +65,7 @@ public class TraHangRestController {
         return ResponseEntity.ok(traHangService.add(traHangRequest));
     }
 
-    @PostMapping("/shop")//localhost:8080/api/return-product
+    @PostMapping("/shop")//localhost:8080/api/return-product/shop
     public ResponseEntity<?> shopAdd(@RequestBody TraHangRequest traHangRequest) {
         return ResponseEntity.ok(traHangService.shopAdd(traHangRequest));
     }
