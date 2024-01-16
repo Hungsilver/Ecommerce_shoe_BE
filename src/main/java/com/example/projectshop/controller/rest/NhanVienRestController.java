@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,22 @@ public class NhanVienRestController {
             nhanViens = nhanVienService.getAll(pageable);
         }
         return ResponseEntity.ok(nhanViens);
+    }
+//        @GetMapping("/checkEmail")
+//        public ResponseEntity<?> findEmail(@RequestParam("email")String email ){
+//        NhanVien maEmail = nhanVienService.findByEmail(email);
+//        return ResponseEntity.ok().body(maEmail);
+//        }
+        @GetMapping("/checkPhoneNumberExists/{sdt}")
+         public  boolean findEmailvaSdt(@PathVariable String sdt ){
+        NhanVien nv = nhanVienService.findSdt(sdt);
+        return nv !=null;
+         }
+
+    @GetMapping("/checkEmailExists/{email}")
+    public boolean checkEmailExists(@PathVariable String email) {
+        NhanVien existingNhanVien = nhanVienService.findByEmail(email);
+        return existingNhanVien != null;
     }
 
     @GetMapping("{id}")//localhost:8080/api/staff/1

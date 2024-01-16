@@ -65,6 +65,10 @@ public class NhanVienServiceImpl implements INhanVienService {
     public NhanVien findByEmail(String email) {
         return nhanVienRepository.findByEmail(email);
     }
+    @Override
+    public NhanVien findSdt( String sdt) {
+        return nhanVienRepository.findBySoDienThoai(sdt);
+    }
 
     @Override
     public NhanVien create(NhanVien nhanVien) {
@@ -107,9 +111,11 @@ public class NhanVienServiceImpl implements INhanVienService {
          roles.add(chucVuRepository.findById(2).get());
 //        roles.add(chucVuRepository.findByTenChucVu(nhanVienRequest.getRole()));// TODO role ADMIN, STAFF
         nhanVien.setChucVus(roles);
-       validateAccount(nhanVienRequest); // kiem tra role có tồn tại và mail có tồn tại không
+//       validateAccount(nhanVienRequest); // kiem tra role có tồn tại và mail có tồn tại không
         return nhanVienRepository.save(nhanVien);
     }
+
+
 
     //trả về thông tin người dùng
     @Override
