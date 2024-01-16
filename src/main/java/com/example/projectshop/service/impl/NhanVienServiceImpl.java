@@ -65,6 +65,10 @@ public class NhanVienServiceImpl implements INhanVienService {
     public NhanVien findByEmail(String email) {
         return nhanVienRepository.findByEmail(email);
     }
+    @Override
+    public NhanVien findSdt( String sdt) {
+        return nhanVienRepository.findBySoDienThoai(sdt);
+    }
 
     @Override
     public NhanVien create(NhanVien nhanVien) {
@@ -111,6 +115,8 @@ public class NhanVienServiceImpl implements INhanVienService {
         return nhanVienRepository.save(nhanVien);
     }
 
+
+
     //trả về thông tin người dùng
     @Override
     public NhanVien authenticateUser(LoginRequest loginRequest) {
@@ -125,14 +131,14 @@ public class NhanVienServiceImpl implements INhanVienService {
     private void validateAccount(NhanVienRequest nhanVienRequest) {
 
         // check role có tồn tồn tại trong cơ sở dữ liệu hay không
-        List<String> roles = chucVuRepository.findAll()
-                .stream()
-                .map(ChucVu::getTenChucVu)
-                .collect(Collectors.toList());
-
-        if (!roles.contains(nhanVienRequest.getRole())) {
-            throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid role");
-        }
+//        List<String> roles = chucVuRepository.findAll()
+//                .stream()
+//                .map(ChucVu::getTenChucVu)
+//                .collect(Collectors.toList());
+//
+//        if (!roles.contains(nhanVienRequest.getRole())) {
+//            throw new BaseException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Invalid role");
+//        }
 
         NhanVien user = nhanVienRepository.findByEmail(nhanVienRequest.getEmail());
 

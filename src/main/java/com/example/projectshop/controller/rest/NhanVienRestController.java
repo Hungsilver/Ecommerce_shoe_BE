@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,22 @@ public class NhanVienRestController {
         }
         return ResponseEntity.ok(nhanViens);
     }
+//        @GetMapping("/checkEmail")
+//        public ResponseEntity<?> findEmail(@RequestParam("email")String email ){
+//        NhanVien maEmail = nhanVienService.findByEmail(email);
+//        return ResponseEntity.ok().body(maEmail);
+//        }
+        @GetMapping("/checkPhoneNumberExists/{sdt}")
+         public  boolean findEmailvaSdt(@PathVariable String sdt ){
+        NhanVien nv = nhanVienService.findSdt(sdt);
+        return nv !=null;
+         }
+
+    @GetMapping("/checkEmailExists/{email}")
+    public boolean checkEmailExists(@PathVariable String email) {
+        NhanVien existingNhanVien = nhanVienService.findByEmail(email);
+        return existingNhanVien != null;
+    }
 
     @GetMapping("{id}")//localhost:8080/api/staff/1
     public ResponseEntity<?> findById(@PathVariable String id) {
@@ -56,6 +73,9 @@ public class NhanVienRestController {
     @PostMapping//localhost:8080/api/staff
     public ResponseEntity<?> create(@RequestBody NhanVienRequest request) {
 //        NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
+//        if(request ==null){
+//
+//        }
         return ResponseEntity.ok(nhanVienService.insertNhanVien(request));
     }
 
@@ -65,7 +85,7 @@ public class NhanVienRestController {
     {
         if (!id.matches(p_chu)){
             return ResponseEntity.ok("*id nhân viên phải là số");
-        }
+        } 
         NhanVien xx = ObjectMapperUtils.map(request, NhanVien.class);
         return ResponseEntity.ok(nhanVienService.update(xx, Integer.valueOf(id)));
     }

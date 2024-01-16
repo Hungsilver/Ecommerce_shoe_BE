@@ -79,7 +79,16 @@ public class KhachHangRestController {
         return ResponseEntity.ok(khachHangService.findById(Integer.valueOf(id)));
 
     }
-
+        @GetMapping("/checkEmail/{email}")
+        public  boolean checkEmail(@PathVariable String email){
+            KhachHang khne = khachHangService.findByEmail(email);
+        return khne !=null;
+        }
+        @GetMapping("/checkPhoneNumberExists/{sdt}")
+        public  boolean checkSDT(@PathVariable String sdt){
+        KhachHang kh = khachHangService.findBySdt(sdt);
+        return  kh !=null;
+        }
 
     @PutMapping("{id}")//localhost:8080/api/customer/1
     public ResponseEntity<?> update(
