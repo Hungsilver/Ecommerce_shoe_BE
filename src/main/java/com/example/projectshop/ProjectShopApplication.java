@@ -65,7 +65,10 @@ public class ProjectShopApplication {
 //        nv.setEmail("admin@gmail.com");
 //        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
 //        nvRepo.save(nv);
-//
+//        NhanVien nv1 = nvRepo.findById(2).get();
+//        nv.setEmail("user@gmail.com");
+//        nv.setMatKhau(bCryptPasswordEncoder.encode("Admin@123"));
+//        nvRepo.save(nv1);
 //
 //    }
 
