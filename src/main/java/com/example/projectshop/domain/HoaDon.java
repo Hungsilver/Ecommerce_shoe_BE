@@ -104,4 +104,8 @@ public class HoaDon {
     @OneToMany(mappedBy = "hoaDon")
     private List<TraHang> listTraHang;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "hoaDon")
+    private List<GhiChu> listGhiChu;
+
 }

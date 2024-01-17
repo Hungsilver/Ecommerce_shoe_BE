@@ -346,8 +346,6 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
         String maChatLieuGiay = utility.tiengVietKhongDau(chatLieuGiay.getTen()).replaceAll("\\s", "");
         String maChatLieuDeGiay = utility.tiengVietKhongDau(chatLieuDeGiay.getTen());
         String maChiTietSanPham = sanPham.getMa() + "-" + maMauSac + "-" + maChatLieuGiay + "-" + maChatLieuDeGiay + "-" + kichCo.getSize();
-
-
         ChiTietSanPham chiTietSanPham = ChiTietSanPham.builder()
                 .id(id)
 //                .ma(this.findById(id).getMa())
@@ -401,7 +399,6 @@ public class ChiTietSanPhamServiceImpl implements IChiTietSanPhamService {
             }
             return saveChiTietSanPham;
         }
-
     }
 
     @Override
