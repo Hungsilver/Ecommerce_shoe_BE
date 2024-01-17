@@ -16,13 +16,8 @@ import com.example.projectshop.repository.HoaDonChiTietRepository;
 import com.example.projectshop.repository.HoaDonRepository;
 import com.example.projectshop.repository.TraHangChiTietRepository;
 import com.example.projectshop.repository.TraHangRepository;
-import com.example.projectshop.service.IHoaDonService;
 import com.example.projectshop.service.ITraHangService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -81,9 +76,19 @@ public class ITraHangServiceImpl implements ITraHangService {
     }
 
     @Override
-    public List<TraHang> findByIdKhachHang(  ) {
+    public TraHangChiTiet findByIdTHCT(Integer id) {
+        return traHangChiTietRepo.findById(id).get();
+    }
+
+    @Override
+    public List<TraHang> findByIdKhachHang() {
         KhachHang khachHang = (KhachHang) appContext.getServletContext().getAttribute("khachHang");
         return traHangRepo.findByIdKhachHang(khachHang.getId());
+    }
+
+    @Override
+    public List<TraHang> findByMaHoaDon(String maHoaDon) {
+        return traHangRepo.findByMaHoaDon(maHoaDon);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class ITraHangServiceImpl implements ITraHangService {
                 .hoaDon(hoaDonRepo.findById(traHangRequest.getIdHoaDon()).get())
                 .build();
         TraHang traHang1 = traHangRepo.save(traHang);
-        for (TraHangChiTietRequest x: traHangRequest.getTraHangChiTietRequests()){
+        for (TraHangChiTietRequest x : traHangRequest.getTraHangChiTietRequests()) {
             TraHangChiTiet traHangChiTiet = TraHangChiTiet.builder()
                     .id(null)
                     .traHang(traHang1)
@@ -121,11 +126,11 @@ public class ITraHangServiceImpl implements ITraHangService {
                 .ngayTao(Date.valueOf(curruntDate))
                 .ngayCapNhat(null)
                 .tienTraKhach(traHangRequest.getTienTraKhach())
-                .trangThai(0)
+                .trangThai(2)
                 .hoaDon(hoaDonRepo.findById(traHangRequest.getIdHoaDon()).get())
                 .build();
         TraHang traHang1 = traHangRepo.save(traHang);
-        for (TraHangChiTietRequest x: traHangRequest.getTraHangChiTietRequests()){
+        for (TraHangChiTietRequest x : traHangRequest.getTraHangChiTietRequests()) {
             TraHangChiTiet traHangChiTiet = TraHangChiTiet.builder()
                     .id(null)
                     .traHang(traHang1)
@@ -153,7 +158,7 @@ public class ITraHangServiceImpl implements ITraHangService {
                     .nhanVien(nhanVien)
                     .build();
             ghiChuRepo.save(ghiChu1);
-        }else{
+        } else {
             hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
             hoaDon.setNhanVien(nhanVien);
             hoaDon.setTrangThai(7);
@@ -176,7 +181,7 @@ public class ITraHangServiceImpl implements ITraHangService {
     @Override
     public void updateQuantity(List<UpdateCTSP> updateCTSPS) {
 
-        for (UpdateCTSP x: updateCTSPS){
+        for (UpdateCTSP x : updateCTSPS) {
             ChiTietSanPham chiTietSanPham = this.chiTietSanPhamRepo.findById(x.getIdChiTietSanPham()).get();
             chiTietSanPham.setSoLuong(chiTietSanPham.getSoLuong() + x.getSoLuong());
             this.chiTietSanPhamRepo.save(chiTietSanPham);
@@ -235,7 +240,7 @@ public class ITraHangServiceImpl implements ITraHangService {
         traHang.setNgayCapNhat(Date.valueOf(curruntDate));
         traHang.setTrangThai(trangThai);
 
-        if(trangThai == 2){
+        if (trangThai == 2) {
             HoaDon hoaDon = hoaDonRepo.findById(traHang.getHoaDon().getId()).get();
             BigDecimal tienTraKhach = hoaDon.getTongTienSauGiam().subtract(traHang.getTienTraKhach());
             BigDecimal tienSauGiam = tienTraKhach.add(hoaDon.getPhiVanChuyen());
@@ -255,7 +260,7 @@ public class ITraHangServiceImpl implements ITraHangService {
                         .nhanVien(nhanVien)
                         .build();
                 ghiChuRepo.save(ghiChu1);
-            }else{
+            } else {
 
                 hoaDon.setTongTienSauGiam(tienSauGiam);
                 hoaDon.setNhanVien(nhanVien);
