@@ -31,6 +31,7 @@ public interface INhanVienService {
 
     NhanVien insertNhanVien(NhanVienRequest nhanVienRequest);
 
+    NhanVien findSdt( String sdt);
     public NhanVien authenticateUser(LoginRequest loginRequest);
 
 

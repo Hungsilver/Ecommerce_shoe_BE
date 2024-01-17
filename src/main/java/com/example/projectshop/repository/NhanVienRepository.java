@@ -19,7 +19,7 @@ public interface NhanVienRepository extends JpaRepository<NhanVien,Integer>{
     Page<NhanVien> findAllByTen(@Param("ten") String ten, Pageable pageable);
 
     NhanVien findByEmail(String email);
-
+    NhanVien findBySoDienThoai(String sdt);
     @Query(value = "select n from NhanVien n where n.hoTen = :name")
     Optional<NhanVien> findByName(@Param("name")String name);
 }

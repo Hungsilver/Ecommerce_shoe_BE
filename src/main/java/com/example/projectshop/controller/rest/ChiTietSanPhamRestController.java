@@ -130,6 +130,7 @@ public class ChiTietSanPhamRestController {
         }
     }
 
+
 //    @PutMapping("{id}")//localhost:8080/api/product-detail/1
 //    public ResponseEntity<?> update(
 //            @PathVariable("id") Integer id,
@@ -151,6 +152,8 @@ public class ChiTietSanPhamRestController {
         } else {
             return ResponseEntity.ok(chiTietSanPham);
         }
+
+
     }
 
     @DeleteMapping("{id}")//localhost:8080/api/product-detail/1
