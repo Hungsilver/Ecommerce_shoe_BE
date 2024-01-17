@@ -236,10 +236,12 @@ public class ITraHangServiceImpl implements ITraHangService {
         traHang.setTrangThai(trangThai);
 
         if(trangThai == 2){
-            HoaDon hoaDon = traHang.getHoaDon();
+            HoaDon hoaDon = hoaDonRepo.findById(traHang.getHoaDon().getId()).get();
             BigDecimal tienTraKhach = hoaDon.getTongTienSauGiam().subtract(traHang.getTienTraKhach());
+            BigDecimal tienSauGiam = tienTraKhach.add(hoaDon.getPhiVanChuyen());
+
             if (tienTraKhach.compareTo(BigDecimal.ZERO) <= 0) {
-                hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
+                hoaDon.setTongTienSauGiam(new BigDecimal(0));
                 hoaDon.setNhanVien(nhanVien);
                 hoaDon.setTrangThai(6);
                 hoaDonRepo.save(hoaDon);
@@ -255,7 +257,7 @@ public class ITraHangServiceImpl implements ITraHangService {
                 ghiChuRepo.save(ghiChu1);
             }else{
 
-                hoaDon.setTongTienSauGiam(tienTraKhach.add(hoaDon.getPhiVanChuyen()));
+                hoaDon.setTongTienSauGiam(tienSauGiam);
                 hoaDon.setNhanVien(nhanVien);
                 hoaDon.setTrangThai(7);
                 hoaDonRepo.save(hoaDon);
