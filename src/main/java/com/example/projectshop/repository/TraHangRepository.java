@@ -28,5 +28,10 @@ public interface TraHangRepository extends JpaRepository<TraHang,Integer> {
     @Query(value = "select t from TraHang t where t.hoaDon.khachHang.id = :idKhachHang order by t.ngayTao desc")
     List<TraHang> findByIdKhachHang(@Param("idKhachHang")Integer idKhachHang);
 
+    @Query(value = "select t from TraHang t " +
+            "where t.hoaDon.maHoaDon= :maHoaDon " +
+            "order by t.ngayTao desc")
+    List<TraHang> findByMaHoaDon(@Param("maHoaDon")String maHoaDon);
+
 
 }

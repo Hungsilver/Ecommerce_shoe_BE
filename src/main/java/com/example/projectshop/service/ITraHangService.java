@@ -1,12 +1,10 @@
 package com.example.projectshop.service;
 
-import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.TraHang;
 import com.example.projectshop.domain.TraHangChiTiet;
 import com.example.projectshop.dto.trahang.TraHangChiTietRequest;
 import com.example.projectshop.dto.trahang.TraHangRequest;
 import com.example.projectshop.dto.trahang.UpdateCTSP;
-import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +23,11 @@ public interface ITraHangService {
 
     TraHang findById(Integer id);
 
+    TraHangChiTiet findByIdTHCT(Integer id);
+
     List<TraHang> findByIdKhachHang( );
+
+    List<TraHang> findByMaHoaDon(String maHoaDon );
 
     TraHang add(TraHangRequest traHangRequest);
 

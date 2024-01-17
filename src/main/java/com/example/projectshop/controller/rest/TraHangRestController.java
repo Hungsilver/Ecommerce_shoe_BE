@@ -109,4 +109,14 @@ public class TraHangRestController {
                                          @PathVariable("soLuong")Integer soLuong) {
         return ResponseEntity.ok(traHangService.updateQuantityTHCT(id,soLuong));
     }
+
+    @GetMapping("/detail/{idHdct}")//localhost:8080/api/return-product/detail/1/1
+    public ResponseEntity<?> findThctByIdHdct(@PathVariable("id")Integer id) {
+        return ResponseEntity.ok(traHangService.findByIdTHCT(id));
+    }
+
+    @GetMapping("/ma-hoa-don")//localhost:8080/api/return-product/detail/1/1
+    public ResponseEntity<?> findThctByIdHdct(@RequestParam(value = "maHoaDon",required = false)String maHoadon) {
+        return ResponseEntity.ok(traHangService.findByMaHoaDon(maHoadon));
+    }
 }
