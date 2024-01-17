@@ -59,14 +59,8 @@ public class KhachHangRestController {
 //        return ResponseEntity.ok(khachHangService.create(khachHangRequest));
 //    }
 
-    @PostMapping("/create-customer")
+    @PostMapping("")
     public ResponseEntity<?> create(@RequestBody KhachHangRequest khachHangRequest) {
-        boolean isDuplicateSoDienThoai = khachHangService.isSoDienThoaiExists(khachHangRequest.getSoDienThoai());
-        boolean isDuplicateEmail = khachHangService.isEmailExists(khachHangRequest.getEmail());
-
-        if (isDuplicateSoDienThoai || isDuplicateEmail) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số điện thoại hoặc Email đã tồn tại");
-        }
         return ResponseEntity.ok(khachHangService.create(khachHangRequest));
     }
 
