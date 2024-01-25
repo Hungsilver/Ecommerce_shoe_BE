@@ -1,11 +1,16 @@
 package com.example.projectshop.service;
 
+import com.example.projectshop.domain.AnhSanPham;
 import com.example.projectshop.domain.ChiTietSanPham;
-import com.example.projectshop.domain.SanPham;
 import com.example.projectshop.dto.chitietsanpham.ChiTietSanPhamRequest;
+import com.example.projectshop.dto.chitietsanpham.ExportExcelCTSP;
+import com.example.projectshop.dto.chitietsanpham.ImportExcelCTSP;
+import com.google.zxing.WriterException;
 import org.springframework.data.domain.Page;
 
-import java.util.Optional;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 public interface IChiTietSanPhamService {
 
@@ -20,20 +25,36 @@ public interface IChiTietSanPhamService {
             String priceMin,
             String priceMax,
             String color,
+            String size,
             String shoe_material,
             String shoe_sole_material,
+            Integer product,
             String keyword,
             Boolean isSortAsc,
             String sortField,
             Integer page,
             Integer pageSize
     );
+    List<AnhSanPham> findAnhByChiTietSanPhamId(Integer id);
+    ChiTietSanPham findById(Integer id);
 
-    Optional<ChiTietSanPham> findById(Integer id);
+    ChiTietSanPham getTop1ByPrice();
 
-    ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest);
+    ChiTietSanPham findByMa(String ma);
+
+    List<ChiTietSanPham> findByIdSanPham(Integer idSanPham);
+
+    List<ExportExcelCTSP> exportExcel();
+
+    List<ImportExcelCTSP> importExcel(List<ImportExcelCTSP> importExcelCTSPS) throws IOException, WriterException;
+
+    ChiTietSanPham create(ChiTietSanPhamRequest chiTietSanPhamRequest) throws IOException, WriterException;
 
     ChiTietSanPham update(Integer id, ChiTietSanPhamRequest chiTietSanPhamRequest);
 
     ChiTietSanPham delete(Integer id);
+
+    ChiTietSanPham  fetchctspWithgiohangchitiet(Integer id);
+
+    public ChiTietSanPham findByMa_ProductDetail(String ma, Integer trangThais);
 }

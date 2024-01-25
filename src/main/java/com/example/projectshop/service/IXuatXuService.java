@@ -1,5 +1,7 @@
 package com.example.projectshop.service;
-import com.example.projectshop.dto.mausac.MauSacResponse;
+import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.danhmuc.ExcelDanhMuc;
+import com.example.projectshop.dto.xuatxu.ExcelXuatXu;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.dto.xuatxu.XuatXuResponse;
 import org.springframework.data.domain.Page;
@@ -9,7 +11,15 @@ import java.util.List;
 public interface IXuatXuService {
     List<XuatXuResponse> getAll();
 
+    Page<XuatXuResponse> findAllXuatXu(String pageParam, String limitParam);
+
     XuatXuResponse findById(Integer id);
+
+    Xuatxu findByName(String name);
+
+    List<ExcelXuatXu> importExcel(List<ExcelXuatXu> excelXuatXus);
+
+    List<ExcelXuatXu> exportExcel();
 
     XuatXuResponse create(XuatXuRequest xuatXuRequest);
 
@@ -17,6 +27,5 @@ public interface IXuatXuService {
 
     void delete(Integer id);
 
-    Page<XuatXuResponse> findAllXuatXu(String pageParam, String limitParam);
 
 }

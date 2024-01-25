@@ -4,7 +4,6 @@ import com.example.projectshop.security.UserDetailServiceCustom;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,12 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class AppConfig {
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new UserDetailServiceCustom();
     }
 
@@ -39,12 +38,11 @@ public class AppConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/**").permitAll()
-//                .requestMatchers("/account/**").permitAll()
-//                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "USER")
-//                .requestMatchers("/user/**").hasRole("USER")
-//                .requestMatchers("/home/**").authenticated()
-//                .anyRequest().permitAll()
+//                .requestMatchers("/api/auth/admin/register-account").permitAll()
+//                .requestMatchers("/api/auth/admin/login").permitAll()
+//                .requestMatchers("/api/auth/admin/**").hasAnyAuthority("ADMIN", "STAFF")
                 .anyRequest().permitAll()
+//                .anyRequest().authenticated()
                 .and()
                 .authenticationManager(manager)
                 .sessionManagement()

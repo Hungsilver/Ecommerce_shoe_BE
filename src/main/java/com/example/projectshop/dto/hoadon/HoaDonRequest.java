@@ -1,8 +1,5 @@
 package com.example.projectshop.dto.hoadon;
 
-import com.example.projectshop.domain.KhachHang;
-import com.example.projectshop.domain.NhanVien;
-import com.example.projectshop.domain.PhieuGiamGia;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,19 +10,20 @@ import java.util.List;
 @Setter
 public class HoaDonRequest {
     private Integer id;
+    private String maHoaDon;
     private String tenKhachHang;
     private String soDienThoai;
     private String diaChi;
     private String phuongXa;
     private String quanHuyen;
     private String tinhThanh;
-    private BigDecimal tongTien;
-    private BigDecimal tienGiam;
-    private BigDecimal tongTienSauGiam;
-    private BigDecimal phiVanChuyen;
-    private String phuongThucThanhToan;
+    private String tongTien;
+    private String tienGiam;
+    private String tongTienSauGiam;
+    private String phiVanChuyen;
+    private Integer phuongThucThanhToan;
     private Integer trangThai;
-    private Integer phieuGiamGia;
+    private Integer phieuGiamGia; // id phieu giam gia
     private Integer khachHang;
     private Integer nhanVien;
     private List<HoaDonChiTietRequest> hoaDonChiTietRequests;

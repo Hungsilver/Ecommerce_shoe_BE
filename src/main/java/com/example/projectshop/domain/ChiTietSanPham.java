@@ -5,15 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +14,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -71,17 +64,17 @@ public class ChiTietSanPham {
     @JoinColumn(name = "id_chatlieudegiay")
     private ChatLieuDeGiay chatLieuDeGiay;
 
-
-    @JsonBackReference
+//    @JsonBackReference
 //    @JsonIgnoreProperties
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "id_sanpham")
     private SanPham sanPham;
 
-    @JsonIgnore
+//    @JsonIgnore
 //    @JsonManagedReference
+    @JsonIgnoreProperties("chiTietSanPham")
     @OneToMany(mappedBy = "chiTietSanPham")
-    private List<AnhSanPham> listAnhSanPham;
+    private List<AnhSanPham> anhSanPhams = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "chiTietSanPham")
@@ -90,6 +83,4 @@ public class ChiTietSanPham {
     @JsonIgnore
     @OneToMany(mappedBy = "chiTietSanPham")
     private List<HoaDonChiTiet> listHoaDonChiTiet;
-
-
 }

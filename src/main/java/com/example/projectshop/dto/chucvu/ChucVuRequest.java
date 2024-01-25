@@ -10,7 +10,6 @@ public class ChucVuRequest {
 
     private String tenChucVu;
 
-
     private Integer trangThai;
 
 }

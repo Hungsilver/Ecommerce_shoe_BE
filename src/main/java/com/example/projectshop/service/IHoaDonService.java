@@ -2,14 +2,15 @@ package com.example.projectshop.service;
 
 import com.example.projectshop.domain.HoaDon;
 import com.example.projectshop.domain.HoaDonChiTiet;
+import com.example.projectshop.domain.PhieuGiamGia;
 import com.example.projectshop.dto.hoadon.HoaDonChiTietRequest;
 import com.example.projectshop.dto.hoadon.HoaDonRequest;
-import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 
 public interface IHoaDonService {
@@ -21,32 +22,64 @@ public interface IHoaDonService {
                          Integer page,
                          Integer pageSize);
 
-    Optional<HoaDon> findById(Integer id);
+    HoaDon findById(Integer id);
 
-    HoaDon shopPayments(Integer idHoaDon,HoaDonRequest hoaDonRequest);
+    HoaDonChiTiet findByIdHDCT(Integer id);
 
-    HoaDon shopCreateInvoice(Integer idNhanVien );
+    HoaDon findByMa(String ma);
+
+    List<HoaDon> findByIdKhachHangAnhTrangThai(Integer trangThai);
+
+    HoaDon shopPayments(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
+
+    String vnPayShopService(Integer idHoaDon, HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
+
+    HoaDon shopCreateInvoice(Integer idNhanVien);
 
     HoaDonChiTiet shopCreateInvoiceDetail(HoaDonChiTietRequest hoaDonChiTietRequest);
 
-    HoaDonChiTiet shopUpdateInvoiceDetail(Integer id, Integer soLuong);
+    HoaDonChiTiet shopUpdateInvoiceDetail(Integer idHDCT,HoaDonChiTietRequest hoaDonChiTietRequest);
 
     void shopDeleteInvoiceDetail(Integer id);
 
-    HoaDon onlinePayments(HoaDonRequest hoaDonRequest);
+    HoaDon onlinePayment(HoaDonRequest hoaDonRequest);
+
+    void vnPayment(String maHoaDon);
+
+    String vnPayService(HoaDonRequest hoaDonRequest) throws UnsupportedEncodingException;
 
     HoaDon update(Integer id, HoaDonRequest hoaDonRequest);
 
-    HoaDon choVanChuyen(Integer id);
+    HoaDon updateInvoice(HoaDon hoaDon);
 
-    HoaDon dangGiao(Integer id);
+    void delete(String maHoaDon);
 
-    HoaDon daGiao(Integer id);
+    HoaDon huyDonHang(Integer id);
 
-    HoaDon daHuy(Integer id);
+    HoaDonChiTiet deleteHdct(Integer idHdct);
 
-    HoaDon traHang(Integer id);
+    HoaDon updateStatus(Integer id, Integer status);
 
-    void exportPDF(HttpServletResponse response) throws IOException, DocumentException;
+    void exportPDF(HttpServletResponse response, Integer id) throws IOException;
+
+    void exportPDFGiaoHang(HttpServletResponse response, Integer id) throws IOException;
+
+    void exportPDFTraHang(HttpServletResponse response, Integer id) throws IOException;
+
+    HoaDon CreateInvoice();
+
+    Optional<HoaDon> findByInvoiceNew();
+
+    HoaDon updateTongTien(Integer idTraHang);
+
+    List<HoaDonChiTiet> findByIdInvoice(Integer idInvoice);
+
+    HoaDonChiTiet updateSalesQuantityAtTheCounter(Integer idHDCT, Integer soLuong);
+
+    void cancellingInvoice(Integer idHoaDon);
+
+    PhieuGiamGia addPhieuGiamGiaToHoaDon(Integer idHoaDon, String maPhieuGiamGia);
+
+    HoaDon getByInvoiceNewWithStatus1();
 
 }

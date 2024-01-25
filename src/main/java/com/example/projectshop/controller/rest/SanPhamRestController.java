@@ -1,14 +1,11 @@
 package com.example.projectshop.controller.rest;
 
 
+import com.example.projectshop.dto.sanpham.ImportExcelSanPham;
 import com.example.projectshop.dto.sanpham.SanPhamRequest;
-import com.example.projectshop.repository.ChatLieuDeGiayRepository;
-import com.example.projectshop.repository.SanPhamRepository;
 import com.example.projectshop.service.IAttributeSevice;
 import com.example.projectshop.service.ISanPhamService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,71 +19,129 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(value = "*")
 @RestController
 @RequestMapping("/api/product")
 public class SanPhamRestController {
+
+
     @Autowired
-    private ISanPhamService service;
+    private ISanPhamService sanPhamService;
 
     @Autowired
     private IAttributeSevice attributeSevice;
 
-    @GetMapping()
+    private String p_chu = "\\d+";
+
+    @GetMapping()//localhost:8080/api/product
     public ResponseEntity<?> findAll(
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc
     ) {
-        return ResponseEntity.ok(service.findAll(page,pageSize,sortField,isSortDesc));
+        return ResponseEntity.ok(sanPhamService.findAll(
+                brand,
+                origin,
+                category,
+                keyword,
+                status,
+                page,
+                pageSize,
+                sortField,
+                isSortDesc
+        ));
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/filter")//localhost:8080/api/product/filter
     public ResponseEntity<?> filter(
-            @RequestParam(value = "pricemin",required = false) String pricemin,
-            @RequestParam(value = "pricemax",required = false) String pricemax,
-            @RequestParam(value = "brand",required = false) String brand,
-            @RequestParam(value = "origin",required = false) String origin,
-            @RequestParam(value = "color",required = false) String color,
-            @RequestParam(value = "size",required = false) String size,
-            @RequestParam(value = "shoe_material",required = false) String shoe_material,
-            @RequestParam(value = "shoe_sole_material",required = false) String shoe_sole_material,
-            @RequestParam(value = "keyword",required = false) String keyword,
+            @RequestParam(value = "pricemin", required = false) String pricemin,
+            @RequestParam(value = "pricemax", required = false) String pricemax,
+            @RequestParam(value = "brand", required = false) String brand,
+            @RequestParam(value = "origin", required = false) String origin,
+            @RequestParam(value = "color", required = false) String color,
+            @RequestParam(value = "size", required = false) String size,
+            @RequestParam(value = "shoe_material", required = false) String shoe_material,
+            @RequestParam(value = "shoe_sole_material", required = false) String shoe_sole_material,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "isSortAsc", required = false, defaultValue = "false") Boolean isSortAsc,
-            @RequestParam(value = "page",required = false,defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize
-    ){
-        return ResponseEntity.ok(service.filter(pricemin,pricemax,brand,origin,color,size,shoe_material,shoe_sole_material,keyword,isSortAsc, page,pageSize));
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize
+    ) {
+
+        return ResponseEntity.ok(
+                sanPhamService.filter(
+                        pricemin,
+                        pricemax,
+                        brand,
+                        origin,
+                        color,
+                        size,
+                        shoe_material,
+                        shoe_sole_material,
+                        status,
+                        keyword,
+                        isSortAsc,
+                        page,
+                        pageSize)
+        );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOne(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+    @GetMapping("/{id}")//localhost:8080/api/product/1
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)) {
+            return ResponseEntity.ok("*id sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(sanPhamService.findById(Integer.valueOf(id)));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product
     public ResponseEntity<?> create(@RequestBody SanPhamRequest sanPhamRequest) {
-        return ResponseEntity.ok(service.create(sanPhamRequest));
+        return ResponseEntity.ok(sanPhamService.create(sanPhamRequest));
     }
 
-    @PutMapping(value ="{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    @PutMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)//localhost:8080/api/product/1
     public ResponseEntity<?> update(
-            @PathVariable("id") Integer id,
+            @PathVariable("id") String id,
             @RequestBody SanPhamRequest sanPhamRequest
     ) {
-        return ResponseEntity.ok(service.update(id, sanPhamRequest));
+        if (!id.matches(p_chu)) {
+            return ResponseEntity.ok("*id sản phẩm phải là số");
+        }
+        return ResponseEntity.ok(sanPhamService.update(Integer.valueOf(id), sanPhamRequest));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        service.delete(id);
+    @DeleteMapping("{id}")//localhost:8080/api/product/1
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)) {
+            return ResponseEntity.ok("*id sản phẩm phải là số");
+        }
+        sanPhamService.delete(Integer.valueOf(id));
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/attribute")
+    @GetMapping("/attribute")//localhost:8080/api/product/attribute
     public ResponseEntity<?> attribute() {
         return ResponseEntity.ok(attributeSevice.findAll());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/product/excel/import
+    public ResponseEntity<?> ImportExcel(@RequestBody List<ImportExcelSanPham> importExcelSanPhams) {
+        return ResponseEntity.ok(sanPhamService.importExcel(importExcelSanPhams));
+    }
+
+    @GetMapping("/excel/export")//localhost:8080/api/product/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(sanPhamService.exportExcel());
     }
 
 }

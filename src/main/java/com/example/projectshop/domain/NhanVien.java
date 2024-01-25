@@ -43,7 +43,7 @@ public class NhanVien {
     private String soDienThoai;
 
     @Column(name = "gioitinh")
-    private Byte gioiTinh;
+    private Boolean gioiTinh;
 
     @Column(name = "ngaysinh")
     private String ngaySinh;
@@ -61,6 +61,10 @@ public class NhanVien {
     @JsonIgnore
     @OneToMany(mappedBy = "nhanVien")
     private List<HoaDon> listHoaDon;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "nhanVien")
+    private List<GhiChu> listGhiChu;
 
 //    @JsonIgnore
 //    @JsonIgnoreProperties("nhanViens")

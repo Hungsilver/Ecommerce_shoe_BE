@@ -3,11 +3,14 @@ package com.example.projectshop.controller.rest;
 import com.example.projectshop.domain.ChatLieuDeGiay;
 import com.example.projectshop.domain.ChatLieuGiay;
 import com.example.projectshop.domain.Xuatxu;
+import com.example.projectshop.dto.chatlieudegiay.ExcelCLDG;
 import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
+import com.example.projectshop.dto.chatlieugiay.ExcelCLG;
 import com.example.projectshop.dto.xuatxu.XuatXuRequest;
 import com.example.projectshop.repository.ChatLieuGiayRepository;
 import com.example.projectshop.service.IChatLieuGiayService;
 import com.example.projectshop.service.ObjectMapperUtils;
+import com.google.zxing.WriterException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,20 +47,23 @@ public class ChatLieuGiayRestController {
     private IChatLieuGiayService chatLieuGiayService;
 
     @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
     ChatLieuGiayRepository chatLieuGiayRepo;
-    @GetMapping
+
+    private String p_chu = "\\d+";
+
+    @GetMapping()//localhost:8080/api/shoe-materiall
     public ResponseEntity<?> findAll(
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "page", required = false, defaultValue = "1") String page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") String pageSize,
             @RequestParam(value = "sortField", required = false, defaultValue = "id") String sortField,
             @RequestParam(value = "isSortDesc", required = false, defaultValue = "false") Boolean isSortDesc,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
+        if (!page.matches(p_chu)|| !pageSize.matches(p_chu)){
+            return ResponseEntity.ok("*page || pageSize phải là số");
+        }
         Sort sort = Sort.by(isSortDesc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField);
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : page, pageSize, sort);
+        Pageable pageable = PageRequest.of(Integer.valueOf(page) > 0 ? Integer.valueOf(page) - 1 : Integer.valueOf(page), Integer.valueOf(pageSize), sort);
         Page<ChatLieuGiay>  chatLieuGiays;
         if (keyword != null && !keyword.isEmpty()) {
             chatLieuGiays = chatLieuGiayService.findAllByName(keyword, pageable);
@@ -65,26 +72,46 @@ public class ChatLieuGiayRestController {
         }
         return ResponseEntity.ok(chatLieuGiays);
     }
-    @GetMapping("{id}")
-    public ResponseEntity<?> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(chatLieuGiayService.findById(id));
+    @GetMapping("{id}")//localhost:8080/api/shoe-materiall/1
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id chất liệu giày phải là số");
+        }
+        return ResponseEntity.ok(chatLieuGiayService.findById(Integer.valueOf(id)));
     }
 
-    @PostMapping
+    @GetMapping("/excel/export")//localhost:8080/api/shoe-material/excel/export
+    public  ResponseEntity<?> exportExcel() {
+        return ResponseEntity.ok(chatLieuGiayService.exportExcel());
+    }
+
+    @PostMapping("/excel/import")//localhost:8080/api/shoe-material/excel/import
+    public  ResponseEntity<?> exportExcel(@RequestBody List<ExcelCLG> excelCLGS) {
+        return ResponseEntity.ok(chatLieuGiayService.importExcel(excelCLGS));
+    }
+
+    @PostMapping//localhost:8080/api/shoe-materiall
     public ResponseEntity<?> create(@RequestBody ChatLieuGiayRequest request) {
         ChatLieuGiay xx = ObjectMapperUtils.map(request, ChatLieuGiay.class);
         return ResponseEntity.ok(chatLieuGiayService.create(xx));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<?> update(@RequestBody ChatLieuGiayRequest request, @PathVariable("id") Integer id) {
+    @PutMapping("{id}")//localhost:8080/api/shoe-materiall
+    public ResponseEntity<?> update(@RequestBody ChatLieuGiayRequest request,
+                                    @PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id chất liệu giày phải là số");
+        }
         ChatLieuGiay xx = ObjectMapperUtils.map(request, ChatLieuGiay.class);
-        return ResponseEntity.ok(chatLieuGiayService.update(xx, id));
+        return ResponseEntity.ok(chatLieuGiayService.update(xx, Integer.valueOf(id)));
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(chatLieuGiayService.delete(id));
+    @DeleteMapping("{id}")//localhost:8080/api/shoe-materiall/1
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        if (!id.matches(p_chu)){
+            return ResponseEntity.ok("*id chất liệu giày phải là số");
+        }
+        return ResponseEntity.ok(chatLieuGiayService.delete(Integer.valueOf(id)));
     }
 
 

@@ -1,20 +1,16 @@
 package com.example.projectshop.service.impl;
 
 import com.example.projectshop.domain.ChatLieuDeGiay;
-import com.example.projectshop.domain.Xuatxu;
-import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayRequest;
-import com.example.projectshop.dto.chatlieudegiay.ChatLieuDeGiayResponse;
-import com.example.projectshop.dto.chatlieugiay.ChatLieuGiayRequest;
+import com.example.projectshop.dto.chatlieudegiay.ExcelCLDG;
 import com.example.projectshop.repository.ChatLieuDeGiayRepository;
-import com.example.projectshop.repository.ChiTietSanPhamRepository;
 import com.example.projectshop.service.IChatLieuDeGiayService;
-import com.example.projectshop.service.ObjectMapperUtils;
+import com.example.projectshop.utilities.utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +18,6 @@ import java.util.Optional;
 public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     @Autowired
     private ChatLieuDeGiayRepository chatLieuDeGiayRepository;
-
-    @Autowired
-    private ChiTietSanPhamRepository chiTietSanPhamRepo;
 
 
     @Override
@@ -35,14 +28,83 @@ public class ChatLieuDeGiaySeviceImpl implements IChatLieuDeGiayService {
     @Override
     public ChatLieuDeGiay findById(Integer id) {
         if (id != null) {
-        return chatLieuDeGiayRepository.findById(id).get();
+            return chatLieuDeGiayRepository.findById(id).get();
+        }
+        return null;
+    }
+
+    @Override
+    public ChatLieuDeGiay findByName(String name) {
+        Optional<ChatLieuDeGiay> chatLieuDeGiay = chatLieuDeGiayRepository.findByName(name);
+        if (chatLieuDeGiay.isPresent()) {
+            return chatLieuDeGiay.get();
         }
         return null;
     }
 
     @Override
     public Page<ChatLieuDeGiay> findAllByName(String ten, Pageable pageable) {
-        return chatLieuDeGiayRepository.findAllByTen("%"+ten+"%",pageable);
+        return chatLieuDeGiayRepository.findAllByTen("%" + ten + "%", pageable);
+    }
+
+    @Override
+    public List<ExcelCLDG> importExcel(List<ExcelCLDG> excelCLDGS) {
+        // tạo list để chứa các đối tượng bị lỗi
+        List<ExcelCLDG> errorImports = new ArrayList<>();
+        // sử dụng for để lặp các đối tượng được truyền vào từ file excel
+        for (ExcelCLDG x : excelCLDGS) {
+            // lấy ra đối tượng theo tên được truyền vào từ file excel
+            ChatLieuDeGiay chatLieuDeGiay = this.findByName(x.getTenChatLieuDeGiay());
+
+            // kiểm nếu tên truyền vào null || space add vào errorImports
+            if (x.getTenChatLieuDeGiay() == null || x.getTenChatLieuDeGiay().isBlank()) {
+                errorImports.add(x);
+                System.out.println("case 1");
+                continue;
+            }
+
+            // kiểm nếu trạng thái là null add vào errorImports
+            if (utility.getNumberByNameStatus(x.getTrangThai()) == null) {
+                errorImports.add(x);
+                System.out.println("case 2");
+                continue;
+            }
+
+            // kiểm tra nếu chưa có trong db thì thêm mới
+            if (chatLieuDeGiay == null) {
+                ChatLieuDeGiay chatLieuDeGiay1 = ChatLieuDeGiay.builder()
+                        .id(null)
+                        .ten(x.getTenChatLieuDeGiay())
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
+                        .build();
+                System.out.println("case3");
+                chatLieuDeGiayRepository.save(chatLieuDeGiay1);
+            } else {// nếu đã có thì cập nhật lại thông tin
+                ChatLieuDeGiay chatLieuDeGiay2 = ChatLieuDeGiay.builder()
+                        .id(chatLieuDeGiay.getId())
+                        .ten(x.getTenChatLieuDeGiay())
+                        .trangThai(utility.getNumberByNameStatus(x.getTrangThai()))
+                        .build();
+                System.out.println("case3");
+                chatLieuDeGiayRepository.save(chatLieuDeGiay2);
+            }
+        }
+        return errorImports;
+    }
+
+    @Override
+    public List<ExcelCLDG> exportExcel() {
+        List<ExcelCLDG> excelCLDGS = new ArrayList<>();
+        Integer index = 1;
+        for (ChatLieuDeGiay x : chatLieuDeGiayRepository.findAll()) {// convert từ ChatLieuDeGiay sang ExcelCLDG
+            ExcelCLDG excelCLDG = ExcelCLDG.builder()
+                    .stt(index++)
+                    .tenChatLieuDeGiay(x.getTen())
+                    .trangThai(utility.trangThaiSanPham(x.getTrangThai()))
+                    .build();
+            excelCLDGS.add(excelCLDG);
+        }
+        return excelCLDGS;
     }
 
     @Override

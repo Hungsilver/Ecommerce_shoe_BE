@@ -27,7 +27,7 @@ public class UserDetailsCustom implements UserDetails {
 
     private String soDienThoai;
 
-    private Byte gioiTinh;
+    private Boolean gioiTinh;
 
     private String ngaySinh;
 
@@ -37,7 +37,7 @@ public class UserDetailsCustom implements UserDetails {
 
     private List<GrantedAuthority> authorities;
 
-    public UserDetailsCustom(String hoTen, String anhDaiDien, String email, String matKhau, String soDienThoai, Byte gioiTinh, String ngaySinh, String diaChi, Integer trangThai, List<GrantedAuthority> authorities) {
+    public UserDetailsCustom(String hoTen, String anhDaiDien, String email, String matKhau, String soDienThoai, Boolean gioiTinh, String ngaySinh, String diaChi, Integer trangThai, List<GrantedAuthority> authorities) {
         this.hoTen = hoTen;
         this.anhDaiDien = anhDaiDien;
         this.email = email;
