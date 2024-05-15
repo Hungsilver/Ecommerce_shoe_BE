@@ -1,1 +1,1 @@
-du an tot nghiep angular + spring boot
+du an angular + spring boot
